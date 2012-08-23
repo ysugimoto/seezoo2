@@ -1,0 +1,76 @@
+@CHARSET "UTF-8";
+
+/** =============== member_management styles ============ **/
+
+p.search_user {
+	margin-top : 15px;
+}
+div.sz_member_exports {
+	border : dashed 1px #c00;
+	padding : 10px;
+}
+div.sz_member_exports p {
+	padding-bottom : 10px;
+}
+#main div.sz_member_exports fieldset {
+	margin : 0;
+}
+div.sz_member_exports input#nick_name {
+	width : 250px;
+	margin-left : 5px;
+}
+p.info_icon {
+	line-height : 1.6;
+}
+
+/** ================== member_attributes setting ============== **/
+
+div.sz_member_att_edit {
+	margin-top : 15px;
+}
+
+#att_form_table th {
+	width : 120px;
+}
+#att_form_table tr.init_hide {
+	display : none;
+}
+#main table.admin_users_table td.moveup {
+	padding-top : 30px;
+	padding-bottom : 30px;
+	width : 50px;
+}
+#main table.admin_users_table td.moveup p {
+	position : relative;
+}
+#main table.admin_users_table td.moveup p a {
+	position : absolute;
+	display : block;
+	left : 8px;
+	width : 18px;
+	height : 10px;
+	text-decoration : none;
+}
+#main table.admin_users_table td.moveup p a:hover {
+	background-position : 0px -10px;
+}
+#main table.admin_users_table td.moveup p a.up {
+	top : -18px;
+	background : url(../../images/etc/arrow_move_upper.gif) top left no-repeat;
+}
+#main table.admin_users_table td.moveup p a.down {
+	bottom : -18px;
+	background : url(../../images/etc/arrow_move_lower.gif) top left no-repeat;
+}
+#main table.admin_users_table td.moveup p a.up:hover {
+	background-position : 0px -10px;
+}
+#main table.admin_users_table td.moveup p a.down:hover {
+	background-position : 0px -10px;
+}
+#main table#att_table td {
+	background-color : #fff;
+}
+#main table#att_table tr.head td {
+	background-color : #f6f6f6;
+}

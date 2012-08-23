@@ -1,0 +1,86 @@
+@CHARSET "UTF-8";
+
+/* ======= blog_comment format ==================== */
+div.sz_blog_comment_form fieldset{
+	border : solid 1px #ccc;
+	padding : 10px;
+	background : #f6f6f6;
+	width : 500px;
+}
+div.sz_blog_comment_form fieldset dl input.tt_input{
+	width : 35em;
+}
+div.sz_blog_comment_form fieldset dl textarea.tt_area{
+	width : 30em;
+	height : 6em;
+}
+div.sz_blog_comment_form fieldset dl dd{
+	margin : 0;
+}
+div.sz_blog_comment_form fieldset p img {
+	vertical-align : bottom;
+}
+div.sz_blog_comment_form fieldset div.sz_comment_submit p{
+	text-align : center;
+	margin : 10px 0;
+}
+div.sz_blog_comment_form fieldset span.error {
+	margin : 0;
+	color : #c00;
+	display : block;
+}
+
+/* ========================== dashboard ======================= */
+
+div#sz_blog_menu_setting_area {
+	border : solid 1px #ccc;
+	margin-top : 15px;
+	-moz-border-radius : 5px;
+	-webkit-border-radius : 5px;
+	border-radius : 5px;
+	padding : 20px;
+	padding-top : 5px;
+	margin-bottom : 15px;
+}
+div.sz_blog_menu_piece {
+	border : solid 1px #019311;
+	padding : 13px 10px 10px 10px;
+	-moz-border-radius : 5px;
+	-webkit-border-radius : 5px;
+	border-radius : 5px;
+	margin : 15px 0 0 0;
+	position : relative;
+}
+div.sz_blog_menu_piece a {
+	position : absolute;
+	top : 5px;
+	right : 10px;
+	width : 16px;
+	height : 16px;
+	display : block;
+}
+div.hidden {
+	background-color : #ccc;
+	border : solid 1px #999;
+}
+div.hidden * {
+}
+div#sz_blog_menu_setting_area div.sz_blog_menu_piece h4 {
+	border-bottom-color : #00c;
+}
+div.sz_blog_menu_piece p.description {
+	line-height : 1.6;
+	margin-top : 10px;
+}
+p.submission input {
+	padding : 0 20px;
+}
+div#state_msg {
+	text-align : center;
+	padding : 10px 0;
+	margin : 10px 0;
+	border : dotted 2px #c00;
+	background-color : #ffc;
+	font-weight : bold;
+	display : none;
+}

@@ -1,0 +1,197 @@
+@CHARSET "UTF-8";
+
+br.clear {
+	clear:both;
+}
+
+/** layout **/
+div.sz_member_profile {
+	border : solid 1px #ccc;
+	padding : 20px 10px;
+	border-radius : 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius : 10px;
+	-o-border-radius : 10px;
+	min-height : 200px;
+}
+* html div.sz_member_profile {
+	height : 200px;
+}
+div.profile_image {
+	width : 140px;
+	float : left;
+	border-right : solid 1px #ccc;
+	padding-bottom : 10px;
+}
+
+div.profile_data_box {
+	margin : -10px 10px 0 160px;
+}
+
+/** profile image **/
+div.profile_image p {
+	margin : 0;
+	text-align : center;
+}
+
+div.profile_image p.image_box {
+	margin-top : 10px;
+}
+div#image_box p {
+	margin-top : 10px;
+	position : relative;
+	height : 30px;
+}
+
+
+div#image_box p input#profile_image_input {
+	position : absolute;
+	overflow : hidden;
+	display : block;
+	top : 0px;
+	right : 0px;
+	opacity : 0;
+	cursor : pointer;
+	filter : alpha(opacity=0);
+}
+
+
+/** profile data **/
+table.profile_data {
+	width : 100%;
+}
+table.profile_data th, table.profile_data td {
+	border-bottom : dotted 2px #32B4DF;
+	padding : 10px 0;
+	font-size : 0.9em;
+}
+/** attributes **/
+table.profile_attributes {
+	width : 98%;
+	margin : 0 auto;
+	font-size : 0.9em;
+	margin-top : 20px;
+}
+table.profile_attributes th, table.profile_attributes td {
+	border-bottom : dotted 2px #32B4DF;
+	padding : 5px 0;
+}
+table.profile_attributes th {
+	text-align : right;
+	width: 125px;
+	padding-right : 15px;
+}
+table.profile_attributes td {
+	padding-left : 3px;
+	line-height : 1.4;
+}
+
+/** ======== edit profile ======== **/
+p.edit_profile {
+	margin-top : 30px;
+	text-align : center;
+}
+p.edit_profile a {
+	color : #00c;
+}
+p.edit_profile a:hover {
+	color : #5A9D1D;
+}
+p.edit_profile span {
+	display : block;
+	margin-top : 20px;
+}
+
+a.edit_logins {
+	margin-left : 30px;
+}
+table.sz_registration_table textarea {
+	width : 100%;
+	height : 100px;
+}
+
+/** =========== profile image changer box ========== **/
+div.pf_image_box {
+	position : fixed;
+	top : 50%;
+	left : 50%;
+	width : 400px;
+	height : 260px;
+	border : solid 10px #000;
+	border-radius : 10px;
+	-moz-border-radius : 10px;
+	-webkit-border-radius : 10px;
+	padding : 10px;
+	margin : -150px 0 0 -220px;
+	z-index : 1001;
+	background : #fff;
+}
+div.pf_image_box h3 {
+	border-bottom : dotted 2px #333;
+	padding-bottom : 3px;
+}
+div.pf_image_box iframe {
+	margin-top : 20px;
+}
+a#up_close {
+	position : absolute;
+	top : -24px;
+	right : -30px;
+	width : 47px;
+	height : 48px;
+	background : url(../js/fl_images/ui/close.png) top left no-repeat;
+}
+* html a#up_close {
+	background : none;
+	filter : progid:DXImageTransform.Microsoft.AplhaImageLoder(src='js/ui/fl_images/ui/close.png',sizingMethod='scale');
+}
+
+/** ==================== secession style =================== **/
+
+ul.secession_notify {
+	margin : 15px 0;
+	padding : 10px;
+	border : solid 1px #c00;
+	border-radius : 5px;
+	-webkit-border-radius : 5px;
+	-moz-border-radius : 5px;
+	-o-border-radius : 5px;
+	background : #ffe;
+}
+
+ul.secession_notify li {
+	list-style : disc inside;
+	font-size : 0.9em;
+	padding : 5px;
+}
+p.submit {
+	margin : 20px auto 0 auto;
+}
+p.submit a {
+	margin : 0 auto;
+	display : block;
+	width : 60%;
+	padding : 5px 12px;
+	background : #00aaff;
+	background : -webkit-gradient(linear, left bottom, left top, from(#00aaff), to(#fff));
+	text-align : center;
+	color : #333;
+	border : solid 1px #ccc;
+	border-radius : 5px;
+	-webkit-border-radius : 5px;
+	-moz-border-radius : 5px;
+	-o-border-radius : 5px;
+}
+p.submit a:hover {
+	background : #00aaff;
+	background : -webkit-gradient(linear, left bottom, left top, from(#00aaaa), to(#fff));
+	
+}
+
+
+
+
+
+
+
+

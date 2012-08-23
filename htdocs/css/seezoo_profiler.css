@@ -1,0 +1,82 @@
+@CHARSET "UTF-8";
+
+body {
+	margin : 0;
+	padding : 0;
+}
+#codeigniter_profiler {
+}
+#codeigniter_profiler fieldset, #query_result {
+	-webkit-border-radius : 2px;
+	-moz-border-radius : 2px;
+	-o-border-radius : 2px;
+	-ms-border-radius : 2px;
+	border-radius : 2px;
+
+}
+ul.cp_tabs {
+	list-style : none outside;
+	width : 100%;
+	margin : 0;
+	padding : 0;
+	padding-left : 4px;
+}
+ul.cp_tabs li {
+	width : 200px;
+	float : left;
+}
+ul.cp_tabs li a {
+	border : solid 1px #ddd;
+	border-bottom : none;
+	background : #eee;
+	padding : 5px;
+	display : block;
+	text-align : center;
+	text-decoration : none;
+	color : #333;
+	margin-left: 4px;
+	_margin-left : 2px;
+	border-radius : 4px 4px 0 0;
+	-webkit-border-top-left-radius : 4px;
+	-webkit-border-top-right-radius : 4px;
+	-moz-border-radius : 4px 4px 0 0;
+	-o-border-radius : 4px 4px 0 0;
+	-ms-border-radius : 4px 4px 0 0;
+}
+ul.cp_tabs li a.active {
+	background : #FF7F7F;
+	border : solid 1px #FF7F7F;
+	color : #fff;
+}
+div.cp_content {
+	clear : both;
+	border-top : solid 1px #ddd;
+	padding : 10px;
+	overflow : auto;
+}
+div.ih {
+	display : none;
+}
+table.queries td {
+	cursor : pointer;
+}
+table.queries tr:hover td {
+	background-color : #ffc !important;
+}
+table.queries tr.active td {
+	background-color : #ffc !important;
+}
+#query_result {
+	border : solid 1px #FF7F7F;
+	background-color : #fcc;
+	margin-bottom : 10px;
+	min-height : 50px;
+}
+#query_result pre {
+	margin : 0;
+	padding : 3px;
+	border : solid 1px #fee;
+}
+.loading {
+	background : #fcc url(../fl_images/loading_small_trans.gif) center center no-repeat;
+}

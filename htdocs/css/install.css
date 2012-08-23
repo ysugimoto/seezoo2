@@ -1,0 +1,177 @@
+body { background: #cdd8de url(../images/dashboard/clouds.gif) repeat-x;}
+
+#container {
+	background : none;
+	padding-bottom : 0px;
+}
+#container_full h3.install_caption {
+	text-align : left;
+	padding : 15px 0 0 15px;	
+}
+#container_full h4.install_caption {
+	text-align : left;
+	padding : 15px 0 3px 15px;
+	margin : 0 10px;
+	border-bottom : dotted 1px #ccc;
+}
+div#main_box {
+	width: 1020px;
+	margin: 0px auto -1px auto;
+}
+
+div#permission_box {
+	width: 360px;
+	background: #FFF;
+	padding: 8px;
+	margin-left: 40px;
+}
+
+div#input_install_data {
+	padding: 8px 20px;
+	margin: 8px 10px;
+}
+div#input_install_data table {
+	width : 100%;
+}
+div#input_install_data table tr th, div#input_install_data table tr td {
+	background : #fbfbfb;
+	border-top : solid 1px #ccc;
+	border-bottom : solid 1px #ccc;
+	padding : 10px 5px;
+}
+div#input_install_data table tr th {
+	width : 40px;
+	padding-left : 40px;
+	vertical-align : middle;
+}
+div#input_install_data table tr td {
+	width : 60%;
+}
+div#input_install_data table tr.odd th, div#input_install_data table tr.odd td {
+	background : #f6f6f6;
+}
+div#input_install_data table tr td input {
+	display : block;
+	width : 80%;
+	height : 30px;
+	font-size : 25px;
+	border : solid 1px #ccc;
+}
+div#input_install_data table tr td input.focused {
+	background-color : #ffc;
+}
+span.writable {
+	color: #0D0;
+}
+span.not_writable {
+	color: #F00;
+}
+p.errors {
+	color: #c00;
+	margin : 5px 0;
+}
+
+p#login_btn {
+	text-align : center;
+	margin-top : 20px;
+}
+p#login_btn input#btn {
+	padding : 0 30px;
+}
+
+ul.install_permissions {
+	margin : 10px;
+	border : solid 1px #ccc;
+	border-radius : 2px;
+	-moz-border-radius : 2px;
+	-webkit-border-radius : 2px;
+}
+ul.install_permissions li {
+	background : #fbfbfb;
+	position : relative;
+}
+ul.install_permissions li p {
+	margin : 0 5px;
+	border-top : solid 1px #ccc;
+	padding : 15px 8px;
+}
+ul.install_permissions li.first p {
+	border : none;
+}
+ul.install_permissions li p em {
+	font-size : 18px;
+	margin-right : 20px;
+	margin-left : 5px;
+}
+ul.install_permissions li p span {
+	display : block;
+	margin-top : -7px;
+	text-align : right;
+	position : absolute;
+	top : 50%;
+	right : 20px;
+}
+
+div.permission_error {
+	margin : 5px 10px;
+	border : solid 1px #c00;
+	border-radius : 5px;
+	-moz-border-radius : 5px;
+	-webkit-border-radius : 5px;
+	padding : 10px;
+	text-align : center;
+	line-height : 30px;
+	font-size : 15px;
+}
+div.permission_error a {
+	font-weight : normal;
+	text-decoration : none;
+}
+div.permission_error a:hover {
+	text-decoration : underline;
+}
+
+/** installation complete **/
+div#container_full div#install_complete_box h2 {
+	text-align : center;
+	font-size : 30px;
+	margin : 30px auto 0 auto;
+	padding : 5px 0 15px 0;
+}
+div#install_complete_box p.install_complete {
+	margin-top : 30px;
+	line-height : 30px;
+	text-align : center;
+	font-size : 15px;
+}
+div#install_complete_box p.to_top {
+	margin-top : 45px;
+	text-align : center;
+}
+div#install_complete_box p.to_top a {
+	font-size : 15px;
+	color : #1e90ff;
+}
+div#install_complete_box p.to_top a:hover {
+	text-decoration : underline;
+}
+a#randomize {
+	margin-left : 30px;
+	text-decoration : none;
+}
+a#randomize:hover {
+	text-decoration : underline;
+}
+.msg {
+	border: solid 1px #CC0000;
+	padding: 5px;
+	padding: 10px;
+	margin: 10px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-o-border-radius: 5px;
+	-ms-border-radius: 5px;
+	background: #ffd;
+	font-weight: bold;
+}

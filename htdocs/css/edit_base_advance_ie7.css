@@ -1,0 +1,20 @@
+div.cmsi_add_block {
+	background : url(../images/etc/spacer.gif) top left repeat;
+}
+div.sz-popup-content div.sz-pp-tc {
+	position : relative;
+	left : 0px;
+}
+
+div.cmsi_menu ul.manage {
+	left: 0;
+}
+ul#ajax_sitemap_tree  {
+	position : relative;
+}
+div#sitemap_sub {
+	position : relative;
+}
+ul.sz_block_menu_list {
+	width : 30px;
+}

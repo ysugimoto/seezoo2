@@ -1,0 +1,394 @@
+.sz_button { padding : 10px 0 10px 14px;}
+.sz_button a {
+	display : block;
+	float : left;
+	position : relative;
+	padding : 10px 50px 0 0;
+	height : 20px;
+	background : url(../images/btn_right.png) right top no-repeat;
+}
+.sz_button a.hover {
+	background : url(../images/btn_right_on.png) right top no-repeat;
+}
+.sz_button a span {
+	background :url(../images/button_left.png) 0px 0px no-repeat;
+	padding : 10px 0 0 20px;
+	margin : 0;
+	float : none;
+	display : block;
+	position : absolute;
+	top : 0px;
+	left : -18px;
+	width : 80px;
+	height : 20px;
+	font-size : 10pt;
+	line-height : 1;
+	color : #666;
+	cursor : pointer;
+}
+.sz_button a:hover span {
+	background-position : 0px -30px;
+	color : #fff;
+}
+.sz_button a.button_right {
+	float : right;
+}
+
+p.cmsi_mode_state {
+	background: none;
+	filter : progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../images/menu/mode-block.png",sizingMethod="scale");
+	top : 10px;
+	padding-top : 12px;
+}
+div.cmsi_menu_btn {
+	background : none;
+	filter :  progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../images/ppbox/seezoo_tab.png",sizingMethod="scale");
+}
+div.cmsi_menu {
+}
+div.cmsi_menu li a{
+	position : relative;
+	cursor : pointer;
+	color : #333;
+}
+
+div#sz_gadget {
+	right : 17px;
+	background : none;
+	filter : progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../images/ppbox/gadget_tab.png",sizingMethod="scale");
+}
+div.sz_gadget_area {
+	margin-right : 3px;
+	border-right : none;
+	position : absolute;
+}
+div.cmsi_add_block {
+	position : relative;
+	height : 1em;
+	overflow :hidden;
+}
+div.sz_block_overlay {
+	position : absolute;
+	width : 100%;
+	height : 1em;
+	zoom : 1;
+	left : 0px;
+	text-align : left;
+	margin : 0 auto;
+}
+div.sz-popup-content div.sz-pp-tl {
+	background : none;
+	/*filter : progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../images/ppbox/rad_top_left.png",sizingMethod="scale");*/
+}
+div.sz-popup-content div.sz-pp-tr {
+	background : none;
+	/*filter : progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../images/ppbox/rad_top_right.png",sizingMethod="scale");*/
+}
+div.sz-popup-content div.sz-pp-bl {
+	background : none;
+	/*filter : progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../images/ppbox/rad_bottom_left.png",sizingMethod="image");*/
+}
+div.sz-popup-content div.sz-pp-br {
+	background : none;
+	/*filter : progid:DXImageTransform.Microsoft.AlphaImageLoader(src="../images/ppbox/rad_bottom_right.png",sizingMethod="image");*/
+}
+div.sz-popup-content div.sz-pp-bc {
+	width : 100%;
+	height : 17px;
+	position : absolute;
+	left : 0px;
+	font-size : 0;
+	background : url(../images/ppbox/rad_bottom_center.gif) top left repeat-x;
+	overflow : hidden;
+}
+div.sz-popup-content div.sz-pp-contents {
+	overflow-x : hidden;
+	overflow-y : auto;
+	zoom : 1;
+}
+div.sz-popup-content a.pp_close {
+	background-image : url(../images/ie6/close.gif);
+	width : 16px;
+	height : 16px;
+}
+ul.sz_block_list li{
+	width : 90%;
+	height : auto;
+	padding : 10px;
+	padding-left : 30px;
+	border-bottom : dotted 2px #32b4df;
+	cursor : pointer;
+	background : url(../images/ie6/block_icon.gif) left center no-repeat;
+	position : relative;
+}
+
+ul.draft li {
+	background-position : 0px 9px;
+	position : relative;
+	flaot : none;
+}
+
+/*  tab style */
+ul.sz_tabs {
+	list-style : none outside;
+	margin : 10px 0 0 10px;
+	padding : 0;
+}
+ul.block {
+	margin : 10px 0 0 2px;
+}
+
+ul.sz_tabs li {
+	float : left;
+	border : solid 1px #ccc;
+	border-bottom : none;
+	display : inline;
+	zoom : 1;
+	height : 20px;
+	line-height : 1;
+}
+ul.sz_tabs li a {
+	display : block;
+	height : 20px;
+	width : 80px;
+	padding : 4px 5px;
+	text-decoration : none;
+}
+ul.sz_tabs li a.active {
+	color : #fff;
+	background : #1eb0ff;
+}
+div.tab_content_draft {
+	clear : both;
+	margin-top : -10px;
+	padding-top : 8px;
+}
+
+/** edit menu hack **/
+a#sz_edit_menu_close {
+	font-size : 0;
+	top : 4px;
+	cursor : pointer;
+	z-index : 520;
+	zoom : 1;
+	display : none;
+}
+div.cmsi_menu div.sz_menu_rad_top {
+	background : none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=../images/menu/toolbar_head.png, sizingMethod=image);
+}
+div#sz_menu_wrapper {
+	background : none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=../images/menu/toolbar_center.png, sizingMethod=scale);
+}
+div.cmsi_menu div.sz_menu_rad_bottom {
+	background : none;
+	filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=../images/menu/toolbar_foot.png, sizingMethod=image);
+}
+ul#sz_menu_tools li a {
+	overflow : hidden;
+	border : none;
+}
+ul#sz_menu_tools li.sz_menu_tools_edit a{
+	border-bottom : none;
+}
+ul#sz_menu_tools li.sz_menu_tools_edit a#sz_edit_out{
+	background-image : url(../images/ie6/edit_out.gif);
+}
+ul#sz_menu_tools li.sz_menu_tools_edit a#to_edit{
+	background-image : url(../images/ie6/edit_to.gif);
+}
+ul#sz_menu_tools li.sz_menu_tools_edit a#edit_forbidden{
+	background-image : url(../images/ie6/forbidden.gif);
+	cursor : default;
+}
+ul#sz_menu_tools li.sz_menu_tools_edit a#other_editting{
+	background-image : url(../images/ie6/editing.gif);
+	cursor : default;
+}
+ul#sz_menu_tools a#sz_pageconfig {
+	background-image : url(../images/ie6/page_conf.gif);
+}
+ul#sz_menu_tools a.sz_pv {
+	background-image : url(../images/ie6/versions.gif);
+}
+ul#sz_menu_tools a#sz_pageconfig {
+	background-image : url(../images/ie6/page_conf.gif);
+}
+ul#sz_menu_tools a#edit_preview {
+	background-image : url(../images/ie6/preview.gif);
+}
+ul#sz_menu_tools a#sz_addpage {
+	background-image : url(../images/ie6/addpage.gif);
+}
+ul#sz_menu_tools a#sz_sitemap {
+	background-image : url(../images/ie6/sitemap.gif);
+}
+ul#sz_menu_tools a#sz_delpage {
+	background-image : url(../images/ie6/delete_page.gif);
+}
+ul#sz_menu_tools a#custom_css {
+	background-image : url(../images/ie6/addpage.gif);
+}
+ul#sz_menu_tools a#arrange_mode {
+	background-image : url(../images/menu/move.gif);
+}
+div#sz_menu_wrapper li {
+	margin : 0;
+	padding : 0;
+	width : 53px;
+	height : 50px;
+	float : left;
+	display : inline;
+	position : relative;
+}
+div#sz_menu_wrapper li a{
+	display : block;
+	width : 52px;
+	height : 49px;
+	border : solid 1px #ccc;
+	background-position : 15px 8px;
+	background-repeat : no-repeat;
+	outline : none;
+	position : relative;
+}
+div#sz_menu_wrapper li a#sz_sitemap{
+	border-left : none;
+}
+div#sz_menu_wrapper ul.manage {
+	left : 0px;
+	bottom : -1px;
+}
+div#sz_menu_wrapper ul.manage li a{
+	border-bottom : none;
+	width : 52px;
+}
+ul.manage a.sz_menu_admin {
+	background-image : url(../images/ie6/admin.gif);
+}
+div#sz_menu_wrapper ul.manage a.sz_menu_logout {
+	border-left : none;
+}
+ul#sz_menu_tools a.sz_pv {
+	border-left : none;
+}
+ul#sz_menu_tools a#edit_preview {
+	border-top : none;
+}
+ul#sz_menu_tools a#custom_css {
+	border-left : none;
+	border-top : none;
+}
+div.cmsi_edit_block {
+	overflow-x : hidden !important;
+	width : 100%;
+}
+div.cmsi_arrange_block_master {
+	overflow-x : hidden !important;
+}
+
+/* === block edit style hack ==== */
+div.sz_block_menu ul li a {
+	display : block;
+	padding : 3px 5px 3px 20px !important;
+	color : #95AD19;
+	border : none;
+}
+
+div.sz_block_menu ul li a {
+	display : block;
+	padding : 3px 5px 3px 20px !important;
+	color : #95AD19;
+	border : none;
+	height : 31px;
+	width :68px;
+}
+div.sz_block_menu ul li a:hover {
+	border : none;
+	margin : 0;
+	padding : 3px 5px 3px 20px !important;
+}
+ul.sz_block_menu_list li a.sz_block_delete {
+	background : url(../images/ie6/delete.gif) 0px 2px no-repeat;
+}
+ul.sz_block_menu_list li a.sz_block_edit {
+	background : url(../images/ie6/edit.gif) 0px 2px no-repeat;
+}
+ul.sz_block_menu_list li a.sz_block_config {
+	background : url(../images/ie6/config.gif) 0px 2px no-repeat;
+}
+ul.sz_block_menu_list li {
+}
+div.sz_block_menu ul li ul {
+	position : absolute;
+	right : 0px;
+	top : 18px;
+	background : #000;
+	border : solid 1px #fff;
+	display : none;
+	margin : 0;
+	padding : 0 !important;
+	width : auto;
+	z-index : 100;
+	zoom : 1;
+}
+div.sz_block_menu ul li ul li {
+	width : 100px;
+	float : none;
+	display : block;
+	margin : 0;
+	height : 25px;
+}
+div.sz_block_menu ul li ul li a{
+	display : block;
+	padding : 5px;
+	padding-left : 10px;
+	background : none;
+	width : 84px;
+	height : 12px;
+	line-height : 1;
+	font-size : 12px;
+}
+div.sz_block_menu ul li ul li a:hover{
+	border: none;
+	padding : 5px;
+	padding-left : 10px;
+	margin : 0;
+	text-decoration : underline;
+}
+div.sz-popup-content div.sz-pp-tc {
+	position : relative;
+	left : 0px;
+}
+div.sz-popup-content div.sz-pp-bc {
+	position : absolute;
+	left : 0px;
+	bottom : -17px;
+}
+div.cmsi_add_block {
+	background : url(../images/etc/spacer.gif) top left repeat;
+}
+
+div.sz_block_overlay {
+	zoom : 1;
+}
+ul#ajax_sitemap_tree  {
+	position : relative;
+}
+div#sitemap_sub {
+	position : relative;
+}
+
+/** ============================= dashboard fix styles ============================= **/
+
+/** ==== dashboard block_list hack =======**/
+div.b_list ul li {
+	height : 1%;
+}
+/** ==== dashboard template list hack ====== **/
+div.templates {
+	width : 668px;
+	height : 100px;
+}
+
+
