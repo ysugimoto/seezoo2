@@ -278,7 +278,7 @@ $config['cookie_path']   = '/';
  * --------------------------------------------------
  */
 
-$config['session_store_type']      = 'file';
+$config['session_store_type']      = 'php';
 $config['session_auth_key']        = 'seezoo_session_key';  // session authorize key
 $config['session_lifetime']        = 500;                   // session expiration time ( sec digit )
 $config['session_name']            = 'sz_session';          // session name

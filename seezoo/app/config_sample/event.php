@@ -56,5 +56,9 @@
  * ====================================================================
  */
 
-
+$event['startup'] = array(
+	'class'    => 'StartupEvent',
+	'function' => 'checkInstall',
+	'once'     => TRUE
+);
 
