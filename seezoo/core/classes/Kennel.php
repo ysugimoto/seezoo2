@@ -20,11 +20,6 @@
 
 class SZ_Kennel
 {
-	/**
-	 *Database instance
-	 * @var SZ_Database
-	 */
-	protected $db;
 	protected $table;
 	
 	protected $modelSuffixRegex;
@@ -32,12 +27,15 @@ class SZ_Kennel
 	public function __construct()
 	{
 		$this->modelSuffixRegex = '#' . preg_quote(get_config('model_suffix')) . '$#';
-		//$this->_loadDatabase();
 	}
 	
 	public function __get($name)
 	{
-		if ( preg_match($this->modelSuffixRegex, $name) )
+		if ( $name === 'db' )
+		{
+			return Seezoo::$Importer->database();
+		}
+		else if ( preg_match($this->modelSuffixRegex, $name) )
 		{
 			return Seezoo::$Importer->model($name);
 		}
@@ -57,7 +55,6 @@ class SZ_Kennel
 	 */
 	public function findOne($column, $conditions = array())
 	{
-		$this->_loadDatabase();
 		if ( empty($this->table)
 		     || ! $this->db->isAllowedTableName($this->table) )
 		{
@@ -92,7 +89,6 @@ class SZ_Kennel
 	                     $conditions = array(),
 	                     $fetchMode  = PDO::FETCH_OBJ)
 	{
-		$this->_loadDatabase();
 		if ( empty($this->table)
 		     || ! $this->db->isAllowedTableName($this->table) )
 		{
@@ -130,7 +126,6 @@ class SZ_Kennel
 	                       $conditions = array(),
 	                       $fetchMode  = PDO::FETCH_OBJ)
 	{
-		$this->_loadDatabase();
 		if ( empty($this->table)
 		     || ! $this->db->isAllowedTableName($this->table) )
 		{
@@ -165,7 +160,6 @@ class SZ_Kennel
 	                        $conditions = array(),
 	                        $fetchMode  = PDO::FETCH_OBJ)
 	{
-		$this->_loadDatabase();
 		if ( empty($this->table)
 		     || ! $this->db->isAllowedTableName($this->table) )
 		{

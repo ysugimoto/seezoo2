@@ -12,14 +12,9 @@
  */
 class DashboardModel extends SZ_Kennel
 {
-	protected $useDatabase = TRUE;
-	
 	public function __construct($state = array())
 	{
-		if ( ! isset($state['disable_database']) )
-		{
-			parent::__construct();
-		}
+		parent::__construct();
 	}
 	
 	public function registAdminUser($dat)

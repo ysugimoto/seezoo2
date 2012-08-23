@@ -61,8 +61,8 @@ class InstallController extends SZ_Breeder
 		$data->isXml      = function_exists('simplexml_load_string');
 		$data->isGd       = extension_loaded('gd');
 		$data->isMbstring = extension_loaded('mbstring');
-		$data->isJson     = ( function_exists('json_encode') ) ? 1
-		                      : ( class_exists('SZ_Compatible_JSON') ) ? 2
+		$data->isJson     = ( extension_loaded('json_encode') ) ? 1     // bundled function
+		                      : ( function_exists('json_encode') ) ? 2  // seezoo supported function
 		                      : 3;
 		$this->view->assign($data);
 		$this->view->render('install/index');

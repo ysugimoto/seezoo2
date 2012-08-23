@@ -16,7 +16,7 @@ class InstallModel extends SZ_Kennel
 	
 	public function __construct()
 	{
-		// do not something but need.
+		parent::__construct();
 	}
 	
 	/**
@@ -203,7 +203,7 @@ class InstallModel extends SZ_Kennel
 				continue;
 			}
 			$sql = str_replace('{DBPREFIX}', $dat['db_prefix'], $sql);
-			$query = mysql_query($sql);
+			$query = mysql_query($sql, $this->db);
 			if ( ! $query )
 			{
 				return 'Install SQL query failed: ' . $sql;
@@ -215,7 +215,7 @@ class InstallModel extends SZ_Kennel
 					"UPDATE site_info set site_title = '%s';",
 					mysql_real_escape_string($dat['site_name'])
 				);
-		$query = mysql_query($sql);
+		$query = mysql_query($sq, $this->db);
 		if ( ! $query )
 		{
 			return 'Faild to Set site_title.';
@@ -248,8 +248,11 @@ class InstallModel extends SZ_Kennel
 	 */
 	public function registInstalledAdminUser($dat)
 	{
-		$dashboard = Seezoo::$Importer->model('DashboardModel', array('disable_database' => TRUE));
-		$encrypted = $dashboard->encryptPassword($dat['admin_password']);
+		if ( ! $this->db )
+		{
+			return 'Database not connected.';
+		}
+		$encrypted = $this->dashboardModel->encryptPassword($dat['admin_password']);
 		$admin     = array(
 			'user_name'     => $dat['admin_username'],
 			'password'      => $encrypted['password'],
@@ -274,7 +277,7 @@ class InstallModel extends SZ_Kennel
 			$admin['is_admin_user']
 		);
 		
-		$query = mysql_query($sql);
+		$query = mysql_query($sql, $this->db);
 	}
 	
 	
@@ -304,6 +307,8 @@ class InstallModel extends SZ_Kennel
 			fwrite($fp, $writeContent);
 			flock($fp, LOCK_UN);
 			fclose($fp);
+			
+			$writeContent = NULL;
 		}
 	}
 	
