@@ -248,6 +248,7 @@ class Event
 				else
 				{
 					$obj = new $class();
+					self::$_instances[$class] = $obj;
 				}
 			}
 			else
