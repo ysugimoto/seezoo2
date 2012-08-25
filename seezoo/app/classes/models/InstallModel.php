@@ -132,7 +132,7 @@ class InstallModel extends SZ_Kennel
 		$request    = Seezoo::getRequest();
 		$requestURI = ( $request->server('script_name') )
 		                ? $request->server('script_name')
-		                :$request->server('php_self');
+		                : $request->server('php_self');
 		$split = explode('/', $requestURI);
 		
 		if ( ! is_array($split) || count($split) === 0 )
@@ -211,11 +211,11 @@ class InstallModel extends SZ_Kennel
 		}
 		
 		// Set site title
-		$sql   = sprintf(
+		$sql = sprintf(
 					"UPDATE site_info set site_title = '%s';",
 					mysql_real_escape_string($dat['site_name'])
 				);
-		$query = mysql_query($sq, $this->db);
+		$query = mysql_query($sql, $this->db);
 		if ( ! $query )
 		{
 			return 'Faild to Set site_title.';

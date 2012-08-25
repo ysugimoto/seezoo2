@@ -12,10 +12,6 @@
  */
 class InstallController extends SZ_Breeder
 {
-	protected $tokenName          = 'sz_install_token';
-	protected $requiredPHPVersion = '5.1.6';
-	protected $dbError;
-	
 	public function __construct()
 	{
 		parent::__construct();
@@ -27,6 +23,9 @@ class InstallController extends SZ_Breeder
 		{
 			exit('インストールは完了しています。');
 		}
+		
+		$siteUri = $this->installModel->getInstallURI();
+		$this->view->assign(array('siteUri' => $siteUri));
 	}
 	
 	// --------------------------------------------------
@@ -37,34 +36,8 @@ class InstallController extends SZ_Breeder
 	 */
 	public function index()
 	{
-		$ticket = $this->session->generateToken($this->tokenName);
-		$data = new stdClass;
-		$data->filePermissions = $this->installModel->checkFilePermissions();
-		$data->hidden          = array($this->tokenName => $ticket);
-		$data->siteUri         = $this->installModel->getInstallURI();
-		$data->directory       = $this->installModel->getInstallDirectory();
-		$data->dbError         = $this->dbError;
-		
-		// Validation setting
-		if ( $this->request->requestMethod === 'GET' )
-		{
-			$this->_validation();
-			$this->validation->getField('db_address')->setValue('localhost');
-			$this->validation->getField('site_uri')->setValue($data->siteUri);
-		}
-		
-		// サーバ要件チェック
-		$data->isModRewriteEnable = $this->installModel->checkModRewrite();
-		$data->phpVersion         = version_compare(PHP_VERSION, $this->requiredPHPVersion, '>');
-		
-		// PHPモジュールチェック
-		$data->isXml      = function_exists('simplexml_load_string');
-		$data->isGd       = extension_loaded('gd');
-		$data->isMbstring = extension_loaded('mbstring');
-		$data->isJson     = ( extension_loaded('json_encode') ) ? 1     // bundled function
-		                      : ( function_exists('json_encode') ) ? 2  // seezoo supported function
-		                      : 3;
-		$this->view->assign($data);
+		$initSet = ( $this->request->requestMethod === 'GET' ) ? TRUE : FALSE;
+		$this->lead->call(array($initSet));
 		$this->view->render('install/index');
 	}
 	
@@ -77,55 +50,12 @@ class InstallController extends SZ_Breeder
 	 */
 	public function do_install_post()
 	{
-		if ( ! $this->session->checkToken(
-		                             $this->tokenName,
-		                             $this->request->post($this->tokenName))
-		)
+		if ( $this->lead->call() !== TRUE )
 		{
-			exit('チケットが不正です。');
-		}
-		
-		$this->_validation();
-		// Check validation
-		if ( ! $this->validation->run() )
-		{
-			$this->index();
+			$this->view->render('install/index');
 			return;
 		}
-		
-		$posts = $this->validation->getValues();
-		// Can we connect to database from input data?
-		if ( ! $this->installModel->isDatabaseEnable($posts) )
-		{
-			$this->dbError = TRUE;
-			$this->index();
-			return;
-		}
-		
-		// Create database from static SQL
-		if ( TRUE !== ( $ret = $this->installModel->createSystemTable($posts)) )
-		{
-			var_dump($ret);
-			exit;
-		}
-		
-		$this->installModel->registInstalledAdminUser($posts);
-		
-		// close database force
-		$this->installModel->closeInstallingDatabase();
-		
-		// Patch file
-		$this->installModel->patchFiles($posts);
-		$this->view->assign(array('siteUri' => $this->installModel->getInstallURI()));
 		$this->view->render('install/complete');
 	}
 	
-	protected function _validation()
-	{
-		$this->import->library('Validation');
-		$this->validation->delimiter('<p class="errors">', '</p>');
-		$this->validation->importRulesXML(APPPATH . 'data/validation/install.xml');
-	}
-	
-
 }

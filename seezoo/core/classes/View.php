@@ -217,7 +217,7 @@ class SZ_View extends SZ_Driver
 		if ( isset($SZ->lead) )
 		{
 			$assigns['Lead'] = $SZ->lead;
-			$assigns = array_merge($assigns, $SZ->lead->getAssignData());
+			$assigns = array_merge($assigns, $SZ->lead->getAssignData(TRUE));
 		}
 		$assigns = array_merge($assigns, $this->_assignedVars);
 		$vars    = array_merge($assigns, $this->_objectToArray($vars));

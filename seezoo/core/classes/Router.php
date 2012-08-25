@@ -298,7 +298,7 @@ class SZ_Router
 				// request method suffix
 				$methodSuffix = ( $this->requestMethod === 'POST' ) ? '_post' : '';
 				
-				$callMethod = '';
+				$callMethod     = '';
 				// First, call method-suffix ( *_post method ) if exists
 				if ( method_exists($Controller, $this->_method . $methodSuffix) )
 				{

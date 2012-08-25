@@ -101,7 +101,7 @@ class SZ_Lead
 		if ( method_exists($this, $this->_callInfo) )
 		{
 			$data = call_user_func_array(array($this, $this->_callInfo), $params);
-			if ( $autoAssign === TRUE )
+			if ( ! is_bool($data) && $autoAssign === TRUE )
 			{
 				$this->_assignData = $data;
 			}
@@ -178,10 +178,26 @@ class SZ_Lead
 	 * Get auto assign data
 	 * 
 	 * @access public
+	 * @param  bool $forceArray
 	 * @return array
 	 */
-	public function getAssignData()
+	public function getAssignData($forceArray = FALSE)
 	{
-		return $this->_assignData;
+		if ( $forceArray === TRUE )
+		{
+			if ( is_object($this->_assignData) )
+			{
+				$data = get_object_vars($this->_assignData);
+			}
+			else
+			{
+				$data = (array)$this->_assignData;
+			}
+		}
+		else
+		{
+			$data = $this->_assignData;
+		}
+		return $data;
 	}
 }
