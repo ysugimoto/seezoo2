@@ -1,13 +1,45 @@
 <?php if ( ! defined('SZ_EXEC') ) exit('access_denied');
 
+/**
+ * ===============================================================================
+ *
+ * CMS起動プロセスハンドリングイベントクラス
+ *
+ * @package Seezoo Core
+ * @author Yoshiaki Sugimoto <neo.yoshiaki.sugimoto@gmail.com>
+ *
+ * ===============================================================================
+ */
 class ProcessEvent
 {
+	/**
+	 * Request object
+	 * @var SZ_Request
+	 */
+	protected $request;
+	
+	/**
+	 * Environment object
+	 * @var SZ_Environment
+	 */
+	protected $env;
+	
+	
+	public function __construct()
+	{
+		$this->request = Seezoo::getRequest();
+		$this->env     = Seezoo::getENV();
+	}
+	/**
+	 * CMS is already installed?
+	 * 
+	 * @access public
+	 */
 	public function checkInstall()
 	{
-		$model = Seezoo::$Importer->model('InstallModel');
-		$req = Seezoo::getRequest();
+		$model = Seezoo::$Importer->model('InitModel');
 		if ( ! $model->isAlreadyInstalled()
-		     && ! preg_match('|^/install.*|', $req->getAccessPathInfo()) )
+		     && ! preg_match('|^/install.*|', $this->request->getAccessPathInfo()) )
 		{
 			Seezoo::init(SZ_MODE_MVC, '/install');
 			exit;
@@ -17,34 +49,29 @@ class ProcessEvent
 		require_once(APPPATH . 'config/seezoo.config.php');
 	}
 	
-	public function startUp()
-	{
-		$request = Seezoo::getRequest();
-		if ( $request->segment(1, 0) !== 'flint' )
-		{
-			$this->_startUpCMS();
-		}
-		else
-		{
-			$this->_startUpFlint();
-		}
-	}
 	
-	protected function _startUpFlint()
+	/**
+	 * CMS start-up
+	 * 
+	 * @access public
+	 */
+	public function startUp()
 	{
 		Autoloader::register(APPPATH . 'cms/');
 		ini_set('date.timezone', SEEZOO_TIMEZONE);
-	}
-	
-	protected function _startUpCMS()
-	{
-		Autoloader::register(APPPATH . 'cms/');
+		
+		// Does system request of flint execute?
+		if ( $this->request->segment(1, 0) === 'flint' )
+		{
+			return;
+		}
+		
 		// TODO: implement
 		// $this->_checkDeniedIP();
 		$this->_setOptions();
 		$this->_detectIE();
 		
-		// Site is maintenance?
+		// Is site maintenance?
 		$site = SeezooOptions::get('site_info');
 		if ( $site->is_maintenance > 0 )
 		{
@@ -61,24 +88,29 @@ class ProcessEvent
 			$_COOKIE = $this->_convert_globals($_COOKIE, 'UTF-8', SEEZOO_MOBILE_STRING_ENCODING);
 		}
 		
-		$env  = Seezoo::getENV();
-		$env->setConfig('is_mobile',     $mobile->is_mobile());
-		$env->setConfig('is_smartphone', $mobile->is_smartphone());
-		$env->setConfig('enable_mod_rewrite', $this->_isModRewrite());
+		$this->env->setConfig('is_mobile',          $mobile->is_mobile());
+		$this->env->setConfig('is_smartphone',      $mobile->is_smartphone());
+		$this->env->setConfig('enable_mod_rewrite', $this->_isModRewrite());
 	}
-
+	
+	
+	/**
+	 * Judge mod_rewrite is enable
+	 * 
+	 * @access protected
+	 * @return bool
+	 */
 	protected function _setModRewrite()
 	{
-		$req  = Seezoo::getRequest();
 		$path = '';
 		$modRewrite = FALSE;
 		
-		if ( $req->server('request_uri') )
+		if ( $this->request->server('request_uri') )
 		{
-			$path = $req->server('request_uri');
+			$path = $this->request->server('request_uri');
 		}
 		
-		if (strpos($req, 'index.php') === FALSE
+		if (strpos($path, 'index.php') === FALSE
 			&& file_exists(FCPATH . '.htaccess') )
 		{
 			// if accessed uri has not index.php, works mod_rewrite!
@@ -87,24 +119,30 @@ class ProcessEvent
 		return $modRewrite;
 	}
 	
+	
+	/**
+	 * Detect Internet Explorer
+	 * 
+	 * @access protected
+	 */
 	protected function _detectIE()
 	{
-		$request = Seezoo::getRequest();
 		$ie  = FALSE;
 		$ie6 = FALSE;
 		$ie7 = FALSE;
 		$png = '.png';
-		$ua  = $request->server('http_user_agent');
+		$ua  = $this->request->server('http_user_agent');
 		
 		if ( $ua )
 		{
-			if ( preg_match('/msie 6.0/i', $ua) )
+			$ua = strtolower($ua);
+			if ( preg_match('/msie 6.0/', $ua) )
 			{
 				$ie  = 'ie6'; // Internet Explorer 6
 				$png = '.gif';
 				$ie6 = TRUE;
 			}
-			else if ( preg_match('/msie 7.0/i', $ua) )
+			else if ( preg_match('/msie 7.0/', $ua) )
 			{
 				$ie  = 'ie7'; // Internet Explorer 7
 				$ie7 = TRUE;
@@ -116,6 +154,16 @@ class ProcessEvent
 		define('IE7', $ie7);
 	}
 	
+	
+	/**
+	 * Convert global variables for mobile input
+	 * 
+	 * @access protected
+	 * @param array  $globals
+	 * @param string $to
+	 * @param string $from
+	 * @return array
+	 */
 	protected function _convert_globals($globals, $to, $from)
 	{
 		foreach ( $globals as $key => $value )
@@ -136,16 +184,25 @@ class ProcessEvent
 		return $globals;
 	}
 	
-	private function _setOptions()
+	
+	/**
+	 * Set CMS options
+	 * 
+	 * @access protected
+	 */
+	protected function _setOptions()
 	{
 		SeezooOptions::init('common');
-		if ( get_config('seezoo_installed') === TRUE )
+		if ( $this->env->getConfig('seezoo_installed') === TRUE )
 		{
+			// set site info
 			$site = ActiveRecord::finder('site_info')->find();
 			SeezooOptions::set('site_info', $site);
 			define('SZ_LOGGING_LEVEL', (int)$site->log_level);
 			define('SZ_DEBUG_LEVEL', (int)$site->debug_level);
 			define('SITE_TITLE', $site->site_title);
+			
+			// set OGP data
 			$ogp = ActiveRecord::finder('sz_ogp_data')->find();
 			SeezooOptions::set('ogp_data', $ogp);
 		}

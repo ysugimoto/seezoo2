@@ -15,11 +15,11 @@ class InstallController extends SZ_Breeder
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import->model('InstallModel');
+		$this->import->model(array('InitModel', 'InstallModel'));
 		$this->import->library('Session');
 		$this->import->helper(array('install', 'form'));
 		
-		if ( $this->installModel->isAlreadyInstalled() )
+		if ( $this->initModel->isAlreadyInstalled() )
 		{
 			exit('インストールは完了しています。');
 		}

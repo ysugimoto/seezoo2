@@ -17,4 +17,16 @@ class InitModel extends SZ_Kennel
 		$session = Seezoo::$Importer->library('Session');
 		return ( $session->get('user_id') ) ? TRUE : FALSE;
 	}
+	
+	/**
+	 * Check system is already installed
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isAlreadyInstalled()
+	{
+		$env = Seezoo::getENV();
+		return ( $env->getConfig('seezoo_installed') ) ? TRUE : FALSE;
+	}
 }

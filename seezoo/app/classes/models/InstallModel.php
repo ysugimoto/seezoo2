@@ -19,18 +19,6 @@ class InstallModel extends SZ_Kennel
 		parent::__construct();
 	}
 	
-	/**
-	 * Check system is already installed
-	 * 
-	 * @access public
-	 * @return bool
-	 */
-	public function isAlreadyInstalled()
-	{
-		$env = Seezoo::getENV();
-		return ( $env->getConfig('seezoo_installed') ) ? TRUE : FALSE;
-	}
-	
 	
 	/**
 	 * Check system required file/directory permission
