@@ -458,7 +458,7 @@ class SZ_Router
 					if ( count($segments) === 0 )
 					{
 						$this->_package   = $apppath;
-						$this->_direcotry = '';
+						$this->_directory = '';
 						$this->_class     = $this->defaultController;
 						$this->_method    = 'index';
 						$this->_arguments = array();
