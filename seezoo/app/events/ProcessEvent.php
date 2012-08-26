@@ -113,7 +113,7 @@ class ProcessEvent
 		}
 		
 		if (strpos($path, 'index.php') === FALSE
-			&& file_exists(FCPATH . '.htaccess') )
+			&& file_exists(ROOTPATH . '.htaccess') )
 		{
 			// if accessed uri has not index.php, works mod_rewrite!
 			$modRewrite = TRUE;

@@ -152,6 +152,7 @@ class SZ_Lead
 		{
 			return $this->_modules[$name];
 		}
+		throw new InvalidArgumentException('Undefined Property: ' . $name . 'in Class: ' . get_class($this));
 	}
 	
 	
