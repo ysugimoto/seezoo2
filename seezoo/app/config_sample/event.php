@@ -56,9 +56,23 @@
  * ====================================================================
  */
 
-$event['startup'] = array(
-	'class'    => 'StartupEvent',
-	'function' => 'checkInstall',
-	'once'     => TRUE
-);
+if ( ! defined('SZ_COMMANDLINE_WORKER') && ! defined('PHPUnit_MAIN_METHOD'))
+{
+	$event['startup'] = array(
+		'class'    => 'ProcessEvent',
+		'function' => 'checkInstall',
+		'once'     => TRUE
+	);
+	$event['process_start'][] = array(
+		'class'    => 'ProcessEvent',
+		'function' => 'startUp',
+		'once'     => TRUE
+	);
+	$event['process_start'][] = array(
+		'class'    => 'RequestHandleEvent',
+		'function' => 'handle',
+		'once'     => TRUE
+	);
+
+}
 

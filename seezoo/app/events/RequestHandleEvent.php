@@ -90,7 +90,7 @@ class RequestHandleEvent
 		{
 			$mode = 'sp';
 		}
-		else if ( $mob > 0 && ($mobile->is_mobile() && $viewMode === 'mb') )
+		else if ( $mb > 0 && ($mobile->is_mobile() && $viewMode === 'mb') )
 		{
 			$mode = 'mb';
 		}

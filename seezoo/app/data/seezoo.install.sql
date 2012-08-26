@@ -2,7 +2,7 @@
 -- テーブルの構造 `areas`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}areas` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}areas` (
   `area_id` int(11) NOT NULL AUTO_INCREMENT,
   `area_name` varchar(255) NOT NULL DEFAULT '',
   `page_id` int(11) NOT NULL DEFAULT '0',
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}areas` (
 -- テーブルの構造 `sz_bt_auto_navigation`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}sz_bt_auto_navigation` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_auto_navigation` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `sort_order` int(2) DEFAULT '1',
   `based_page_id` int(11) DEFAULT '1',
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}sz_bt_auto_navigation` (
 -- テーブルの構造 `blocks`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}blocks` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}blocks` (
   `block_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ブロックID',
   `collection_name` varchar(255) NOT NULL DEFAULT '0' COMMENT '使用している機能名',
   `is_active` int(1) NOT NULL DEFAULT '1' COMMENT '使用中かどうか',
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}blocks` (
 -- テーブルの構造 `block_permissions`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}block_permissions` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}block_permissions` (
   `block_permissions_id` int(11) NOT NULL auto_increment COMMENT 'ブロックパーミッションID',
   `block_id` int(11) NOT NULL default '0',
   `allow_view_id` varchar(255) default NULL,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}block_permissions` (
 -- テーブルの構造 `block_versions`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}block_versions` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}block_versions` (
   `block_version_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ブロックバージョンID',
   `block_id` int(11) NOT NULL DEFAULT '0' COMMENT 'ブロック連番ID',
   `collection_name` varchar(255) NOT NULL DEFAULT '0' COMMENT '使用している機能名',
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}block_versions` (
 -- テーブルの構造 `blog_info`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}blog_info` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}blog_info` (
   `template_id` int(11) NOT NULL DEFAULT '0' COMMENT 'ブログで使用するテンプレートID',
   `entry_limit` int(11) NOT NULL DEFAULT '5' COMMENT '最新の記事一覧表示件数',
   `comment_limit` int(11) NOT NULL DEFAULT '10' COMMENT 'コメント表示件数',
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}blog_info` (
 --  `blog_info`
 --
 
-INSERT INTO `{DBPREFIX}{DBPREFIX}blog_info` (`template_id`, `entry_limit`, `comment_limit`, `is_enable`, `page_title`, `is_need_captcha`, `is_auto_ping`) VALUES
+INSERT INTO `{DBPREFIX}blog_info` (`template_id`, `entry_limit`, `comment_limit`, `is_enable`, `page_title`, `is_need_captcha`, `is_auto_ping`) VALUES
 (1, 5, 10, 0, 'blog', 1, 0);
 
 
@@ -101,7 +101,7 @@ INSERT INTO `{DBPREFIX}{DBPREFIX}blog_info` (`template_id`, `entry_limit`, `comm
 -- テーブルの構造 `collections`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}collections` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}collections` (
   `collection_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '機能ID',
   `collection_name` varchar(255) NOT NULL DEFAULT '0' COMMENT '機能名',
   `interface_width` int(6) NOT NULL DEFAULT '500' COMMENT 'ウインドウの幅',
@@ -122,7 +122,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}collections` (
 --  `collections`
 --
 
-INSERT INTO `{DBPREFIX}{DBPREFIX}collections` (`collection_id`, `collection_name`, `interface_width`, `interface_height`, `description`, `added_date`, `block_name`, `db_table`, `pc_enabled`, `sp_enabled`, `mb_enabled`) VALUES
+INSERT INTO `{DBPREFIX}collections` (`collection_id`, `collection_name`, `interface_width`, `interface_height`, `description`, `added_date`, `block_name`, `db_table`, `pc_enabled`, `sp_enabled`, `mb_enabled`) VALUES
 (1, 'textcontent', 760, 500, 'リッチエディタでコンテンツを作成します。', NOW(), '記事ブロック', 'sz_bt_textcontent', 1, 1, 1),
 (2, 'image', 500, 500, '画像を設置します。', NOW(), '画像ブロック', 'sz_bt_image_block', 1, 1, 1),
 (3, 'file_download', 500, 500, 'ファイルをダウンロードさせるブロックを設置します。', NOW(), 'ファイルダウンロードブロック', 'sz_bt_file_download', 1, 1, 1),
@@ -145,7 +145,7 @@ INSERT INTO `{DBPREFIX}{DBPREFIX}collections` (`collection_id`, `collection_name
 -- テーブルの構造 `directories`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}directories` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}directories` (
   `directories_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ディレクトリ連番ID',
   `path_name` varchar(255) NOT NULL DEFAULT '/' COMMENT 'ディレクトリパス名',
   `parent_id` int(11) NOT NULL DEFAULT '0' COMMENT '親階層ディレクトリID',
@@ -159,14 +159,14 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}directories` (
 --  `directories`
 --
 
-INSERT INTO `{DBPREFIX}{DBPREFIX}directories` (`directories_id`, `path_name`, `parent_id`, `dir_name`, `created_date`, `access_permission`) VALUES
+INSERT INTO `{DBPREFIX}directories` (`directories_id`, `path_name`, `parent_id`, `dir_name`, `created_date`, `access_permission`) VALUES
 (1, '/', 0, 'no_name', '0000-00-00 00:00:00', ':1:');
 
 --
 -- テーブルの構造 `draft_blocks`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}draft_blocks` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}draft_blocks` (
   `draft_blocks_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '下書き',
   `block_id` int(11) NOT NULL DEFAULT '0' COMMENT 'ブロックID',
   `collection_name` varchar(255) NOT NULL DEFAULT '0' COMMENT '使用するブロック名',
@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}draft_blocks` (
 -- テーブルの構造 `files`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}files` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}files` (
   `file_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ファイル管理連番ID',
   `file_name` varchar(255) NOT NULL DEFAULT '0' COMMENT 'ファイル名',
   `crypt_name` varchar(255) NOT NULL DEFAULT '0' COMMENT '実体ファイル名（暗号化済み）',
@@ -199,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}files` (
 -- テーブルの構造 `file_groups`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}file_groups` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}file_groups` (
   `file_groups_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '連番ID',
   `group_name` varchar(255) NOT NULL DEFAULT '0' COMMENT 'グループ名',
   `created_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '追加日時',
@@ -210,7 +210,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}file_groups` (
 -- テーブルの構造 `sz_bt_forms`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}{DBPREFIX}sz_bt_forms` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_forms` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `question_key` varchar(255) DEFAULT '0',
   `form_title` varchar(255) DEFAULT NULL,
@@ -1311,7 +1311,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_plugins` (
 
 -- page_versions
 -- 先に公開バージョンフラグを下げておく
-UPDATE `page_versions` SET `is_public` = 0 WHERE `page_id` = 1;
+UPDATE `{DBPREFIX}page_versions` SET `is_public` = 0 WHERE `page_id` = 1;
 -- 続いて、初期ブロックをセットしたものを公開状態でINSERT
 INSERT INTO `{DBPREFIX}page_versions` (`version_number`, `page_id`, `page_title`, `template_id`, `meta_title`, `meta_keyword`, `meta_description`, `navigation_show`, `parent`, `display_order`, `display_page_level`, `version_date`, `created_user_id`, `is_public`, `public_datetime`, `approved_user_id`, `version_comment`, `is_system_page`, `is_mobile_only`, `alias_to`, `page_description`) VALUES (2, 1, 'Seezooトップ', 1, '', '', '', 1, 0, 1, 0, NOW(), 1, 1, NOW(), 1, 'バージョン2', 0, 0, 0, NULL);
 

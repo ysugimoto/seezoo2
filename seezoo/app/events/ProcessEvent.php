@@ -73,7 +73,7 @@ class ProcessEvent
 		
 		// Is site maintenance?
 		$site = SeezooOptions::get('site_info');
-		if ( $site->is_maintenance > 0 )
+		if ( $site && $site->is_maintenance > 0 )
 		{
 			exit('maintenance');
 		}
@@ -100,7 +100,7 @@ class ProcessEvent
 	 * @access protected
 	 * @return bool
 	 */
-	protected function _setModRewrite()
+	protected function _isModRewrite()
 	{
 		$path = '';
 		$modRewrite = FALSE;

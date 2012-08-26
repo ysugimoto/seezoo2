@@ -200,7 +200,7 @@ class InstallModel extends SZ_Kennel
 		
 		// Set site title
 		$sql = sprintf(
-					"UPDATE site_info set site_title = '%s';",
+					"UPDATE {$dat['db_prefix']}site_info set site_title = '%s';",
 					mysql_real_escape_string($dat['site_name'])
 				);
 		$query = mysql_query($sql, $this->db);
@@ -253,7 +253,7 @@ class InstallModel extends SZ_Kennel
 		$admin = array_map('mysql_real_escape_string', $admin);
 		
 		$sql = sprintf(
-			"INSERT INTO sz_users "
+			"INSERT INTO {$dat['db_prefix']}sz_users "
 			. "(user_name, password, hash, email, admin_flag, regist_time, is_admin_user) "
 			. "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
 			$admin['user_name'],

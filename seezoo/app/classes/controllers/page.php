@@ -56,14 +56,12 @@ class PageController extends SZ_Breeder
 		if ( $method === 'index' )
 		{
 			$this->pageID = 1;
-			$this->lead->setExecuteMethod('view');
 			$this->_view();
 			return;
 		}
 		else if ( method_exists($this, $method) )
 		{
 			$this->pageID = $this->request->segment(3, 1);
-			$this->lead->setEcevuteMethod($method);
 			$this->{$method}();
 			return;
 		}

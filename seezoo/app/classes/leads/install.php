@@ -8,7 +8,9 @@ class InstallLead extends SZ_Lead
 	
 	public function index($isGet = FALSE)
 	{
-		$ticket = $this->session->generateToken($this->tokenName);
+		$Cookie = Seezoo::$Importer->helper('Cookie');
+		$ticket = sha1(uniqid(mt_rand(), TRUE));
+		$Cookie->set($this->tokenName, $ticket);
 		$data = new stdClass;
 		$data->filePermissions = $this->installModel->checkFilePermissions();
 		$data->hidden          = array($this->tokenName => $ticket);
@@ -41,8 +43,9 @@ class InstallLead extends SZ_Lead
 	public function do_install_post()
 	{
 		$request = Seezoo::getRequest();
-		if ( ! $this->session->checkToken($this->tokenName, $request->post($this->tokenName))
-		)
+		$Cookie  = Seezoo::$Importer->helper('Cookie');
+		$ticket  = $request->post($this->tokenName);
+		if ( ! $ticket || $ticket !== $Cookie->get($this->tokenName) )
 		{
 			exit('チケットが不正です。');
 		}
@@ -77,6 +80,7 @@ class InstallLead extends SZ_Lead
 		// Patch file
 		$this->installModel->patchFiles($posts);
 		//$this->view->assign(array('siteUri' => $this->installModel->getInstallURI()));
+		$Cookie->delete($this->tokenName);
 		return TRUE;
 	}
 	
