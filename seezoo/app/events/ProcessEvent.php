@@ -47,6 +47,8 @@ class ProcessEvent
 		
 		// Include system configuration
 		require_once(APPPATH . 'config/seezoo.config.php');
+		// CMS Basic utility functions
+		require_once(APPPATH . 'cms/seezoo_functions.php');
 	}
 	
 	
@@ -57,7 +59,7 @@ class ProcessEvent
 	 */
 	public function startUp()
 	{
-		Autoloader::register(APPPATH . 'cms/');
+		Autoloader::register(APPPATH . 'cms/classes/');
 		ini_set('date.timezone', SEEZOO_TIMEZONE);
 		
 		// Does system request of flint execute?

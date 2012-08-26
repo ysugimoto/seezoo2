@@ -158,7 +158,7 @@ $config['default_process'] = SZ_MODE_MVC;
  * --------------------------------------------------
  */
 
-$config['default_controller'] = 'welcome';
+$config['default_controller'] = 'page';
 
 
 /*

@@ -332,7 +332,7 @@ class InstallModel extends SZ_Kennel
 				$buffer
 			);
 			$buffer .= "\n" . '$config[\'seezoo_installed\'] = TRUE;';
-			//$buffer .= "\n" . '$config[\'seezoo_current_version\'] = \'' . SEEZOO_VERSION . '\';';
+			$buffer .= "\n" . '$config[\'seezoo_current_version\'] = \'' . SEEZOO_VERSION . '\';';
 		}
 		else if ( $fileName === 'database.php' )
 		{

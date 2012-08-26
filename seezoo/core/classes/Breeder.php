@@ -157,7 +157,6 @@ class SZ_Breeder extends Process
 	protected function _attachLead()
 	{
 		$leadName = str_replace($this->env->getConfig('controller_suffix'), '', get_class($this));
-		$this->lead = Seezoo::$Importer->lead($leadName);
+		$this->lead = $this->router->bootLead($leadName);
 	}
 }
-	

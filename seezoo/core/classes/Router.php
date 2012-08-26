@@ -247,9 +247,24 @@ class SZ_Router
 	
 	
 	/**
+	 * Boot Lead layer class
+	 * 
+	 * @access public
+	 * @return object SZ_Lead
+	 */
+	public function bootLead($leadName)
+	{
+		return Seezoo::$Importer->lead($this->_directory . $this->_class);
+	}
+	
+	
+	// ---------------------------------------------------------------
+	
+	/**
 	 * Boot MVC/CLI process
 	 * 
 	 * @access public
+	 * @return object SZ_Breeder
 	 */
 	public function bootController()
 	{

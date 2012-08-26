@@ -61,8 +61,8 @@ class SZ_Database_session extends SZ_Session_driver
 	{
 		parent::__construct();
 		
-		$this->_dbTableName = $this->env->getConfig('session_db_tablename');
 		$this->db = Seezoo::$Importer->database();
+		$this->_dbTableName = $this->env->getConfig('session_db_tablename');
 
 		if ( $this->_initSession() === FALSE )
 		{
@@ -153,7 +153,7 @@ class SZ_Database_session extends SZ_Session_driver
 				.	'user_agent, '
 				.	'last_activity, '
 				.	'user_data '
-				.'FROM ' . $this->_dbTableName . ' '
+				.'FROM ' . $this->db->prefix() . $this->_dbTableName . ' '
 				.'WHERE '
 				.	'session_id = ? '
 				.'LIMIT 1';
