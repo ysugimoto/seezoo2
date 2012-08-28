@@ -151,18 +151,22 @@ class InstallModel extends SZ_Kennel
 	public function isDatabaseEnable($dat)
 	{
 		// Sorry, mysql only...
-		$db = @mysql_connect($dat['db_address'], $dat['db_username'], $dat['db_password']);
-		if ( ! $db )
+		$dsn = sprintf('mysql:host=%s;dbname=%s;por=%s', $dat['db_address'], $dat['db_name'], $dat['db_port']);
+		// try database connection
+		try
 		{
-			return FALSE;
+			$this->db = new PDO($dsn, $dat['db_username'], $dat['db_password'] );
+			$result   = TRUE;
 		}
-		if ( ! mysql_select_db($dat['db_name']) )
+		catch ( PDOException $e )
 		{
-			@mysql_close($db);
-			return FALSE;
+			$result   = FALSE;
 		}
-		$this->db =& $db;
-		return TRUE;
+		catch ( Exception $e )
+		{
+			throw $e;
+		}
+		return $result;
 	}
 	
 	
@@ -191,7 +195,7 @@ class InstallModel extends SZ_Kennel
 				continue;
 			}
 			$sql = str_replace('{DBPREFIX}', $dat['db_prefix'], $sql);
-			$query = mysql_query($sql, $this->db);
+			$query = $this->db->query($sql);
 			if ( ! $query )
 			{
 				return 'Install SQL query failed: ' . $sql;
@@ -199,11 +203,9 @@ class InstallModel extends SZ_Kennel
 		}
 		
 		// Set site title
-		$sql = sprintf(
-					"UPDATE {$dat['db_prefix']}site_info set site_title = '%s';",
-					mysql_real_escape_string($dat['site_name'])
-				);
-		$query = mysql_query($sql, $this->db);
+		$statement = $this->db->prepare("UPDATE {$dat['db_prefix']}site_info set site_title = ?;");
+		$statement->bindValue(1, $dat['site_name'], PDO::PARAM_STR);
+		$query = $statement->execute();
 		if ( ! $query )
 		{
 			return 'Faild to Set site_title.';
@@ -220,9 +222,9 @@ class InstallModel extends SZ_Kennel
 	 */
 	public function closeInstallingDatabase()
 	{
-		if ( is_resource($this->db) )
+		if ( $this->db )
 		{
-			@mysql_close($this->db);
+			unset($this->db);
 		}
 	}
 	
@@ -241,31 +243,22 @@ class InstallModel extends SZ_Kennel
 			return 'Database not connected.';
 		}
 		$encrypted = $this->dashboardModel->encryptPassword($dat['admin_password']);
-		$admin     = array(
-			'user_name'     => $dat['admin_username'],
-			'password'      => $encrypted['password'],
-			'hash'          => $encrypted['hash'],
-			'email'         => $dat['admin_email'],
-			'admin_flag'    => 1,
-			'regist_time'   => date('Y-m-d H:i:s'),
-			'is_admin_user' => 1
-		);
-		$admin = array_map('mysql_real_escape_string', $admin);
-		
-		$sql = sprintf(
+		$sql =
 			"INSERT INTO {$dat['db_prefix']}sz_users "
 			. "(user_name, password, hash, email, admin_flag, regist_time, is_admin_user) "
-			. "VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')",
-			$admin['user_name'],
-			$admin['password'],
-			$admin['hash'],
-			$admin['email'],
-			$admin['admin_flag'],
-			$admin['regist_time'],
-			$admin['is_admin_user']
-		);
+			. "VALUES (?, ?, ?, ?, ?, ?, ?)";
+		$index     = 0;
 		
-		$query = mysql_query($sql, $this->db);
+		$statement = $this->db->prepare($sql);
+		$statement->bindValue(++$index, $dat['admin_username'], PDO::PARAM_STR);
+		$statement->bindValue(++$index, $encrypted['password'], PDO::PARAM_STR);
+		$statement->bindValue(++$index, $encrypted['hash'],     PDO::PARAM_STR);
+		$statement->bindValue(++$index, $dat['admin_email'],    PDO::PARAM_STR);
+		$statement->bindValue(++$index, 1,                      PDO::PARAM_INT);
+		$statement->bindValue(++$index, date('Y-m-d H:i:s'),    PDO::PARAM_STR);
+		$statement->bindValue(++$index, 1,                      PDO::PARAM_INT);
+		
+		return $statement->execute();
 	}
 	
 	
@@ -339,6 +332,11 @@ class InstallModel extends SZ_Kennel
 			$buffer = preg_replace(
 				'/(\$database\[\'default\'\]\[\'host\'\]\s*=\s*[\'"])[a-z\/\.-_:]*([\'"];)/',
 				"\${1}{$dat['db_address']}\${2}",
+				$buffer
+			);
+			$buffer = preg_replace(
+				'/(\$database\[\'default\'\]\[\'port\'\]\s*=\s*[\'"])[a-z\/\.-_:]*([\'"];)/',
+				"\${1}{$dat['db_port']}\${2}",
 				$buffer
 			);
 			$buffer = preg_replace(

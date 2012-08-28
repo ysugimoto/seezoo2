@@ -18,6 +18,7 @@ class PageController extends SZ_Breeder
 	public function __construct()
 	{
 		parent::__construct();
+		$this->import->database();
 		$this->import->model(array('InitModel', 'DashboardModel', 'UserModel'));
 		$this->import->library('Session');
 		

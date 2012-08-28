@@ -226,7 +226,7 @@ class SZ_Validation extends SZ_Driver
 		{
 			if ( ! isset($field->name) || ! isset($field->label) || ! isset($field->rules) )
 			{
-				throw LogicException('Imported rules XML structure is invalid!');
+				throw new LogicException('Imported rules XML structure is invalid!');
 			}
 			$this->field((string)$field->name, (string)$field->label)
 			     ->setRules((string)$field->rules);

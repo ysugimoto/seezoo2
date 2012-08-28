@@ -55,6 +55,10 @@ class InstallController extends SZ_Breeder
 			$this->view->render('install/index');
 			return;
 		}
+		
+		// If installation succeed, set administrator session!
+		$this->session->set('user_id', 1);
+		
 		$this->view->render('install/complete');
 	}
 	

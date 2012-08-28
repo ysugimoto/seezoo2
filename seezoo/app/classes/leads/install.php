@@ -24,6 +24,7 @@ class InstallLead extends SZ_Lead
 			$Validation = $this->_validation();
 			$Validation->getField('db_address')->setValue('localhost');
 			$Validation->getField('site_uri')->setValue($data->siteUri);
+			$Validation->getField('db_port')->setValue(3306);
 		}
 		
 		// サーバ要件チェック
@@ -79,7 +80,6 @@ class InstallLead extends SZ_Lead
 		
 		// Patch file
 		$this->installModel->patchFiles($posts);
-		//$this->view->assign(array('siteUri' => $this->installModel->getInstallURI()));
 		$Cookie->delete($this->tokenName);
 		return TRUE;
 	}
