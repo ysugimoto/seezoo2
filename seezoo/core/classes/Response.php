@@ -155,43 +155,43 @@ class SZ_Response
 	 * @param bool   $isData
 	 * @throws Exception
 	 */
-	public function download($filepath, $filename = '', $isData = FALSE)
+	public function download($filePath, $fileName = '', $isData = FALSE)
 	{
-		if ( empty($filename) )
-		{
-			if ( $isData ==- TRUE )
-			{
-				throw new Exception('Download filename is not empty when direct data download.');
-				return FALSE;
-			}
-			$filename = basename($filepath);
-		}
-		
-		// get extension
-		$exp         = explode('.', $filepath);
-		$extention   = end($exp);
-		$fileSize    = ( isData === TRUE ) ? strlen($filepath) : filesize($filepath);
-		$memoryLimit = $this->env->memoryLimit;
-		
-		// set mimetype
+		// Is Download data real data string?
 		if ( $isData === TRUE )
 		{
-			$mimetype = 'application/octet-stream';
+			if ( empty($fileName) )
+			{
+				throw new Exception('Download filename is not empty when direct data download.');
+			}
+			$fileSize = strlen($filePath);
+			$mimeType = 'application/octet-stream';
 		}
+		// Else, download file
 		else
 		{
-			$Mime = Seezoo::$Importer->classes('Mimetype');
-			$mimetype = $Mime->detect($filepath);
+			if ( ! file_exists($filePath) )
+			{
+				throw new InvalidArgumentException('Download file is not exists! file: ' . $filePath);
+			}
+			
+			if ( empty($fileName) )
+			{
+				$fileName = basename($filePath);
+			}
+			$fileSize = filesize($filePath);
+			$Mime     = Seezoo::$Importer->classes('Mimetype');
+			$mimeType = $Mime->detect($filepath);
+			
 		}
 		
 		// send headers
-		$headers = array(
-			'Content-Type: "' . $mimetype . '"',
-			'Content-Disposition: attachment; filename="' . $filename . '"'
-		);
+		$headers = array('Content-Type: "' . $mimeType . '"');
+		
 		if ( $this->env->isIE )
 		{
-			$filename = mb_convert_encoding($filename, 'SHIFT_JIS', 'UTF-8');
+			$fileName = mb_convert_encoding($fileName, 'SHIFT_JIS', 'UTF-8');
+			$headers[] = 'Content-Disposition: attachment; filename="' . $fileName . '"';
 			$headers[] = 'Expires: 0';
 			$headers[] = 'Cache-Control: must-revalidate, post-check=0, pre-check=0';
 			$headers[] = 'Content-Transfar-Encoding: binary';
@@ -200,6 +200,7 @@ class SZ_Response
 		}
 		else
 		{
+			$headers[] = 'Content-Disposition: attachment; filename="' . $fileName . '"';
 			$headers[] = 'Content-Transfar-Encoding: binary';
 			$headers[] = 'Expires: 0';
 			$headers[] = 'Pragma: no-cahce';
@@ -213,17 +214,30 @@ class SZ_Response
 		
 		// If download filesize over our PHP memory_limit,
 		// we try to split download
-		if ( ! $isData && $memoryLimit < $fileSize )
+		if ( $this->env->memoryLimit < $fileSize )
 		{
 			flush();
-			$fp = fopen($filepath, 'rb');
-			do
+			if ( ! $isData )
 			{
-				echo fread($fp, 4096);
-				flush();
+				$fp = fopen($filePath, 'rb');
+				do
+				{
+					echo fread($fp, 4096);
+					flush();
+				}
+				while ( ! feof($fp) );
+				fclose($fp);
 			}
-			while ( ! feof($fp) );
-			fclose($fp);
+			else
+			{
+				$point = 0;
+				do
+				{
+					echo substr($filePath, $point, 4096);
+					flush();
+					$point += 4096;
+				} while ( $point < $fileSize );
+			}
 		}
 		else
 		{
