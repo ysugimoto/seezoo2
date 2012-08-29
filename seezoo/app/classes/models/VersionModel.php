@@ -3,25 +3,14 @@
 /**
  * ===============================================================================
  *
- * CMS過去互換用ヘルパ関数
+ * seezooバージョン管理モデル
  *
  * @package Seezoo Core
  * @author Yoshiaki Sugimoto <neo.yoshiaki.sugimoto@gmail.com>
  *
  * ===============================================================================
  */
-if ( ! function_exists('file_link') )
+class VersionModel extends SZ_Kennel
 {
-	function file_link($path = '')
-	{
-		return get_config('base_url') . $path;
-	}
-}
-
-if ( ! function_exists('db_datetime') )
-{
-	function db_datetime()
-	{
-		return date('Y-m-d H:i:s');
-	}
+	
 }

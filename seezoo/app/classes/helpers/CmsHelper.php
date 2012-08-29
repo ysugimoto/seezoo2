@@ -23,14 +23,21 @@ class CmsHelper
 	
 	public function getUserID()
 	{
-		$sess   = Seezoo::$Importer->library('Session');
-		return $sess->get('user_id');
+		$sess = Seezoo::$Importer->library('Session');
+		return (int)$sess->get('user_id');
 	}
 	
 	public function getUserData($userID)
 	{
 		return ActiveRecord::finder('sz_users')
 		         ->findByUserId($userID);
+	}
+	
+	public function getMemberID()
+	{
+		$sess = Seezoo::$Importer->library('Session');
+		return (int)$sess->get('member_id');
+		
 	}
 	
 	/**

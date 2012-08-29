@@ -181,7 +181,7 @@ class SZ_Response
 			}
 			$fileSize = filesize($filePath);
 			$Mime     = Seezoo::$Importer->classes('Mimetype');
-			$mimeType = $Mime->detect($filepath);
+			$mimeType = $Mime->detect($filePath);
 			
 		}
 		
@@ -241,7 +241,7 @@ class SZ_Response
 		}
 		else
 		{
-			echo ( $isData ) ? $filepath : file_get_contents($filepath);
+			echo ( $isData ) ? $filePath : file_get_contents($filePath);
 		}
 		exit;
 	}

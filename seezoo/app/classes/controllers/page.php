@@ -13,7 +13,7 @@
  * ===============================================================================
  */
 
-class PageController extends SZ_Breeder
+class PageController extends EX_Breeder
 {
 	public $pageID;
 	public $versionNumber;
@@ -42,11 +42,15 @@ class PageController extends SZ_Breeder
 	public $additionalFooterJavascript = array();
 	public $additionalFooterElement    = array();
 	
+	public $pageObject;
+	
 	
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import->model(array('pageModel', 'initModel', 'permissionModel', 'versionModel'));
+		$this->import->library('Session');
+		$this->import->model(array('PageModel', 'InitModel', 'VersionModel', 'UserModel'));
+		$this->import->helper('cms');
 		//$this->import->helper(array('core', 'utility'));
 		
 	}
@@ -55,13 +59,12 @@ class PageController extends SZ_Breeder
 	{
 		if ( $method === 'index' )
 		{
-			$this->pageID = 1;
-			$this->_view();
+			$page = $this->pageModel->detectPage(1);
+			$this->_view($page);
 			return;
 		}
 		else if ( method_exists($this, $method) )
 		{
-			$this->pageID = $this->request->segment(3, 1);
 			$this->{$method}();
 			return;
 		}
@@ -82,23 +85,23 @@ class PageController extends SZ_Breeder
 		include($path);
 	}
 	
-	protected function _view()
+	protected function _view($page = FALSE)
 	{
-		if ( ! $this->pageID )
+		if ( ! $page )
 		{
 			show_404();
 		}
-		$this->lead->view($this->pageID);
+		$data = $this->lead->view($page);
+		$this->view->assign($data);
 		$this->view->renderTemplate($data->templateDir);
 	}
 	
 	protected function _cmsRouting($uri, $quit = FALSE)
 	{
-		$pageID = $this->pageModel->detectPage($uri);
-		if ( $pageID )
+		$page = $this->pageModel->detectPage($uri);
+		if ( $page )
 		{
-			$this->pageID = $pageID;
-			$this->_view();
+			$this->_view($page);
 			return;
 		}
 		( $quit === FALSE )

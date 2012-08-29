@@ -1,27 +1,23 @@
 <?php if ( ! defined('SZ_EXEC') ) exit('access_denied');
-
 /**
  * ===============================================================================
  *
- * CMS過去互換用ヘルパ関数
+ * Seezoo 拡張ビュークラス
  *
  * @package Seezoo Core
  * @author Yoshiaki Sugimoto <neo.yoshiaki.sugimoto@gmail.com>
  *
  * ===============================================================================
  */
-if ( ! function_exists('file_link') )
+class EX_View extends SZ_View
 {
-	function file_link($path = '')
+	public function __construct()
 	{
-		return get_config('base_url') . $path;
+		parent::__construct();
 	}
-}
-
-if ( ! function_exists('db_datetime') )
-{
-	function db_datetime()
+	
+	public function renderTemplate($dir, $vireType = 'view')
 	{
-		return date('Y-m-d H:i:s');
+		
 	}
 }

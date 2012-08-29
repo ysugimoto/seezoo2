@@ -214,6 +214,6 @@ class ProcessEvent
 			define('SZ_DEBUG_LEVEL',   1);
 		}
 		// change error reporting level
-		error_reporting(( SZ_DEBUG_LEVEL === 0 ) ? 0 : E_ALL);
+		//error_reporting(( SZ_DEBUG_LEVEL === 0 ) ? 0 : E_ALL);
 	}
 }
