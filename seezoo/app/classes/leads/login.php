@@ -22,6 +22,7 @@ class LoginLead extends SZ_Lead
 		{
 			$Validation = $this->_validation();
 		}
+		$R = Seezoo::getRequest();
 		
 		return $data;
 	}

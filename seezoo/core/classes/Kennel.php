@@ -27,6 +27,11 @@ class SZ_Kennel
 	public function __construct()
 	{
 		$this->modelSuffixRegex = '#' . preg_quote(get_config('model_suffix')) . '$#';
+		
+		if ( property_exists($this, 'db') )
+		{
+			$this->db = Seezoo::$Importer->database();
+		}
 	}
 	
 	public function __get($name)

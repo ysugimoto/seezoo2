@@ -11,20 +11,20 @@
  * ===============================================================================
  */
 
-class PageController extends SZ_Breeder
+class PageController extends EX_Breeder
 {
 	public static $pageTitle = '管理パネルトップ';
 	
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import->database();
 		$this->import->model(array('InitModel', 'DashboardModel', 'UserModel'));
 		$this->import->library('Session');
+		$this->import->helper('cms');
 		
 		if ( ! $this->initModel->isLoggedIn() )
 		{
-			//Seezoo::$Response->redirect(SEEZOO_SYSTEM_LOGIN_URI);
+			Seezoo::$Response->redirect(SEEZOO_SYSTEM_LOGIN_URI);
 		}
 	}
 	

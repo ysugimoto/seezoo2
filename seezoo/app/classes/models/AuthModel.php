@@ -99,7 +99,7 @@ class AuthModel extends SZ_Kennel
 		//$process = Seezoo::$Importer->model('ProcessModel');
 		//$process->deleteAllEditStatus($user->user_id);
 		
-		return ( $user->admin_flag > 0 ) ? 'dashboard/panel' : '/';
+		return ( $user->admin_flag > 0 ) ? 'dashboard/' : '/';
 	}
 	
 	/**
@@ -135,6 +135,49 @@ class AuthModel extends SZ_Kennel
 	public function isEmailExists($email)
 	{
 		return ( $this->findOne('user_id', array('email' => $email)) ) ? TRUE : FALSE;
+	}
+	
+	
+	/**
+	 * Logout administrators
+	 * 
+	 * @return bool
+	 */
+	function logout()
+	{
+		$sess = Seezoo::$Importer->library('Session');
+		$userID = $sess->get('user_id');
+		
+		if ( $userID )
+		{
+			$sql =
+				'UPDATE '
+				.	$this->db->prefix().'pages '
+				.'SET '
+				.	'is_editting = ?, '
+				.	'edit_user_id = ? '
+				.'WHERE '
+				.	'edit_user_id = ?';
+			$this->db->query($sql, array(0, 0, $userID));
+			
+			// delete session data
+			$sess->remove(array('user_id', 'rollback_user', 'viewmode'));
+			return TRUE;
+		}
+		return FALSE;
+	}
+	
+	
+	/**
+	 * Logout registed members
+	 */
+	function memberLogout()
+	{
+		$sess = Seezoo::$Importer->library('Session');
+		if ( $sess->get('member_id') )
+		{
+			$sess->remove('member_id');
+		}
 	}
 		
 }

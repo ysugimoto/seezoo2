@@ -37,7 +37,7 @@
       <?php if ( ! isset($sidebar) || $sidebar !== FALSE ):?>
       <div id="container">
         <div id="sidebar">
-          <?php //echo build_dashboard_menu();?> 
+          <?php echo $Helper->cms->buildDashboardMenu($pageData);?> 
         </div>
         <!-- // #sidebar -->
       <?php else:?>
