@@ -141,7 +141,7 @@ class PageLead extends SZ_Lead
 			}
 			else if ( $this->cms->getUserID() === 1 )
 			{
-				$this->isEnablwEditUnclock = TRUE;
+				$this->isEnableEditUnclock = TRUE;
 			}
 			$this->edtMode = 'EDIT_OTHER';
 		}
