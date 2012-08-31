@@ -47,9 +47,10 @@ class SZ_ActiveRecord
 	/**
 	 * Select query statements
 	 */
-	protected $_limit   = 0;
-	protected $_offset  = 0;
-	protected $_orderBy = array();
+	protected $_limit    = 0;
+	protected $_offset   = 0;
+	protected $_orderBy  = array();
+	protected $_distinct = '';
 	
 	
 	/**
@@ -185,15 +186,31 @@ class SZ_ActiveRecord
 	
 	
 	/**
+	 * Set distinct
+	 * 
+	 * @access public
+	 */
+	public function distinct()
+	{
+		$this->_distinct = 'DISTINCT ';
+		return $this;
+	}
+	
+	
+	// ---------------------------------------------------------------
+	
+	
+	/**
 	 * Reset stattements
 	 * 
 	 * @access public
 	 */
 	public function reset()
 	{
-		$this->_limit   = 0;
-		$this->_offset  = 0;
-		$this->_orderBy = array();
+		$this->_limit    = 0;
+		$this->_offset   = 0;
+		$this->_orderBy  = array();
+		$this->_distinct = '';
 	}
 	
 	
@@ -450,7 +467,7 @@ class SZ_ActiveRecord
 		$bindData     = array();
 		
 		$sql =
-				'SELECT '
+				'SELECT ' . $this->_distinct
 				. $selectColumn . ' '
 				.'FROM '
 				. $db->prefix() . $this->_table . ' ';

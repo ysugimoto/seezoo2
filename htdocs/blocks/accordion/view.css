@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+
+.ac_head {
+	border :solid 1px #ccc;
+	padding : 5px;
+	cursor : pointer;
+}
+div.sz_accordion_body {
+	padding : 10px;
+}

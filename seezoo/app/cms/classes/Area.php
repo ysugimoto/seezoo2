@@ -1,74 +1,156 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('SZ_EXEC')) exit('No direct script access allowed');
+
 /**
  * ====================================================
- * Seezoo Area management Class
+ * 
+ * Area management Class
  *
- * @package Seezoo Core
+ * @package seezoo-CMS Core
  * @author Yoshiaki Sugimoto <neo.yoshiaki.sugimoto@gmail.com>
+ * 
  * ====================================================
  */
 class Area
 {
-	protected $ci;
-	protected $editable = TRUE;
-	protected $moveable = TRUE;
-	protected $reverse_view;
+	/**
+	 * This area ID
+	 * @var int
+	 */
+	protected $areaID;
 	
-	// property from constructor
-	public $page_id;
-	public $area_id;
-	public $area_name;
-	public $created_date;
+	/**
+	 * This area name
+	 * @var string
+	 */
+	protected $areaName;
+	
+	/**
+	 * Database instance
+	 * @var SZ_Database
+	 */
+	protected $db;
+	
+	
+	/**
+	 * seezoo CMS instance
+	 * @var SeezooCMS
+	 */
+	protected $seezoo;
 
-	function __construct($params, $reverse_view = FALSE)
+
+	function __construct($name = FALSE)
 	{
-		//$this->editable = $editable;
-		//$this->moveable = $moveable;
-		$this->reverse_view = $reverse_view;
-		
-		if (is_array($params))
+		if ( ! $name )
 		{
-			foreach ($params as $key => $val)
-			{
-				$this->{$key} = $val;
-			}
-			$this->ci =& get_instance();
+			throw new InvalidArgumentException('Area name must not be empty!');
+		}
+		
+		$this->areaName = $name;
+		$this->db       = Seezoo::$Importer->database();
+		$this->seezoo   = SeezooCMS::getInstance();
+		$this->_detectArea();
+	}
+	
+	
+	// ---------------------------------------------------------------
+	
+	
+	/**
+	 * Area detection
+	 * 
+	 * @access protected
+	 */
+	protected function _detectArea()
+	{
+		$Area = ActiveRecord::finder('areas')
+		        ->setOrderBY('area_id', 'desc')
+		        ->findByAreaNameAndPageId($this->areaName, $this->seezoo->page->page_id);
+		
+		if ( ! $Area )
+		{
+			// Create new area record when record not exists
+			$Area = ActiveRecord::create('areas');
+			$Area->area_name    = $this->areaName;
+			$Area->page_id      = $this->seezoo->page->page_id;
+			$Area->created_date = db_datetime();
+			$this->areaID = $Area->insert();
+		}
+		else
+		{
+			$this->areaID = $Area->area_id;
 		}
 	}
-
+	
+	
+	// ---------------------------------------------------------------
+	
+	
 	/**
-	 * load_blocks
-	 * Generate blocks in this area
+	 * Display area with contains blocks
+	 * 
+	 * @access public
+	 * @param  array $params
 	 */
-	public function load_blocks()
+	public function show($params = array())
 	{
-		$id         = $this->area_id;
-		$is_editing = ($this->ci->edit_mode == 'EDIT_SELF') ? TRUE : FALSE;
-		$mode       = ( defined('SZ_OUTPUT_MODE') )
-		              ? SZ_OUTPUT_MODE
-		              : $this->ci->config->item('final_output_mode');
-		              
-		// default, get blocks from version table
-		$from_table = 'block_versions';
+		$SZ        = Seezoo::getInstance();
+		$editting  = ( $this->seezoo->edit_mode === 'EDIT_SELF' ) ? TRUE : FALSE;
+		$reverse   = ( isset($params['reverse']) ) ? (bool)$param['reverse'] : FALSE;
 		
-		// permission for PC or mobile
-		$mobile     = Mobile::get_instance();
+		$blocks = $this->_getContainedBlocks($editting, $this->seezoo->page->version_number);
 		
-		$data  = array(
-			'aid'      => $id,
-			'can_edit' => $this->editable,
-			'can_move' => $this->moveable,
-			'reverse'  => $this->reverse_view
-		);
-		
-		if ($is_editing)
+		if ( $editting && $reverse === TRUE )
 		{
-			// if page is edit mode, get blocks from pending table
-			$from_table = 'pending_blocks';
+			$SZ->view->assign(array('areaName' => $this->areaName, 'pageID' => $this->seezoo->page->page_id));
+			$SZ->view->render('parts/add_block');
 		}
 		
-			
-		$sql = 'SELECT DISTINCT '
+		if ( $blocks )
+		{
+			if ( $editting )
+			{
+				$SZ->view->render('parts/arrange_master_wrapper', $data);
+			}
+			if ( $reverse === TRUE )
+			{
+				$blocks = array_reverse($blocks);
+			}
+			$this->_showBlocks($blocks, $editting, $reverse);
+		}
+		else if ( $editting )
+		{
+			$SZ->view->render('parts/arrange_master_wrappper', $data);
+		}
+		
+		if ( $editting )
+		{
+			if ( $reverse === FALSE )
+			{
+				$SZ->view->render('parts/add_block', array('areaName' => $this->areaName, 'pageID' => $this->seezoo->page->page_id));
+			}
+			$SZ->view->render('parts/arrange_master_wrapper_end');
+		}
+	}
+	
+	
+	// ---------------------------------------------------------------
+	
+	
+	/**
+	 * Get contained blocks
+	 * 
+	 * @access protected
+	 * @param  bool $editting
+	 * @param  int $versionNumber
+	 * @return mixed
+	 */
+	protected function _getContainedBlocks($editting = FALSE, $versionNumber = 0)
+	{
+		$fromTable = ( $editting ) ? 'pending_blocks' : 'block_versions';
+		$fromTable = $this->db->prefix() . $fromTable;
+		
+		$sql = 
+				'SELECT DISTINCT '
 				.	'B.block_id, '
 				.	'B.slave_block_id, '
 				.	'B.collection_name, '
@@ -82,7 +164,7 @@ class Area
 				.	'C.pc_enabled, '
 				.	'C.sp_enabled, '
 				.	'C.mb_enabled '
-				.'FROM ' . $from_table . ' as B '
+				.'FROM ' . $fromTable . ' as B '
 				.'LEFT OUTER JOIN ('
 				.		'SELECT '
 				.			'block_id, '
@@ -90,11 +172,11 @@ class Area
 				.			'allow_edit_id, '
 				.			'allow_mobile_carrier '
 				.		'FROM '
-				.			'block_permissions '
+				.			$this->db->prefix().'block_permissions '
 				.	') as BP ON ('
 				.		'BP.block_id = IF ( B.slave_block_id > 0, B.slave_block_id, B.block_id ) '
 				.') '
-				.'LEFT JOIN collections as C ON ('
+				.'LEFT JOIN ' . $this->db->prefix().'collections as C ON ('
 				.	'C.collection_name = B.collection_name '
 				.') '
 				.'WHERE '
@@ -105,189 +187,179 @@ class Area
 				.	'B.version_number = ? '
 				.'ORDER BY B.display_order ASC';
 				;
-		$query = $this->ci->db->query($sql, array($id, 1, $this->ci->version_number));
+		$query = $this->db->query($sql, array($this->areaID, 1, $versionNumber));
 		
-		if ( $is_editing && $this->editable && $this->reverse_view === TRUE )
+		return ( $query && $query->numRows() > 0 )
+		         ? $query->result()
+		         : FALSE; 
+	}
+	
+	
+	// ---------------------------------------------------------------
+	
+	
+	/**
+	 * Display block view
+	 * 
+	 * @access protected
+	 * @param  array $blocks
+	 * @param  bool $editting
+	 * @param  bool $reverse
+	 * 
+	 */
+	protected function _showBlocks($blocks, $editting = FALSE, $reverse = FALSE)
+	{
+		$SZ             = Seezoo::getInstance();
+		$UserModel      = Seezoo::$Importer->model('UserModel');
+		$data           = new stdClass;
+		$data->aid      = $this->areaID;
+		$data->can_edit = TRUE;
+		$data->can_move = TRUE;
+		$data->reverse  = $reverse;
+		
+		$isAdmin  = $UserModel->isAdmin($this->seezoo->getUserID());
+		
+		foreach ( $blocks as $block )
 		{
-			$this->ci->load->view('parts/add_block', array('area_name' => $this->area_name, 'page_id' => $this->ci->page_id));
+			list($canEdit, $canView, $canDelete) = $this->_checkBlockPermission($block);
+			
+			if ( ! $canView )
+			{
+				continue;
+			}
+			
+			if ( (int)$block->is_enabled === 0 )
+			{
+				$canEdit = FALSE;
+			}
+			
+			$blockID    = ( (int)$block->slave_block_id > 0 ) ? $block->slave_block_id : $block->block_id;
+			$BlockClass = $this->seezoo->loadBlock($block->collection_name, $blockID);
+			$BlockClass->originalBlockID = (int)$block->block_id;
+			
+			$blockEnable = ( ! isset($block->{SZ_OUTPUT_MODE . '_enabled'})
+			                 || $block->{SZ_OUTPUT_MODE . '_enabled'} ) ? TRUE : FALSE;
+			
+			if ( $blockEnable )
+			{
+				$BlockClass->addHeaderItem($block->collection_name);
+			}
+			
+			$BlockClass->view();
+			
+			$viewPath = ( ! empty($block->ct_handle) )
+			              ? 'templates/' . $block->ct_handle . '/view'
+			              : 'view';
+			$data->block      = $BlockClass;
+			$data->value      = $block;
+			$data->bid        = $block->block_id;
+			$data->can_edit   = $canEdit;
+			$data->can_delete = $canDelete;
+			
+			if ( $editting )
+			{
+				$SZ->view->render('parts/edit_wrapper', $data);
+				if ( $blockEnable )
+				{
+					$dir = $block->collection_name . '/';
+					$param = array('controller' => $BlockClass);
+					$BlockClass->render($dir . $viewPath, $param, FALSE, $block->plugin_handle);
+				}
+				else
+				{
+					$SZ->view->render('elements/block_view_disabled', $block);
+					if ( ! $block->isMultiMolumn() )
+					{
+						$SZ->view->render('parts/edit_wrapper_end', $data);
+					}
+				}
+				
+				if ( ! $block->isMultiMolumn() )
+				{	
+					$SZ->view->render('parts/edit_wrapper_end', $data);
+				}
+			}
+			else if ( $blockEnable )
+			{
+				$dir = $block->collection_name . '/';
+				$param = array('controller' => $BlockClass);
+				$BlockClass->render($dir . $viewPath, $param, FALSE, $block->plugin_handle);
+			}
 		}
+	}
+	
+	
+	// ---------------------------------------------------------------
+	
+	
+	/**
+	 * Check block permissions
+	 * 
+	 * @access protected
+	 * @param  Block $block
+	 * @return array (booleans)
+	 */
+	protected function _checkBlockPermission($block)
+	{
+		$Mobile    = Seezoo::$Importer->library('Mobile');
+		$UserModel = Seezoo::$Importer->model('UserModel');
+		$isAdmin   = $UserModel->isAdmin($this->seezoo->getUserID());
 		
-		// blocks exists?
-		if ($query->num_rows() > 0)
+		// Use mobile permission
+		if ( $Mobile->is_mobile() )
 		{
-			$blocks = $query->result_array();
-			$query->free_result();
-			
-		
-			// If page id editting, output arrange master <div>.
-			if ( $is_editing )
+			$canEdit = FALSE;
+			switch ( TRUE )
 			{
-				$this->ci->load->view('parts/arrange_master_wrapper', $data);
+				case $Mobile->is_docomo():
+					$mark = 'D';
+					break;
+				case $Mobile->is_au():
+					$mark = 'A';
+					break;
+				case $Mobile->is_softbank():
+					$mark = 'S';
+					break;
+				case $Mobile->is_willcom():
+					$mark = 'W';
+					break;
+				default:
+					$mark = FALSE;
+					break;
 			}
-			
-			if ( $this->reverse_view === TRUE )
-			{
-				$blocks = array_reverse($blocks);
-			}
-			
-			foreach ($blocks as $value)
-			{
-				if ( $mobile->is_mobile() )
-				{
-					$can_edit = FALSE;
-					if ( $mobile->is_docomo() )
-					{
-						$can_view = is_permission_allowed($value['allow_mobile_carrier'], 'D');
-					}
-					else if ( $mobile->is_au() )
-					{
-						$can_view = is_permission_allowed($value['allow_mobile_carrier'], 'A');
-					}
-					else if ( $mobile->is_softbank() )
-					{
-						$can_view = is_permission_allowed($value['allow_mobile_carrier'], 'S');
-					}
-					else if ( $mobile->is_willcom() )
-					{
-						$can_view = is_permission_allowed($value['allow_mobile_carrier'], 'W');
-					}
-					else
-					{
-						$can_view = FALSE;
-					}
-				}
-				else
-				{
-					if ( ! $this->ci->is_admin )
-					{
-						$can_edit = is_permission_allowed($value['allow_edit_id'], $this->ci->user_id);
-						$can_view = is_permission_allowed($value['allow_view_id'], $this->ci->user_id);
-						
-						if ( $can_edit === FALSE && $this->ci->member_id > 0)
-						{
-							$can_edit = is_permission_allowed($value['allow_edit_id'], 'm');
-						}
-						if ( $can_view === FALSE && $this->ci->member_id > 0)
-						{
-							$can_view = is_permission_allowed($value['allow_view_id'], 'm');
-						}
-					}
-					else 
-					{
-						$can_edit = $can_view = TRUE;
-					}
-				}
-				$can_delete = $can_edit; // same edit permission
-				
-				if ( ! $can_view )
-				{
-					continue;
-				}
-				
-				if ( (int)$value['is_enabled'] === 0 )
-				{
-					$can_edit = FALSE;
-				}
-				
-				$block = $this->ci->load->block(
-											$value['collection_name'],
-											((int)$value['slave_block_id'] > 0) ? $value['slave_block_id'] : $value['block_id'],
-											TRUE,
-											TRUE /* force view mode */
-										);
-				
-				// mark slave block original id
-				$block->orig_block_id = (int)$value['block_id'];
-				
-				$enable = ( ! isset($value[$mode . '_enabled']) || $value[$mode . '_enabled'] > 0 ) ? TRUE : FALSE;
-	
-				// Is block enable to output? 
-				if ( $enable )
-				{
-					// add header item if file exists
-					$block->add_header_item($value['collection_name']);
-				}
-				
-				// call view method
-				$block->view();
-	
-				if (!empty($value['ct_handle']))
-				{
-					$view_path = 'templates/' . $value['ct_handle'] . '/view';
-				}
-				else
-				{
-					$view_path = 'view';
-				}
-				$data['block']      = $block;
-				$data['value']      = $value;
-				$data['bid']        = $value['block_id'];
-				$data['can_edit']   = $can_edit;
-				$data['can_delete'] = $can_delete;
-	
-				if ( $is_editing )
-				{
-					$this->ci->load->view('parts/edit_wrapper', $data);
-					if ( $enable )
-					{
-						// load the block-view file with block instance parameter.
-						$dir    = $value['collection_name'] . '/';
-						$this->ci->load->block_view($dir . $view_path, array('controller' => $block), FALSE, $block->plugin_handle);
-						//$block->load_view($view_path);
-					}
-					else
-					{
-						$this->ci->load->view('elements/block_view_disabled', $value);
-						if ( $block->is_multi_column() )
-						{
-							$this->ci->load->view('parts/edit_wrapper_end', $data);
-						}
-					}
-					// Does block show multi-column?
-					if ( ! $block->is_multi_column() )
-					{
-						$this->ci->load->view('parts/edit_wrapper_end', $data);
-					}
-				}
-				else
-				{
-					if ( $enable )
-					{
-						//$block->load_view($view_path);
-						$dir    = $value['collection_name'] . '/';
-						$this->ci->load->block_view($dir . $view_path, array('controller' => $block), FALSE, $block->plugin_handle);
-					}
-				}
-			}
-			
-//			if ( $this->reverse_view === TRUE )
-//			{
-//				$this->show_blocks_reverse($blocks, $data);
-//			}
-//			else
-//			{
-//				$this->show_blocks($blocks, $data);
-//			}
+			$canView = ( $mark )
+			             ? $this->seezoo->hasBlockPermission($block->allow_mobile_carrier, $mark)
+			             : FALSE;
 		}
 		else
 		{
-			if ($is_editing)
+			if ( $isAdmin )
 			{
-				// if block is empty, set arrange master block for moveable blocks.
-				$this->ci->load->view('parts/arrange_master_wrapper', $data);
+				$canEdit = $canView = TRUE;
 			}
-		}
-
-		if ( $is_editing && $this->editable )
-		{
-			if ( $this->reverse_view === FALSE )
+			else
 			{
-				$this->ci->load->view('parts/add_block', array('area_name' => $this->area_name, 'page_id' => $this->ci->page_id));
+				$canEdit = $this->seezoo->hasBlockPermission($block->allow_edit_id, $this->seezoo->userID);
+				$canView = $this->seezoo->hasBlockPermission($block->allow_edit_id, $this->seezoo->userID);
+				
+				$memberID = $this->seezoo->getMemberID();
+				if ( $canEdit === FALSE && $memberID > 0 )
+				{
+					$canEdit = $this->seezoo->hasBlockPermission($block->allow_edit_id, 'm');
+				}
+				if ( $canView === FALSE && $memberID > 0 )
+				{
+					$canView = $this->seezoo->hasBlockPermission($block->allow_edit_id, 'm');
+				}
 			}
-			$this->ci->load->view('parts/arrange_master_wrapper_end');
 		}
 		
+		return array($canEdit, $canView, $canEdit);
 	}
+	
+	
+	// ---------------------------------------------------------------
+	
 	
 	/**
 	 * Duplicate area
@@ -295,103 +367,81 @@ class Area
 	 * @param int $target_page_id
 	 * @return void
 	 */
-	public function duplicate($target_page_id = 0)
+	public function duplicate($targetPageID = 0)
 	{
 		// guard empty page
 		// or duplicate to same page
 		// or same areaname already_exists
-		if ( ! $target_page_id
-		     || $target_page_id == $this->page_id
-		     || $this->_area_exists($target_page_id) )
+		if ( ! $targetPageID
+		     || $targetPageID == $this->seezoo->page->page_id
+		     || $this->_areaExists($targetPageID) )
 		{
 			return;
 		}
 		
-		$this->ci->load->model('sitemap_model');
+		$Page = Seezoo::$Importer->model('PageModel');
 		
 		// get current version
-		$current_version        = $this->ci->sitemap_model->get_current_version($this->page_id);
-		$current_target_version = $this->ci->sitemap_model->get_current_version($target_page_id);
-		$now_date               = db_datetime();
+		$currentVersion        = $Page->getCurrentVersion($this->seezoo->page->page_id);
+		$currentTargetVersion  = $Page->getCurrentVersion($targetPageID);
+		$nowDate               = db_datetime();
 		
-		// insert area target
-		$area_data = array(
-			'area_name'    => $this->area_name,
-			'page_id'      => $target_page_id,
-			'created_date' => $now_date
-		);
-		$this->ci->db->insert('areas', $area_data);
+		$Area = ActiveRecord::create('areas');
+		$Area->area_name    = $this->areaName;
+		$Area->page_id      = $targetPageID;
+		$Area->created_date = $nowDate;
 		
-		// and get inserted id
-		$new_area_id = $this->ci->db->insert_id();
+		$newAreaID = $Area->insert();
 		
 		// get block data on copy-from area
-		$sql =
-				'SELECT DISTINCT '
-				.	'* '
-				.'FROM '
-				.	'block_versions '
-				.'WHERE '
-				.	'area_id = ? '
-				.'AND '
-				.	'version_number = ?'
-				;
-		$query = $this->ci->db->query($sql, array($this->area_id, $current_version));
+		$blocks = ActiveRecord::finder('block_versions')
+		          ->distinct()
+		          ->findAllByAreaIdAndVersionNumber($this->seezoo->page->page_id, $currentVersion);
 		
 		// block not exists
-		if ( ! $query || $query->num_rows() === 0 )
+		if ( ! $blocks )
 		{
 			return;
 		}
 		// duplicate block
-		foreach ( $query->result() as $block_data )
+		foreach ( $blocks as $blockRecord )
 		{
-			$block = $this->ci->load->block(
-											$value['collection_name'],
-											( (int)$value['slave_block_id'] > 0 ) ? $value['slave_block_id'] : $value['block_id'],
-											TRUE
-										);
-										
-			$new_block_id = $block->duplicate();
-			$bv_data      = array(
-				'block_id'        => $new_block_id,
-				'collection_name' => $block_data->collection_name,
-				'area_id'         => $new_area_id,
-				'display_order'   => $block_data->display_order,
-				'is_active'       => $block_data->is_active,
-				'version_date'    => $now_date,
-				'version_number'  => $current_target_version,
-				'ct_handle'       => $block_data->ct_handle,
-				'slave_block_id'  => $block_data->slave_block_id
+			$block = $this->seezoo->loadBlock(
+			                               $value['collection_name'],
+			                               ( (int)$value['slave_block_id'] > 0 ) ? $value['slave_block_id'] : $value['block_id']
+			                             );
+			
+			$newBlockID  = $block->duplicate();
+			$versionData = array(
+				'block_id'        => $newBlockID,
+				'collection_name' => $blockRecord->collection_name,
+				'area_id'         => $newAreaID,
+				'display_order'   => $blockRecord->display_order,
+				'is_active'       => $blockRecord->is_active,
+				'version_date'    => $nowDate,
+				'version_number'  => $currentTargetVersion,
+				'ct_handle'       => $blockRecord->ct_handle,
+				'slave_block_id'  => $blockRecord->slave_block_id
 			);
 			
-			$this->ci->db->insert('block_versions', $bv_data);
+			$this->db->insert('block_versions', $versionData);
 		}
 	}
+	
+	
+	// ---------------------------------------------------------------
+	
 	
 	/**
 	 * Check the area_name already exsits at target page
 	 * @param int $target_page_id
 	 * @return bool
 	 */
-	protected function _area_exists($target_page_id)
+	protected function _areaExists($targetPageID)
 	{
-		$sql =
-				'SELECT '
-				.	'area_id '
-				.'FROM '
-				.	'areas '
-				.'WHERE '
-				.	'area_name = ? '
-				.'AND '
-				.	'page_id = ?'
-				;
-		$query = $this->ci->db->query($sql, array($this->area_name, $target_page_id));
-		if ( $query && $query->num_rows() > 0 )
-		{
-			// already exists!
-			return TRUE;
-		}
-		return FALSE;
+		$Area = ActiveRecord::finder('areas')
+		         ->findByAreaNameAndPageId($this->areaName, $targetPageID);
+		
+		return ( $Area ) ? TRUE : FALSE;
 	}
 }

@@ -70,7 +70,7 @@ class ProcessEvent
 		
 		// TODO: implement
 		// $this->_checkDeniedIP();
-		$this->_setOptions();
+		$this->_setCMSData();
 		$this->_detectIE();
 		
 		// Is site maintenance?
@@ -188,25 +188,24 @@ class ProcessEvent
 	
 	
 	/**
-	 * Set CMS options
+	 * Set CMS data
 	 * 
 	 * @access protected
 	 */
-	protected function _setOptions()
+	protected function _setCMSData()
 	{
-		SeezooOptions::init('common');
 		if ( $this->env->getConfig('seezoo_installed') === TRUE )
 		{
 			// set site info
 			$site = ActiveRecord::finder('site_info')->find();
-			SeezooOptions::set('site_info', $site);
+			SeezooCMS::setStatus('site', $site);
 			define('SZ_LOGGING_LEVEL', (int)$site->log_level);
 			define('SZ_DEBUG_LEVEL', (int)$site->debug_level);
 			define('SITE_TITLE', $site->site_title);
 			
 			// set OGP data
 			$ogp = ActiveRecord::finder('sz_ogp_data')->find();
-			SeezooOptions::set('ogp_data', $ogp);
+			SeezooCMS::setStatus('ogp', $ogp);
 		}
 		else
 		{

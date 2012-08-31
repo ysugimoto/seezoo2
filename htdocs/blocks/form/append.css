@@ -1,0 +1,289 @@
+div.sz_form_separator { padding-bottom : 10px;}
+ul#sz_form_tab {
+	margin : 0;
+	padding : 0;
+	margin-top : 10px;
+	margin-left : 20px;
+}
+ul#sz_form_tab li {
+	float : left;
+	display : inline;
+	width : 130px;
+	border : solid 1px #ccc;
+}
+ul#sz_form_tab li a {
+	display : block;
+	padding : 5px;
+	color : #333;
+	background : #fff;
+	text-align : center;
+}
+ul#sz_form_tab li a:hover, ul#sz_form_tab li a.active {
+	background : #eaf7ff;
+	color : #666;
+}
+
+div.tab_wrapper {
+	margin-top : 5px;
+}
+div#form_msg{
+	opacity : 0;
+	filter : alpha(opacity=0);
+	text-align : center;
+	color : #c00;
+	background : #ffc;
+	padding : 5px 0;
+	margin : 0 30px;
+	border : solid 1px #ccc;
+	zoom : 1;
+} 
+div.tabcontents {
+	min-height : 300px;
+}
+* html div.tabcontents {
+	height : 300px;
+}
+div.init_hide { display : none;}
+div#content1 table.add_forms {
+	border-collapse : collapse;
+	border: none;
+	width : 90%;
+	margin : 0 auto;
+}
+div#content1 table.add_forms tr td a img{
+	vertical-align : middle;
+}
+div#content1 table.add_forms th {
+	text-align : right;
+	vertical-align : top;
+	border: none;
+	padding : 13px 0 10px 0;
+	width : 80px;
+	border-bottom : 2px dotted #32B4DF;
+}
+
+div#content1 table.add_forms td {
+	vertica-align : top;
+	padding : 10px 0 10px 10px;
+	border-bottom : 2px dotted #32B4DF;
+}
+div#content1 table.add_forms tr.sz_fm_sbt td {
+	border : none;
+}
+div#content1 table.add_forms td p {
+	margin :  0;
+	padding : 0;
+}
+div#content1 table.add_forms tr.init_hide {
+	display : none;
+}
+div#content1 a.option_add {
+	margin-left : 10px;
+}
+
+/* */
+div#content3 table.add_forms {
+	border-collapse : collapse;
+	border: none;
+	width : 90%;
+	margin : 0 auto;
+}
+div#content3 table.add_forms tr td a img{
+	vertical-align : middle;
+}
+div#content3 table.add_forms th {
+	text-align : right;
+	vertical-align : top;
+	border: none;
+	padding : 13px 0 10px 0;
+	border-bottom : 2px dotted #32B4DF;
+}
+
+div#content3 table.add_forms td {
+	vertica-align : top;
+	padding : 10px 0 10px 10px;
+	border-bottom : 2px dotted #32B4DF;
+}
+div#content3 table.add_forms tr.sz_fm_sbt td {
+	border : none;
+}
+div#content3 table.add_forms td p {
+	margin :  0;
+	padding : 0;
+}
+div#content3 table.add_forms tr.init_hide {
+	display : none;
+}
+div#content3 a.option_add {
+	margin-left : 10px;
+}
+div#content3 td input {
+	vertical-align : middle;
+}
+div#content3 textarea { font-size : 13px;}
+div#content3 p#remail { margin-top: 10px;}
+div#content4 table.add_forms {
+	border-collapse : collapse;
+	border: none;
+	width : 90%;
+	margin : 0 auto;
+}
+div#content4 table.add_forms tr td a img{
+	vertical-align : middle;
+}
+div#content4 table.add_forms th {
+	text-align : right;
+	vertical-align : top;
+	border: none;
+	padding : 13px 0 10px 0;
+	border-bottom : 2px dotted #32B4DF;
+}
+
+div#content4 table.add_forms td {
+	vertica-align : top;
+	padding : 10px 0 10px 10px;
+	border-bottom : 2px dotted #32B4DF;
+}
+div#content4 table.add_forms tr.sz_fm_sbt td {
+	border : none;
+}
+div#content4 table.add_forms td p {
+	margin :  0;
+	padding : 0;
+}
+div#content4 table.add_forms tr.init_hide {
+	display : none;
+}
+div#content4 a.option_add {
+	margin-left : 10px;
+}
+div#content4 table.init_hide { display : none;}
+
+
+/**----  input styles ---- **/
+input#question_name, input#question_name_edit {
+	width : 30em;
+}
+input#class_name, input#class_name_edit {
+	width : 15em;
+}
+input.ime-dis { ime-mode:disabled;}
+div#content1 input.text-int {
+	width : 3em;edit_select_msg
+}
+div#content1 table.add_forms td p.submit {
+	text-align : center;
+	margin : 10px;
+}
+div#content4 table.add_forms td p.submit {
+	text-align : center;
+	margin : 10px;
+}
+p#edit_select_msg {
+	text-align : center;
+}
+/** preview style **/
+ul#form_preview {
+	margin : 0px;
+	padding : 0px;
+	list-style : none outside;
+}
+ul#form_preview li {
+	position : relative;
+	border : solid 1px #ccc;
+	padding : 10px 0 10px 10px;
+	margin : 3px 0;
+}
+ul#form_preview li a {
+	background-color : transparent;
+	font-size : 12px;
+	color : #f7c05b;
+}
+ul#form_preview li p.sz_form_list_control {
+	position : absolute;
+	top :1px;
+	right : 10px;
+	font-size : 10px;
+	margin : 0;
+	padding : 0;
+	line-height : 1.4;
+}
+ul#form_preview li p.sz_form_list_edit {
+	position : absolute;
+	top : 11px;
+	right : 80px;
+	line-height : 1.0;
+	font-size : 14px;
+	margin : 0;
+	padding : 0;
+}
+ul#form_preview li p.sz_form_list_edit a:hover {
+	color : #25df25;
+}
+ul#form_preview li p.sz_form_list_delete a:hover {
+	color : #fe3b3b;
+}
+ul#form_preview li p.sz_form_list_delete {
+	position : absolute;
+	top :11px;
+	right : 40px;
+	font-size : 14px;
+	line-height : 1.0;
+	margin : 0;
+	padding : 0;
+}
+p#sort_wrapper {
+	margin-top : 10px;
+	padding-top : 10px;
+	border-top : dotted 2px #32B4DF; 
+	text-align : center;
+}
+
+/* ---- type format ---- */
+table.add_forms div.types {
+	width : 220px;
+	padding : 10px;
+	border : solid 1px #ccc;
+	min-height : 130px;
+	margin-top : 15px;
+	float : left;
+}
+table.add_forms div.special {
+	margin-left : 16px;
+	display : inline;
+}
+table.add_forms div.types span {
+	display : block;
+	margin : -20px 40px 15px 40px;
+	padding : 3px 0;
+	background : #fff;
+	text-align : center;
+}
+
+/* ---- auto reply form ---- */
+div#content5 ul {
+	margin : -20px 10px 10px 10px;
+	padding : 5px;
+	border : solid 1px #c00;
+	background : #ffc;
+}
+div#content5 ul li {
+	margin-left : 30px;
+	padding-bottom : 5px;
+	list-style : square inside;
+}
+div#content5 input.auto_reply_mail_subject {
+	border : solid 1px #999;
+	display : block;
+	width : 95%;
+	margin :0 auto;
+	padding : 5px;
+}
+div#content5 textarea {
+	display : block;
+	border : solid 1px #999;
+	width : 95%;
+	height : 280px;
+	margin : 0 auto;
+	padding : 5px;
+}

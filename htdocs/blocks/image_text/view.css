@@ -1,0 +1,34 @@
+div.sz_imt_wrapper:after {
+	content : '';
+	display : block;
+	height : 0;
+	clear : both;
+	visibility : hidden;
+}
+*:first-child+html div.sz_imt_wrapper {
+	overflow : hidden;
+}
+* html div.sz_imt_wrapper {
+	overflow : hidden;
+}
+
+/* ==== float state ==== */
+img.sz_imt_image_left {
+	float : left;
+	display: block;
+	padding-right : 10px;
+}
+img.sz_imt_image_right {
+	float : right;
+	display : block;
+	padding-left : 10px;
+}
+
+div.sz_imt_text_left {
+	float : left;
+	display : inline;
+}
+div.sz_imt_text_right {
+	float : right;
+	display: inline;
+}

@@ -15,13 +15,14 @@ class PageLead extends SZ_Lead
 	public $cms;
 	public $page;
 	public $pageData;
+	protected $seezoo;
 	
 	public function __construct()
 	{
 		parent::__construct();
-		$this->cms    = Seezoo::$Importer->helper('cms');
-		$this->userID = $this->cms->getUserID();
-		$this->site   = SeezooOptions::get('site_info');
+		$this->seezoo  = SeezooCMS::getInstance();
+		$this->userID = $this->seezoo->getUserID();
+		$this->site   = $this->seezoo->getStatus('site');
 	}
 	
 	public function view($page)
@@ -44,9 +45,10 @@ class PageLead extends SZ_Lead
 		$this->_checkRedirectPage($pageData);
 		
 		// When approve output, set output cahce if enabled
-		$this->enableCache = ( $this->site->enable_cache > 0 ) ? TRUE : FALSE;
+		$cacheEnable = ( $this->site->enable_cache > 0 ) ? TRUE : FALSE;
+		SeezooCMS::setStatus('enable_cache', $cacheEnable);
 		$request = Seezoo::getRequest();
-		if ( $this->enableCache === TRUE
+		if ( $cacheEnable === TRUE
 		     && $request->requestMethod === 'GET' )
 		{
 			$cache = $this->initModel->getDisplayCacheData($pageData);
@@ -89,6 +91,8 @@ class PageLead extends SZ_Lead
 			$this->isMobilePage = FALSE;
 		}
 		
+		SeezooCMS::setStatus('page', $pageData);
+		
 		$data                = new stdClass;
 		$data->page          = $pageData;
 		$data->templateDir   = $templatePath;
@@ -126,7 +130,7 @@ class PageLead extends SZ_Lead
 		{
 			$this->editMode = 'NO_EDIT';
 		}
-		else if ( $this->page->edit_user_id == $this->cms->getUserID() )
+		else if ( $this->page->edit_user_id == $this->seezoo->getUserID() )
 		{
 			$this->editMode = 'EDIT_SELF';
 		}
@@ -139,12 +143,14 @@ class PageLead extends SZ_Lead
 				$this->isEditTimeout = sha1(microtime());
 				$this->session->set('sz_unlock_token', $this->isEditTimeout);
 			}
-			else if ( $this->cms->getUserID() === 1 )
+			else if ( $this->seezoo->getUserID() === 1 )
 			{
 				$this->isEnableEditUnclock = TRUE;
 			}
 			$this->edtMode = 'EDIT_OTHER';
 		}
+		
+		SeezooCMS::setStatus('edit_mode', $this->editMode);
 	}
 	
 	protected function _getVersionMode()
@@ -177,19 +183,20 @@ class PageLead extends SZ_Lead
 		else
 		{
 			// permissionデータが見つかった場合は権限チェック
-			if ( $this->cms->hasPermission($this->page->allow_access_user, $this->userID) === FALSE )
+			if ( $this->seezoo->hasPagePermission($this->page->allow_access_user, $this->userID) === FALSE )
 			{
 				// memberとしてログインしていれば権限チェック
-				if ( $this->cms->getMemberID() < 1
+				if ( $this->seezoo->getMemberID() < 1
 				     || strpos($permissions->allow_access_user, 'm') === FALSE )
 				{
 					// 権限が無ければpermission_denied
 					Seezoo::init(SZ_MODE_MVC, 'page/permission_denied');
 				}
 			}
-			$edit          = $this->cms->hasPermission($this->page->allow_edit_user, $this->userID);
-			$memberEdit    = ( $this->cms->getMemberID() > 0 || $this->cms->hasPermission($this->page->allow_edit_user, 'm') ) ? TRUE : FALSE;
+			$edit          = $this->seezoo->hasPagePermission($this->page->allow_edit_user, $this->userID);
+			$memberEdit    = ( $this->seezoo->getMemberID() > 0 || $this->seezoo->hasPagePermission($this->page->allow_edit_user, 'm') ) ? TRUE : FALSE;
 			$this->canEdit = ( $edit || $memberEdit ) ? TRUE : FALSE;
 		}
+		SeezooCMS::setStatus('can_edit', $this->canEdit);
 	}
 }

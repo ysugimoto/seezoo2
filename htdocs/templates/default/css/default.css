@@ -1,0 +1,297 @@
+/* reset css
+==================================================*/
+
+body,div,p,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,p,blockquote,th,td,a {
+	margin:0;
+	padding:0;
+	background: none;
+	border: 0;
+	text-align:1.6em;
+	text-decoration:none;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size : 100%;
+
+}
+table {
+	border-collapse:collapse;
+	border-spacing:0;
+}
+img {
+	border:0;
+}
+address,caption,cite,code,dfn,em,strong,th,var {
+	font-style:normal;
+	font-weight:normal;
+}
+h1,h2,h3,h4,h5,h6 {
+	font-weight:normal;
+}
+input,textarea {
+	margin : 0;
+	padding : 0;
+}
+ol, ul {
+	list-style : decimal inside;
+}
+
+/* reset css end
+==================================================*/
+
+/* clearfix */
+.clearfix:after{
+	content : '';
+	display : block;
+	height : 0px;
+	clear : both;
+	visibility : hidden;
+}
+* html .clearfix{
+	clear : both;
+	overflow : hidden;
+}
+*:first-child+html .clearfix{
+	clear : both;
+	overflow : hidden;
+}
+/* holly hack*/
+ /*\*//*/
+  height: auto;
+  overflow: hidden;
+  /**/
+
+/* clearfix end */
+
+/* all contents
+==================================================*/
+p{
+line-height:150%;
+margin:20px 0 20px;
+font-size:13px;
+}
+
+a{
+color:#999;
+}
+
+a:hover{
+color:#5a9d1d;
+}
+
+.green{
+font-size:36px;
+color:#5a9d1d;
+
+}
+
+#allitem{
+	width:100%;
+	background-color: #FCFCFC;
+}
+
+#main_img{
+width:920px;
+margin:0 auto;
+}
+
+#contents_wrap{
+width:920px;
+margin:0 auto;
+border-bottom:solid 1px #ffffff;
+}
+
+
+
+
+
+/* all contents end
+==================================================*/
+
+
+
+
+
+
+
+
+/* header
+==================================================*/
+#header{
+width:920px;
+height:90px;
+margin:0 auto;
+padding-top:25px;
+}
+
+
+#header h1 {
+font-size: 40px;
+color: #999;
+float:left;
+margin-left:10px;
+}
+
+#header_nav{
+width:250px;
+margin:15px 0 0;
+float:right;
+overflow: hidden;
+}
+
+#header_nav ul {
+margin-left: -1px;
+}
+
+#header_nav li {
+padding: 0 10px;
+display: inline;
+border-left: 1px solid #999;
+font-weight: bold;
+font-size:11px;
+}
+
+
+/* header end
+==================================================*/
+
+/* navi
+==================================================*/
+
+#nav{
+width:920px;
+margin:0 auto 30px;
+overflow: hidden;
+
+}
+
+#nav ul{
+margin-left: -1px;
+font-size:13px;
+float:left;
+}
+
+#nav li{
+padding: 0 10px;
+display: inline;
+border-left: 1px solid #999;
+font-weight: bold;
+}
+
+#nav a{
+color:#151515;
+}
+
+#nav a:hover{
+color:#5a9d1d;
+}
+
+
+
+/* navi end
+==================================================*/
+
+/* main
+==================================================*/
+#main{
+width:630px;
+float:left;
+margin:35px 30px 0 0;
+
+}
+
+#main h2{
+width:625px;
+color:#666;
+font-weight:bold;
+padding:0 0 5px 5px;
+margin-bottom:15px;
+border-bottom:solid 3px #151515;
+}
+
+
+/* main end
+==================================================*/
+
+
+
+/* sub
+==================================================*/
+#sub{
+width:260px;
+float:left;
+display:inline;
+margin:35px 0 0;
+}
+
+
+
+#sub h2{
+width:255px;
+color:#666;
+font-weight:bold;
+padding:0 0 5px 5px;
+border-bottom:solid 3px #151515;
+}
+
+
+
+/* sub end
+==================================================*/
+
+
+
+
+
+/* footer
+=======================================================================*/
+#footer{
+width:920px;
+padding:35px 0 35px;
+margin:15px auto 0 auto;
+clear:both;
+border-top:1px solid #C6C6C6;
+overflow: hidden;
+
+}
+
+
+#footer ul{
+margin-left: -1px;
+font-size:11px;
+float:left;
+
+}
+
+#footer li{
+padding: 0 10px;
+display: inline;
+border-left: 1px solid #999;
+}
+
+#footer a{
+color:#333;
+}
+
+#footer a:hover{
+color:#666;
+}
+
+
+#footer address{
+text-align : center;
+font-size:11px;
+color:#333;
+margin-top : 10px;
+}
+
+/* footer end
+=======================================================================*/
+
+/*
+:after {
+    content: ".";
+    clear: both;
+    height: 0;
+    display: block;
+    visibility: hidden;
+}
+*/

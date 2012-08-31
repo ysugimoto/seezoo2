@@ -1,0 +1,25 @@
+@CHARSET "UTF-8";
+
+ul.sz_blog_updates {
+	width : 100%;
+	list-style : none outside;
+}
+ul.sz_blog_updates li {
+	border-top : dotted 1px #ccc;
+}
+ul.sz_blog_updates li.noline {
+	border-top : none;
+}
+ul.sz_blog_updates li a, ul.sz_blog_updates li span.nolink {
+	display : block;
+	padding : 10px;
+	text-decoration : none;
+	color : #333;
+}
+ul.sz_blog_updates li a:hover, ul.sz_blog_updates li span.nolink:hover {
+	background : #eee;
+}
+ul.sz_blog_updates li span.entrydate {
+	margin-right : 15px;
+	color : #333;
+}

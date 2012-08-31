@@ -1,0 +1,1 @@
+<?php echo $controller->show_static_map();?>

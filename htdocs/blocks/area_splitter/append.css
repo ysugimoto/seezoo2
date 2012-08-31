@@ -1,0 +1,82 @@
+div.sz_as_separator { padding-bottom : 10px;}
+div.sz_as_separator input.txt-long {
+	width : 300px;
+}
+div.sz_as_separator a.as_delete {
+	margin-left : 10px;
+	color : #00c;
+	text-decoration : none;
+}
+div.sz_as_separator a.as_delete img {
+	display : inline;
+	vertical-align : middle;
+}
+div#as_contents_frame p {
+	margin : 3px 0;
+}
+p.add_as_wrapper{
+	background : url(../../images/plus.png) left center no-repeat;
+	padding-left : 18px;
+	margin-top : 8px;
+}
+p a#add_as {
+	color : #00c;
+}
+hr.sep { margin : 5px;}
+div.as_input_area {
+	border : solid 1px #ccc;
+	borer-radius : 5px;
+	-moz-border-radius : 5px;
+	-webkit-border-radius : 5px;
+	padding : 10px;
+	margin : 8px;
+	background : #fbfbfb;
+}
+div#sz_asp_previews_wrapper {
+	width : 450px;
+	background-color : #fff;
+	border : solid 1px #999;
+	margin : 10px auto;
+	overflow : visible;
+}
+div.sz_asp_previews {
+	width : 223px;
+	height : 100px;
+	background-color : #eee;
+	border : dotted 1px #c00;
+	float : left;
+	position : relative;
+}
+div.sz_asp_previews span {
+	position : absolute;
+	bottom : -15px;
+	right : -5px;
+	width : 8px;
+	height : 8px;
+	font-size : 0;
+	cursor : pointer;
+	background-color : #666;
+}
+* html div.sz_asp_previews {
+	float : none;
+	display : inline-block;
+}
+div.sz_asp_previews p {
+	padding-top : 40px;
+	text-align : center;
+	margin : 0;
+}
+div.asp_last span {
+	display : none;
+}
+p#reset_division img {
+	vertical-align : middle;
+}
+p#reset_division {
+	margin-top : 40px;
+}
+div.sz_asp_tc {
+	height : auto;
+	min-height : 250px;
+}
+

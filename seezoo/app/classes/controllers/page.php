@@ -50,7 +50,6 @@ class PageController extends EX_Breeder
 		parent::__construct();
 		$this->import->library('Session');
 		$this->import->model(array('PageModel', 'InitModel', 'VersionModel', 'UserModel'));
-		$this->import->helper('cms');
 		//$this->import->helper(array('core', 'utility'));
 		
 	}
@@ -93,6 +92,7 @@ class PageController extends EX_Breeder
 		}
 		$data = $this->lead->view($page);
 		$this->view->assign($data);
+		$this->view->assign(array('seezoo' => new SeezooCMS()));
 		$this->view->renderTemplate($data->templateDir);
 	}
 	

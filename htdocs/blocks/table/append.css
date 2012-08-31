@@ -1,0 +1,173 @@
+@CHARSET "UTF-8";
+
+div#table-editor-area {
+	height : 250px;
+	border : solid 1px #999;
+	margin-top : 10px;
+	padding : 10px 20px;
+	overflow : auto;
+}
+
+
+div#table-editor-status {
+	margin-top : 10px;
+	position : relative;
+}
+
+/* ============== inner table style ============== */
+div#table-editor-area table td.default,div#table-editor-area table th.default {
+	border : solid 1px #ccc;
+}
+}
+div#table-editor-area table td,div#table-editor-area table th {
+	border : solid 2px #ccc;
+	padding : 8px;
+	cursor : pointer;
+}
+/*
+div#table-editor-area table td:hover {
+	border : solid 2px #fc0 !important;
+}
+div#table-editor-area table th:hover {
+	border : solid 2px #fc0 !important;
+}
+*/
+
+div#table-editor-area table td.focus {
+	border : solid 2px #0cf !important;
+}
+div#table-editor-area table th.focus {
+	border : solid 2px #0cf !important;
+}
+
+div#table-editor-area table td.control{
+	border : none !important;
+}
+div#table-editor-area table input {
+	border : none;
+	background : none;
+	padding : 3px;
+}
+div#table-editor-area table td.control {
+	width : 11px;
+	padding : 8px 2px;
+	border : none;
+}
+td.control a {
+	display : block;
+	width : 11px;
+	height : 11px;
+	margin : 0 auto;
+	font-size : 0;
+	outline : none;
+	text-decoration : none;
+	outline : none;
+	text-indent : -9999px;
+}
+td.control a.up {
+	background : url(images/up.gif) top center no-repeat;
+}
+td.control a.down {
+	background : url(images/down.gif) top center no-repeat;
+}
+
+
+/* ================= status info styles ============ */
+div#table-editor-status table {
+	width : 100%;
+}
+div#table-editor-status table td {
+	text-align : center;
+	padding : 8px;
+	border : solid 1px #ccc;
+}
+div#table-editor-status table td.cell_control a {
+	margin : 0 20px;
+	color : #00f;
+}
+div#table-editor-status table td.cell_v {
+	text-align : left;
+}
+textarea#cv {
+	width : 95%;
+	height : 3em;
+	display : block;
+	margin : 0 auto;
+}
+div#table-editor-status ul li {
+	float : left;
+	margin-right : 4px;
+	list-style : none outside;
+}
+div#table-editor-status ul li a {
+	display : block;
+	padding : 5px 8px;
+	border : solid 1px #ccc;
+	border-bottom : none;
+}
+div#table-editor-status ul li a.active {
+	background-color : #0cf;
+	color : #fff;
+}
+div#table-editor-status table.table_info input.number {
+	width : 50px;
+	ime-mode : disabled;
+}
+
+/* =================== colorpicker style =============== */
+div.table_editor_colorpicker {
+	position : absolute;
+	top : 0px;
+}
+div.table_editor_colorpicker{
+	position : absolute;
+	padding : 10px;
+	border : ridge 1px #ccc;
+	z-index : 1500;
+	right : 0px;
+	background : #fff;
+	margin-top : 5px;
+	width : 137px;
+	display : none;
+}
+div.table_editor_colorpicker table {
+	border-collapse : collapse;
+	table-layout : fixed;
+	margin : 0;
+}
+div#table-editor-status div.table_editor_colorpicker table td {
+	border : solid 1px #333;
+	width : 16px;
+	height : 16px;
+	font-size : 0;
+	margin : 0;
+	padding : 0;
+}
+div.table_editor_colorpicker table td div{
+	width : 16px;
+	height : 16px;
+	margin : 0;
+	padding : 0;
+	cursor : pointer;
+}
+div.table_editor_colorpicker table.colorpicker_base_grays {
+
+}
+div.table_editor_colorpicker table.colorpicker_base_vivids {
+	margin-top : 10px;
+}
+div.table_editor_colorpicker table.colorpicker_base_vivids td {
+	border: solid 1px #333;
+}
+
+div.table_editor_colorpicker table.colorpicker_others {
+	 border : solid 1px #333;
+	 margin-top : 10px;
+}
+
+div.table_editor_colorpicker table.colorpicker_others td {
+	 border-left : solid 1px #666;
+	 border-right : solid 1px #666;
+	 border-bottom : none;
+	 border-top : none;
+}

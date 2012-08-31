@@ -1,0 +1,35 @@
+div.sz_tab_separator { padding-bottom : 10px;}
+div.sz_tab_separator input.txt-long {
+	width : 300px;
+}
+div.sz_tab_separator a.tab_delete {
+	margin-left : 10px;
+	color : #00c;
+	text-decoration : none;
+}
+div.sz_tab_separator a.tab_delete img {
+	display : inline;
+	vertical-align : middle;
+}
+div#tab_contents_frame p {
+	margin : 3px 0;
+}
+p.add_tab_wrapper{
+	background : url(../../images/plus.png) left center no-repeat;
+	padding-left : 18px;
+	margin-top : 8px;
+}
+p a#add_tab {
+	color : #00c;
+}
+hr.sep { margin : 5px;}
+div.tab_input_area {
+	border : solid 1px #ccc;
+	borer-radius : 5px;
+	-moz-border-radius : 5px;
+	-webkit-border-radius : 5px;
+	padding : 10px;
+	margin : 8px;
+	background : #fbfbfb;
+}
+

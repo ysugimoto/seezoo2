@@ -1,0 +1,106 @@
+div.sz_slideshow_block {
+	position : relative;
+	overflow : hidden;
+	width : 100%;
+}
+div.sz_slideshow_block img, div.sz_slideshow_block a {
+	position : absolute;
+	display : block;
+	top : 0px;
+	left : 0px;
+	z-index : 1;
+}
+div.sz_slideshow_block div.sz_garalley {
+	display : block;
+}
+
+div.sz_slideshow_block ul li img, div.sz_slideshow_block ul li a {
+	position : static;
+}
+div.sz_slideshow_block ul.sz_slideshow{
+	padding : 0 !important;
+	position : relative;
+	top : 0px;
+	left : 0px;
+	z-index: 10;
+	overflow : hidden;
+	height : 100%;
+	width : 100%;
+}
+div.sz_slideshow_block ul:after{
+	content : '';
+	display : block;
+	height : 0;
+	visibility : hidden;
+	clear : both;
+}
+div.sz_slideshow_block ul li{
+	margin : 0;
+	padding : 0;
+	list-style : none outside;
+}
+div.sz_slideshow_block ul.sz_slide_left li, ul.sz_garalley li{
+	float : left;
+}
+div.sz_slideshow_block ul.sz_slide_right li{
+	float : right;
+}
+div.sz_slideshow_block_ul.sz_slide_upper {
+	width : 100%;
+}
+ul.sz_garalley {
+	margin-left : -5px;
+	margin-top : 8px;
+}
+ul.sz_garalley li {
+	border :solid 1px #ccc;
+	padding : 10px 5px;
+	display : inline;
+	margin-left : 5px;
+	margin-top : 5px;
+	border-radius : 5px;
+	-moz-border-radius : 5px;
+	-webkit-border-radius : 5px;
+	-o-border-radius : 5px;
+	cursor : pointer;
+}
+ul.sz_garalley li.active {
+	border-color : #c00;
+}
+ul.sz_garalley li.hover {
+	border-color : #00c;
+}
+
+/* sub clearfix */
+ul.sz_garalley:after {
+	height : 0;
+	visibility : hidden;
+	display : block;
+	clear : both;
+	content : ''
+}
+*:first-child+html ul.sz_garalley {
+	overflow : hidden;
+}
+* html ul.sz_garalley ul.sz_garalley {
+	overflow : hidden;
+}
+ul.sz_slideshow_caption {
+	list-style : nont outside;
+	margin : 8px 0 0 0;
+	padding : 0;
+	text-align : center;
+}
+ul.sz_slideshow_caption li {
+	display : inline;
+	margin : 0 8px;
+}
+ul.sz_slideshow_caption li a {
+	color : #666;
+	text-decoration : none;
+}
+ul.sz_slideshow_caption li a.sz_slideshow_current {
+	color : #333;
+	font-size : 20px;
+}
+

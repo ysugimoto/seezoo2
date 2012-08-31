@@ -1,0 +1,29 @@
+(function(FL) {
+	
+	FL.load.module('ui');
+	Module.ready('ui', function() {
+		DOM('div.sz_area_splitter_wrapper').foreach(function() {
+			var splits = DOM(this).detect('div.sz_as_contents'),
+				sliders = {},
+				width = this.offsetWidth,
+				pos = 0;
+			
+			splits.foreach(function(num) {
+				if ( num === splits.length - 1 ) {
+					return;
+				}
+				pos += DOM(this).readStyle('width', true);
+				sliders['as' + num] = { initPosition : pos };
+			});
+			new Module.slider(this, {
+				sliders : sliders,
+				width : width,
+				state : true,
+				onslide : function(e) {
+					//console.log(this.__sliderID);
+				}
+			});
+		});
+		
+	});
+})(getInstance());

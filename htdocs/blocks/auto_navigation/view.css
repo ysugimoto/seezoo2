@@ -1,0 +1,49 @@
+br.sz_clear {
+	clear : both;
+	display : none;
+}
+div.sz_auto_navigation ul{
+	margin : 0;
+	float : none;
+}
+div.sz_auto_navigation ul:after {
+	content : '';
+	display : block;
+	height  : 0;
+	clear : both;
+	visibility : hidden;
+}
+*:first-child+html div.sz_auto_navigation ul{
+	overflow : hidden;
+}
+* htlm div.sz_auto_navigation ul {
+	overflow : hidden;
+}
+
+div.sz_auto_navigation ul.sz_breadcrumb li {
+	display : inline !important;
+	vertical-align : middle;
+}
+div.sz_auto_navigation ul.sz_breadcrumb li.curent_page {
+	font-weight : bold;
+}
+div.sz_auto_navigation ul.sz_breadcrumb li.sz_bc_separator {
+	margin : 0 8px;
+}
+div.sz_auto_navigation ul.h_nav:after{
+	content : '';
+	display : block;
+	height : 0;
+	visibility : hidden;
+	clear : both;
+}
+*:first-child+html div.sz_auto_navigation ul.h_nav{ overflow : hidden;}
+* html div.sz_auto_navigation ul.h_nav { overflow : hidden;}
+
+div.sz_auto_navigation ul.h_nav li {
+	float : left;
+}
+* html div.sz_auto_navigation ul.h_nav li {
+	float : none;
+	display : inline-block;
+}

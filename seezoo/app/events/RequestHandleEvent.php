@@ -44,12 +44,13 @@ class RequestHandleEvent
 	
 	public function __construct()
 	{
-		SeezooOptions::init('common');
 		$this->request   = Seezoo::getRequest();
 		$this->env       = Seezoo::getENV();
-		$this->site      = SeezooOptions::get('site_info');
 		$this->session   = Seezoo::$Importer->library('Session'); 
 		$this->initModel = Seezoo::$Importer->model('InitModel');
+		
+		$ut = new SeezooCMS;
+		$this->site = $ut->getStatus('site');
 	}
 	
 	public function handle()
@@ -67,11 +68,10 @@ class RequestHandleEvent
 		// SSL settings
 		$ssl = ( $this->request->server('server_port') == '443'
 		         || $this->request->server('https') == 'on' ) ? TRUE : FALSE;
-		SeezooOptions::init('common');
 		$ssl_url = ( $this->site && ! empty($this->site->ssl_base_url) )
 		             ? $this->site->ssl_base_url
 		             : $this->env->getConfig('base_url');
-		
+					 
 		$this->env->setConfig('ssl_mode', $ssl);
 		$this->env->setConfig('ssl_base_url', $ssl_url);
 		

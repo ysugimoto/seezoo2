@@ -1,0 +1,18 @@
+div.sz_area_splitter_wrapper:after {
+		content : '';
+	display : block;
+	height : 0px;
+	clear : both;
+	visibility : hidden;
+}
+* html div.sz_area_splitter_wrapper {
+	clear : both;
+	overflow : hidden;
+}
+*:first-child+html div.sz_area_splitter_wrapper {
+	clear : both;
+	overflow : hidden;
+}
+div.sz_as_contents {
+	float : left;
+}

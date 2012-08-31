@@ -1,0 +1,374 @@
+@CHARSET "UTF-8";
+
+.backlink {
+	margin : 10px 10px 15px 10px;
+}
+.backlink a,
+.morelink a {
+	color : #5A9D1D;
+	text-decoration : none;
+}
+.backlink a:hover,
+.morelink a:hover {
+	color : #5A9D1D;
+	text-shadow: 0 -1px 1px #fff;
+}
+
+.morelink {
+	margin : 20px 20px 40px 0;
+	text-align : right;
+}
+
+/** ====================== parts section ====================== **/
+
+div.sz_blog_menu_parts {
+	margin-bottom : 30px;
+}
+div.sz_blog_menu_parts a {
+	color : #333;
+}
+
+/** ====================== menu captions ====================== **/
+
+h4.blog_menu_caption {
+	border-bottom : solid 3px #5A9D1D;
+	padding-bottom : 2px;
+	margin-bottom : 10px;
+}
+
+h4.blog_menu_caption span {
+	display : block;
+	padding-left : 5px;
+	padding-bottom : 3px;
+	border-bottom : solid 1px #5A9D1D;
+}
+
+ul.sz_blog_menu_list li.none {
+	font-size : 0.9em;
+}
+
+/** ====================== calendar section ====================== **/
+
+div#sz_blog_calendar *{
+	font-family : Arial;
+	font-size : 1.0em;
+}
+div#sz_blog_calendar table {
+	width : 90%;
+	margin : 5px auto 0 auto;
+}
+div#sz_blog_calendar table tr.head_row th {
+	padding-bottom : 5px;
+}
+div#sz_blog_calendar table tr td {
+	text-align : center;
+	padding : 3px;
+}
+div#sz_blog_calendar table tr td.today {
+	background-color : #ccc;
+	color : #000;
+}
+div#sz_blog_calendar table tr a {
+	color : #5A9D1D;
+	display : block;
+}
+div#sz_blog_calendar table tr td a:hover {
+	color : #00d;
+	background-color : #eee;
+}
+
+
+/** ====================== menu list setcion ====================== **/
+
+ul.sz_blog_menu_list {
+	border-top : dotted 1px #ccc;
+}
+ul.sz_blog_menu_list li {
+	border-bottom : dotted 1px #ccc;
+	list-style : none outside;
+}
+ul.sz_blog_menu_list li a {
+	display : block;
+	padding : 8px 0 8px 10px;
+	color : #0084B4;
+	font-size : 0.8em;
+}
+ul.sz_blog_menu_list li a:hover, ul.sz_blog_menu_list li a.active {
+	background-color : #ffc;
+	color : #00d;
+}
+ul.sz_blog_menu_list li.none {
+	border : none;
+	padding : 8px 0 8px 10px;
+}
+
+/** ====================== search form section ====================== **/
+
+form.sz_blog_search fieldset {
+	border : solid 1px #ddd;
+	text-align : center;
+	padding : 20px 0 20px 0;
+	background-color : #fbfbfb;
+	border-radius : 5px;
+	-moz-border-radius : 5px;
+	-webkit-border-radius : 5px;
+	-o-border-radius : 5px;
+}
+form.sz_blog_search fieldset input.sz_blog_search_input {
+	padding : 3px 0 3px 20px;
+	width : 50%;
+	margin-right : 2px;
+	background : url(../../../images/search.png) left center no-repeat;
+	border : solid 1px #ccc;
+}
+p.to_detail {
+	margin : 0;
+	text-align : right;
+}
+
+
+/** ====================== frontend ====================== **/
+div.sz_blog_entry {
+	margin-bottom : 30px;
+}
+
+/* ---- title ---- */
+h3.sz_blog_title {
+	border-bottom : solid 2px #999;
+	padding-bottom : 3px;
+	position : relative;
+}
+h3.sz_blog_title a, h3.sz_blog_title strong {
+	font-size : 1.3em;
+	font-weight : bold;
+	margin-left : 8px;
+	color : #5A9D1D;
+}
+h3.sz_blog_title a:hover {
+	color : #00d;
+}
+h3.sz_blog_title span {
+	position : absolute;
+	top : 5px;
+	right : 10px;
+	font-size : 0.9em;
+	font-weight : normal;
+	color : #999;
+}
+
+/* ---- category ---- */
+p.sz_blog_category {
+	clear : both;
+	margin : 3px 0 0 15px;
+	font-size : 0.9em;
+}
+
+/* ---- author ---- */
+p.sz_blog_author {
+	margin : -20px  10px 0 0;
+	font-size : 0.9em;
+	text-align : right;
+}
+
+/* ---- body ---- */
+div.sz_blog_body {
+	padding : 10px;
+	font-size : 0.9em;
+	margin-bottom : 20px;
+	margin-top : 20px;
+}
+
+/* ---- pagination ---- */
+p.sz_blog_pagination {
+	text-align: center;
+	font-size: 0.9em;
+}
+p.sz_blog_pagination a,
+p.sz_blog_pagination strong {
+	margin : 0 5px;
+}
+
+/* ---- next/prev link ---- */
+p.sz_blog_next_prev {
+	position : relative;
+	height : 20px;
+}
+p.sz_blog_next_prev a {
+	position : absolute;
+	color : #5A9D1D;
+}
+p.sz_blog_next_prev a:hover {
+	text-decoration : underline;
+}
+a.sz_blog_prev {
+	left : 5px;
+	top : 0px;
+	
+}
+a.sz_blog_next {
+	right : 5px;
+	top : 0px;
+}
+
+
+/** ====================== comment section ====================== **/
+
+div.sz_blog_comment_list {
+	margin : 0 8px;	
+}
+h4.sz_blog_comment_section {
+	border-bottom : solid 1px #c00;
+	padding-bottom : 3px;
+	font-size : 0.9em;
+}
+h4.sz_blog_comment_section span {
+	margin-left : 10px;
+}
+h4.post_comment {
+	margin-top : 15px;
+}
+p#toggle_comment {
+	margin : 10px 0 10px 15px;
+	font-size : 12px;
+}
+p#toggle_comment a {
+	color : #0084B4;
+}
+p#toggle_comment a img {
+	vertical-align : middle;
+}
+div.sz_comment_box {
+	padding : 0;
+	height : 0;
+	overflow : hidden;
+	border-top : dotted 2px #ccc;
+}
+div.sz_blog_comment {
+	border-bottom : dotted 2px #ccc;
+	padding : 10px;
+}
+div.sz_blog_comment p {
+	margin : 0;
+	padding-right : 10px;
+}
+div.sz_blog_comment p span {
+	float : right;
+	color : #999;
+}
+div.sz_blog_comment div {
+	clear : both;
+	margin-top : 5px;
+	font-size : 0.9em;
+}
+
+/** ====================== trackback section ====================== **/
+
+h5.sz_blog_trackbacks_uri {
+	margin-top : 30px;
+	font-size : 0.9em;
+}
+p.trackback_uri {
+	margin : 8px 0 40px 0;
+	padding : 10px;
+	border : solid 1px #ddd;
+	border-radius : 5px;
+	-moz-border-radius : 5px;
+	-webkit-border-radius : 5px;
+	background : #FBFBFB;
+}
+p.trackback_uri input {
+	border : none;
+	background : none;
+	width : 100%;
+	font-size : 14px;
+}
+dl.sz_blog_trackback_section dd {
+	font-size : 0.9em;
+	padding : 5px 10px;
+	margin-top : 15px;
+	line-height : 1.4;
+}
+dl.sz_blog_trackback_section dt {
+	text-align : right;
+	padding-right : 15px;
+	font-size : 0.8em;
+	border-top : solid 1px #ccc;
+	padding-top : 3px;
+	line-height : 1.6;
+}
+
+/** ====================== comment form ====================== **/
+form.blog_comment_form {
+	margin : 10px;
+}
+form.blog_comment_form fieldset {
+	border : solid 1px #ddd;
+	background-color : #fbfbfb;
+	padding : 20px;
+}
+table.comment_submission_table {
+	width : 90%;
+}
+table.comment_submission_table th, table.comment_submission_table td {
+	padding : 5px;
+}
+table.comment_submission_table th {
+	width : 15%;
+	vertical-align : top;
+	font-size : 0.9em;
+	text-align : right;
+}
+table.comment_submission_table td {
+	width : 80%;
+}
+table.comment_submission_table td input.tt_input {
+	width : 100%;
+}
+table.comment_submission_table td textarea {
+	width : 100%;
+}
+table.comment_submission_table p.capcha_caption {
+	margin : 3px 0 0 0;
+	font-size : 11px;
+}
+table.comment_submission_table label img {
+	vertical-align : bottom;
+}
+p#comment_msg {
+	display : none;
+}
+
+/** ====================== comment validaion error ====================== **/
+p.error {
+	font-size : 0.9em;
+	color : #c00;
+	margin : 0;
+}
+
+/** ====================== ajax comment mesage ====================== **/
+div#sz_comment_posted_message {
+	position : fixed;
+	top : 0;
+	left : 0;
+	width : 100%;
+	z-index : 10000;
+	text-align : center;
+	font-size : 14px;
+	background-color : #fff;
+}
+div#sz_comment_posted_message p {
+	border : dotted 2px #c00;
+	border-left : none;
+	border-right : none;
+	margin : 0;
+	padding : 15px;
+	color : #0084B4;
+	font-size : 16px;
+}
+
+div.sz_blogparts_sortable {
+	border : dotted 2px #ccc;
+	padding : 10px;
+	margin-bottom : 10px;
+}
+

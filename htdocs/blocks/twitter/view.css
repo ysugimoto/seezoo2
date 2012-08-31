@@ -1,0 +1,94 @@
+ul.sz_twitter_block li {float : none;}
+
+div.sz_twitter_block_contents ul.sz_twitter_block_list {
+	width : 100%;
+	background-color : #fff;
+	margin : 0;
+	height : 200px;
+	/*overflow : auto;
+	border : solid 1px #ccc;*/
+}
+div.sz_twitter_block_contents ul.sz_twitter_block_list li{
+	font-size : 0.8em;
+	border-bottom : dotted 1px #ccc;
+	list-style : none outside;
+	padding : 5px 8px;
+}
+div.sz_twitter_block_contents ul.sz_twitter_block_list li p{
+	margin : 3px;
+	margin-top : 5px;
+	padding : 0;
+	text-align : right;
+	font-size : 10px;
+}
+div.sz_twitter_block_contents {
+	clear : both;
+	height : 0;
+	overflow : auto;
+	background : url(../../images/loading_small.gif) center center no-repeat;
+	position : relative;
+	z-index : 10;
+	font-size : 0.9em;
+	line-height : 1.4;
+	border : solid 1px #ccc;
+}
+
+div.sz_twitter_block_head {
+	border : solid 1px #333;
+	border-radius : 5px;
+	-moz-border-radius : 5px 5px 0 0;
+	webkit-border-radius : 5px;
+	background : #333;
+	padding : 10px;
+}
+*:first-child+html div.sz_twitter_block_head {
+	overflow : hidden;
+}
+* html div.sz_twitter_block_head {
+	overflow : hidden;
+}
+div.sz_twitter_block_head:after {
+	clear : both;
+	height : 0;
+	content : '';
+	visibility : hidden;
+	display : block;
+}
+*:first-child * html div.sz_twitter_block_head {
+	overflow : hidden;
+}
+* html div.sz_twitter_block_head {
+	overflow : hidden;
+}
+div.sz_twitter_block_head p {
+
+}
+div.sz_twitter_block_user_image {
+	width : 48px;
+	height : 48px;
+	float : left;
+	background : url(../../images/loading_small.gif) center center no-repeat;
+}
+div.sz_twitter_block_user_name {
+	float : left;
+	margin-left : 10px;
+	display : inline;
+	font-size : 0.8em;
+	padding-top : 10px;
+	color : #fff;
+}
+div.sz_twitter_block_user_name a {
+	color : #fff;
+}
+div.sz_twitter_block_user_name a:hover {
+	color : #fff;
+	text-decoration :underline;
+}
+div.sz_twitter_block_footer {
+	border : solid 1px #333;
+	border-radius : 5px;
+	-moz-border-radius : 0 0 5px 5px;
+	webkit-border-radius : 5px;
+	background : #333;
+	padding : 5px;
+}

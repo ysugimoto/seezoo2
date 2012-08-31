@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('SZ_EXEC')) exit('No direct script access allowed');
 
 /**
  * ==============================================================================
@@ -14,20 +14,58 @@
  * ==============================================================================
  */
 
-class SeezooUtility
+class SeezooCMS
 {
-	private $CI;
-	private $convert_defaults = array(
+	protected static $_status = array();
+	private static $instance;
+	protected $_userID;
+	
+	
+	private $convertDefaults = array(
 		'width'          => 300,
 		'height'         => 200,
 		'quality'        => 80,
 		'maintain_ratio' => TRUE
 	);
 	
-	function __construct()
+	public static function setStatus($name, $value)
 	{
-		$this->CI =& get_instance();
+		self::$_status[$name] = $value;
 	}
+	
+	public function getStatus($name)
+	{
+		return ( isset(self::$_status[$name]) )
+		         ? self::$_status[$name]
+		         : FALSE;
+	}
+	
+	public static function getInstance()
+	{
+		if ( ! self::$instance )
+		{
+			self::$instance = new self();
+		}
+		return self::$instance;
+	}
+	
+	public function __get($name)
+	{
+		return $this->getStatus($name);
+	}
+	
+	public function loadHeader()
+	{
+		$SZ = Seezoo::getInstance();
+		return $SZ->view->render('header_required', '', TRUE);
+	}
+
+	public function loadFooter()
+	{
+		$SZ = Seezoo::getInstance();
+		return $SZ->view->render('footer_required', '', TRUE);
+	}
+	
 
 	/**
 	 * is_edit_mode
@@ -35,9 +73,9 @@ class SeezooUtility
 	 * @access public
 	 * @return bool
 	 */
-	public function is_edit_mode()
+	public function isEditMode()
 	{
-		return ( $this->CI->edit_mode === 'EDIT_SELF' ) ? TRUE : FALSE;
+		return ( $this->getStatus('edit_mode') === 'EDIT_SELF' ) ? TRUE : FALSE;
 	}
 	
 	/**
@@ -45,9 +83,10 @@ class SeezooUtility
 	 * @access public
 	 * @return bool
 	 */
-	public function is_user_logged_in()
+	public function isLoggedIn()
 	{
-		return ( (int)$this->CI->session->userdata('user_id') > 0 ) ? TRUE : FALSE;
+		$init = Seezoo::$Importer->model('InitModel');
+		return $init->isLoggedIn();
 	}
 	
 	/**
@@ -55,9 +94,10 @@ class SeezooUtility
 	 * @access public
 	 * @return bool
 	 */
-	public function is_member_logged_in()
+	public function isMemberLoggedIn()
 	{
-		return ( (int)$this->CI->session->userdata('member_id') > 0 ) ? TRUE : FALSE;
+		$init = Seezoo::$Importer->model('InitModel');
+		return $init->isMemberLoggedIn();
 	}
 	
 	/**
@@ -66,18 +106,260 @@ class SeezooUtility
 	 * @access public
 	 * @param $abs
 	 */
-	public function get_template_path($abs = TRUE)
+	public function getTemplatePath($abs = TRUE)
 	{
-		if ( $abs )
+		$prefix = ( $abs ) ? file_link() : '';
+		return $prefix . 'templates/' . $this->getStatus('relative_template_path');
+	}
+	
+	
+	public function __construct()
+	{
+		$this->_userID = $this->getUserID();
+	}
+	
+	public function getUserID()
+	{
+		if ( ! $this->_userID )
 		{
-			return file_link() . 'templates/' . $this->CI->_rel_template_path;
+			$sess = Seezoo::$Importer->library('Session');
+			$this->_userID = (int)$sess->get('user_id');
+		}
+		return $this->_userID;
+	}
+	
+	public function getUserData($userID)
+	{
+		return ActiveRecord::finder('sz_users')
+		         ->findByUserId($userID);
+	}
+	
+	public function getMemberID()
+	{
+		$sess = Seezoo::$Importer->library('Session');
+		return (int)$sess->get('member_id');
+		
+	}
+	
+	/**
+	 * Block has permission
+	 * 
+	 * @param string [:]seperated string
+	 * @param int $userID
+	 * @return bool
+	 */
+	public function hasBlockPermission($permission, $userID)
+	{
+		if ( ! $permission )
+		{
+			return TRUE;
 		}
 		else
 		{
-			return 'templates/' . $this->CI->_rel_template_path;
-			//return $this->CI->relative_template_path;
+			$mark = ':' . $userID . ':';
+			return strpos($permission, $mark) !== FALSE;
 		}
 	}
+	
+	/**
+	 * Page has permission
+	 * 
+	 * @param string [:]seperated string
+	 * @param int $userID
+	 * @return bool
+	 */
+	public function hasPagePermission($permission, $userID)
+	{
+		if ( ! $permission )
+		{
+			return FALSE;
+		}
+		else
+		{
+			$mark = ':' . $userID . ':';
+			return strpos($permission, $mark) !== FALSE;
+		}
+	}
+	
+	public function loadBlock($collectionName = FALSE, $blockID = FALSE)
+	{
+		if ( ! $collectionName )
+		{
+			return;
+		}
+		
+		// to correct basename
+		$collectionName = kill_traversal($collectionName);
+		$packages       = Seezoo::getPackage();
+
+		if ( ! class_exists(ucfirst($collectionName . '_block')))
+		{
+			$blockPath = 'blocks/' . $collectionName . '/' . $collectionName . '.php';
+			$isLoaded = FALSE;
+			foreach ( $packages as $pkg )
+			{
+				if ( file_exists(PKGPATH . $pkg . '/' . $blockPath) )
+				{
+					require_once(PKGPATH . $pkg . '/' . $blockPath);
+					$isLoaded = TRUE;
+					break;
+				}
+			}
+			
+			if ( ! $isLoaded )
+			{
+				if ( file_exists(EXTPATH . $blockPath) )
+				{
+					require_once(EXTPATH . $blockPath);
+				}
+				else
+				{
+					require_once(ROOTPATH . $blockPath);
+				}
+			}
+		}
+		
+		$blockClass = ucfirst($collectionName) . '_block';
+		$block = new $blockClass();
+		$block->init($blockID, $collectionName);
+		
+		return $block;
+	}
+	
+	/**
+	 * Generate dashboard left menus
+	 * 
+	 * @return HTML string
+	 */
+	public function buildDashboardMenu($pageData)
+	{
+		$db  = Seezoo::$Importer->database();
+		$sql = 
+				'SELECT DISTINCT '
+				.	'PP.page_path, '
+				.	'PV.page_title, '
+				.	'PV.page_description, '
+				.	'PV.parent, '
+				.	'PV.page_id, '
+				.	'perms.allow_access_user '
+				. 'FROM '
+				.	$db->prefix().'page_versions as PV '
+				. 'LEFT OUTER JOIN ' . $db->prefix().'page_permissions as perms ON ( '
+				.	'PV.page_id = perms.page_id '
+				.') '
+				. 'RIGHT OUTER JOIN ' . $db->prefix().'page_paths as PP ON ( '
+				.	'PV.page_id = PP.page_id '
+				.') '
+				. 'WHERE '
+				.	'PP.page_path LIKE ? '
+				.'AND '
+				.	'PV.display_page_level = 0 '
+				. 'ORDER BY '
+				.	'display_order ASC'
+				;
+
+		$ch_sql =
+				'SELECT '
+				.	'PV.page_title, '
+				.	'PV.page_description, '
+				.	'PV.page_id, '
+				.	'perms.allow_access_user, '
+				.	'PP.page_path '
+				. 'FROM '
+				.	$db->prefix().'page_versions as PV '
+				. 'RIGHT OUTER JOIN ' . $db->prefix().'page_paths as PP ON ( '
+				.	'PV.page_id = PP.page_id '
+				.') '
+				. 'LEFT OUTER JOIN ' . $db->prefix().'page_permissions as perms ON ( '
+				.	'PV.page_id = perms.page_id '
+				.') '
+				. 'WHERE '
+				.	'PV.parent = ? '
+				.'ORDER BY '
+				.	'PV.display_order ASC'
+				;
+		$query       = $db->query($sql, array('dashboard/%'));
+		$child_stack = array();
+		$out         = array('<ul class="sideNav">');
+		foreach ( $query->resultArray() as $v )
+		{
+			// page has child?
+			$query2 = $db->query($ch_sql, array($v['page_id']));
+			$arr    = array(
+				'page'  => $v,
+				'child' => ( $query2->numRows() > 0 ) ? $query2->resultArray() : FALSE
+			);
+			$child_stack[] = $arr;
+		}
+		// format HTML
+		foreach ( $child_stack as $key => $value )
+		{
+			$out[] = $this->_buildDashboardMenuFormat($value['page'], $pageData);
+
+			if ( $value['child']
+			     && ( $value['page']['page_id'] == $pageData->page_id
+			          || $value['page']['page_id'] == $pageData->parent_id) )
+			{
+				$out[] = '<ul>';
+				foreach ( $value['child'] as $v )
+				{
+					$out[] = $this->_buildDashboardMenuFormat($v, $pageData);
+					$out[] = '</li>';
+				}
+				$out[] = '</ul>';
+			}
+			$out[] = '</li>';
+		}
+		$out[] = '</ul>';
+
+		return implode("\n", $out);
+	}
+	
+	
+	/**
+	 * Format dashboard menu tree
+	 * 
+	 * @param array $page
+	 * @param object $pageData
+	 * @return string
+	 */
+	protected function _buildDashboardMenuFormat($page, $pageData)
+	{
+		// Are you a master user?
+		if ( $this->_userData->user_id  > 1 )
+		{
+			// Do you have admin_permission?
+			if ( $this->_userData->admin_flag == 0 )
+			{
+				// this page allow_access?
+				if ( ! $this->hasPermission(
+				                        $page['allow_access_user'],
+				                        $this->_userData->user_id
+				                        )
+				)
+				{
+					return '';
+				}
+			}
+		}
+
+		$out[] = '<li id="dashboard_page_' . $page['page_id'] . '">'
+		         .'<a href="' . page_link() . $page['page_path'] . '"';
+		
+		if ( $page['page_id'] == $pageData->page_id
+		     || $page['page_id'] == $pageData->parent_id)
+		{
+			$out[] = ' class="active"';
+		}
+		$out[] = '>' . $page['page_title'] . '</a>';
+
+		return implode('', $out);
+	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * get_page_path
@@ -86,7 +368,7 @@ class SeezooUtility
 	 * @param $abs
 	 * @return $path
 	 */
-	public function get_page_path($abs = TRUE)
+	public function getPagePath($abs = TRUE)
 	{
 		if ( isset($this->page_path ) )
 		{
