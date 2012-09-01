@@ -293,7 +293,7 @@ $config['session_filename_prefix'] = 'sess_';
 $config['session_file_store_path'] = ETCPATH . 'caches/session/';
 
 /* ----------------- Database session config ------------------ */
-$config['session_db_tablename']    = 'sz_sessions';
+$config['session_db_tablename']    = 'sessions';
 
 /* ----------------- Memcache session config ------------------ */
 $config['session_memcache_host']     = 'localhost';

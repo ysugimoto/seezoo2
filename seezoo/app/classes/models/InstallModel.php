@@ -12,7 +12,7 @@
  */
 class InstallModel extends SZ_Kennel
 {
-	protected $db;
+	protected $_db;
 	
 	public function __construct()
 	{
@@ -155,7 +155,7 @@ class InstallModel extends SZ_Kennel
 		// try database connection
 		try
 		{
-			$this->db = new PDO($dsn, $dat['db_username'], $dat['db_password'] );
+			$this->_db = new PDO($dsn, $dat['db_username'], $dat['db_password'] );
 			$result   = TRUE;
 		}
 		catch ( PDOException $e )
@@ -175,7 +175,7 @@ class InstallModel extends SZ_Kennel
 	 */
 	public function createSystemTable($dat)
 	{
-		if ( ! $this->db )
+		if ( ! $this->_db )
 		{
 			return 'Database not connected.';
 		}
@@ -195,7 +195,7 @@ class InstallModel extends SZ_Kennel
 				continue;
 			}
 			$sql = str_replace('{DBPREFIX}', $dat['db_prefix'], $sql);
-			$query = $this->db->query($sql);
+			$query = $this->_db->query($sql);
 			if ( ! $query )
 			{
 				return 'Install SQL query failed: ' . $sql;
@@ -203,7 +203,7 @@ class InstallModel extends SZ_Kennel
 		}
 		
 		// Set site title
-		$statement = $this->db->prepare("UPDATE {$dat['db_prefix']}site_info set site_title = ?;");
+		$statement = $this->_db->prepare("UPDATE {$dat['db_prefix']}site_info set site_title = ?;");
 		$statement->bindValue(1, $dat['site_name'], PDO::PARAM_STR);
 		$query = $statement->execute();
 		if ( ! $query )
@@ -222,9 +222,9 @@ class InstallModel extends SZ_Kennel
 	 */
 	public function closeInstallingDatabase()
 	{
-		if ( $this->db )
+		if ( $this->_db )
 		{
-			unset($this->db);
+			unset($this->_db);
 		}
 	}
 	
@@ -238,18 +238,18 @@ class InstallModel extends SZ_Kennel
 	 */
 	public function registInstalledAdminUser($dat)
 	{
-		if ( ! $this->db )
+		if ( ! $this->_db )
 		{
 			return 'Database not connected.';
 		}
 		$encrypted = $this->dashboardModel->encryptPassword($dat['admin_password']);
 		$sql =
-			"INSERT INTO {$dat['db_prefix']}sz_users "
+			"INSERT INTO {$dat['db_prefix']}users "
 			. "(user_name, password, hash, email, admin_flag, regist_time, is_admin_user) "
 			. "VALUES (?, ?, ?, ?, ?, ?, ?)";
 		$index     = 0;
 		
-		$statement = $this->db->prepare($sql);
+		$statement = $this->_db->prepare($sql);
 		$statement->bindValue(++$index, $dat['admin_username'], PDO::PARAM_STR);
 		$statement->bindValue(++$index, $encrypted['password'], PDO::PARAM_STR);
 		$statement->bindValue(++$index, $encrypted['hash'],     PDO::PARAM_STR);

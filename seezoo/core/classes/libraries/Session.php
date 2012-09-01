@@ -124,9 +124,16 @@ class SZ_Session extends SZ_Driver
 	 */
 	public function remove($key)
 	{
-		foreach ( (array)$key as $index )
+		if ( is_array($key) )
 		{
-			$this->driver->remove($index);
+			foreach ( $key as $index )
+			{
+				$this->driver->remove($index);
+			}
+		}
+		else 
+		{
+			$this->driver->remove($key);
 		}
 	}
 	

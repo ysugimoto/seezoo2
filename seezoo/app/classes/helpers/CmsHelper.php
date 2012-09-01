@@ -29,7 +29,7 @@ class CmsHelper
 	
 	public function getUserData($userID)
 	{
-		return ActiveRecord::finder('sz_users')
+		return ActiveRecord::finder('users')
 		         ->findByUserId($userID);
 	}
 	

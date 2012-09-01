@@ -13,7 +13,7 @@
 class AuthModel extends SZ_Kennel
 {
 	protected $remmemberLoginCookieName = 'seezoo_remembers';
-	protected $table = 'sz_users';
+	protected $table = 'users';
 	protected $cryptAlgorithms = array(
 		'$1$' => 'md5',
 		'$2$' => 'sha1',
@@ -45,6 +45,20 @@ class AuthModel extends SZ_Kennel
 	
 	
 	/**
+	 * Login from remember cookit
+	 * 
+	 * @access protected
+	 * @param  string $cookir
+	 * @return mixed
+	 */
+	protected function doRemenberLogin($cookie)
+	{
+		$user = $this->find('users', array('remember_token' => $cookie));
+		return ( $user ) ? $user->user_id : FALSE;
+	}
+	
+	
+	/**
 	 * Execute admin user login
 	 * 
 	 * @access public
@@ -53,7 +67,7 @@ class AuthModel extends SZ_Kennel
 	 * @param string $remember
 	 * @return mixed
 	 */
-	public function adminLogin($username, $password, $remenber)
+	public function adminLogin($username, $password, $remember)
 	{
 		$condition = array(
 			'user_name'        => $username,
@@ -95,6 +109,18 @@ class AuthModel extends SZ_Kennel
 		$session = Seezoo::$Importer->library('session');
 		$session->set('user_id', $user->user_id);
 		
+		if ( $remember )
+		{
+			$rememberToken = sha1(uniqid(mt_rand(), TRUE));
+			$this->db->update(
+				$this->table,
+				array('remember_token' => $rememberToken),
+				array('user_id' => $user->user_id)
+			);
+			$Cookie = Seezoo::$Importer->helper('Cookie');
+			$Cookie->set($this->remmemberLoginCookieName, $rememberToken);
+		}
+		
 		// To disable all the editing status of past
 		//$process = Seezoo::$Importer->model('ProcessModel');
 		//$process->deleteAllEditStatus($user->user_id);
@@ -124,7 +150,6 @@ class AuthModel extends SZ_Kennel
 			$storedPassword = substr($user->possword, 3);
 		}
 		$password = $dashboard->stretchPassword($user->hash, $password, $algorithm);
-		echo $password;
 		return ( $password === $storedPassword ) ? TRUE : FALSE;
 	}
 	
@@ -148,7 +173,7 @@ class AuthModel extends SZ_Kennel
 		$sess = Seezoo::$Importer->library('Session');
 		$userID = $sess->get('user_id');
 		
-		if ( $userID )
+		if ( $userID > 0 )
 		{
 			$sql =
 				'UPDATE '
@@ -159,12 +184,10 @@ class AuthModel extends SZ_Kennel
 				.'WHERE '
 				.	'edit_user_id = ?';
 			$this->db->query($sql, array(0, 0, $userID));
-			
+
 			// delete session data
 			$sess->remove(array('user_id', 'rollback_user', 'viewmode'));
-			return TRUE;
 		}
-		return FALSE;
 	}
 	
 	
@@ -178,6 +201,7 @@ class AuthModel extends SZ_Kennel
 		{
 			$sess->remove('member_id');
 		}
+		return TRUE;
 	}
 		
 }

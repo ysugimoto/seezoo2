@@ -20,7 +20,7 @@ class PageLead extends SZ_Lead
 		$data->site            = $seezoo->getStatus('site');
 		$data->approveOrders   = $this->dashboardModel->getApproveStatuses($userID);
 		$data->approveRequest  = $this->dashboardModel->getApproveRequests($userID, $this->userModel->isAdmin($userID));
-		$data->userData        = ActiveRecord::finder('sz_users')
+		$data->userData        = ActiveRecord::finder('users')
 		                         ->findByUserId(1);
 		$data->defaultTemplate = ActiveRecord::finder('templates')
 		                         ->findByTemplateId($data->site->default_template_id);

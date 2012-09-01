@@ -45,6 +45,14 @@ class InstallModelTest extends SZ_KennelTest
 		$this->assertTrue($bool);
 	}
 	
+	public function testIsDatabaseEnableNG()
+	{
+		$dat = $this->getDBSettings();
+		$dat['db_password'] = '';
+		$bool = $this->model->isDatabaseEnable($dat);
+		$this->assertFalse($bool);
+	}
+	
 	public function getDBSettings()
 	{
 		include(APPPATH . 'config/database.php');
@@ -53,7 +61,8 @@ class InstallModelTest extends SZ_KennelTest
 			'db_address'  => $default['host'] . ':' . $default['port'],
 			'db_username' => $default['username'],
 			'db_password' => $default['password'],
-			'db_name'     => $default['dbname']
+			'db_name'     => $default['dbname'],
+			'db_port'     => $default['port']
 		);
 		return $dat;
 	}

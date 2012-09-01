@@ -46,7 +46,7 @@ class ProcessEvent
 		}
 		
 		// Include system configuration
-		require_once(APPPATH . 'config/seezoo.config.php');
+		require_once(APPPATH . 'cms/seezoo.config.php');
 		// CMS Basic utility functions
 		require_once(APPPATH . 'cms/seezoo_functions.php');
 	}
@@ -204,7 +204,7 @@ class ProcessEvent
 			define('SITE_TITLE', $site->site_title);
 			
 			// set OGP data
-			$ogp = ActiveRecord::finder('sz_ogp_data')->find();
+			$ogp = ActiveRecord::finder('ogp_data')->find();
 			SeezooCMS::setStatus('ogp', $ogp);
 		}
 		else

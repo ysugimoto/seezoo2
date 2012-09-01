@@ -11,10 +11,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}areas` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_auto_navigation`
+-- テーブルの構造 `bt_auto_navigation`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_auto_navigation` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_auto_navigation` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `sort_order` int(2) DEFAULT '1',
   `based_page_id` int(11) DEFAULT '1',
@@ -123,23 +123,23 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}collections` (
 --
 
 INSERT INTO `{DBPREFIX}collections` (`collection_id`, `collection_name`, `interface_width`, `interface_height`, `description`, `added_date`, `block_name`, `db_table`, `pc_enabled`, `sp_enabled`, `mb_enabled`) VALUES
-(1, 'textcontent', 760, 500, 'リッチエディタでコンテンツを作成します。', NOW(), '記事ブロック', 'sz_bt_textcontent', 1, 1, 1),
-(2, 'image', 500, 500, '画像を設置します。', NOW(), '画像ブロック', 'sz_bt_image_block', 1, 1, 1),
-(3, 'file_download', 500, 500, 'ファイルをダウンロードさせるブロックを設置します。', NOW(), 'ファイルダウンロードブロック', 'sz_bt_file_download', 1, 1, 1),
-(4, 'form', 700, 600, 'お問い合わせフォームを設置します。', NOW(), 'お問い合わせフォームブロック', 'sz_bt_forms', 1, 1, 1),
-(5, 'head', 500, 500, '見出しを挿入します。', NOW(), '見出しブロック', 'sz_bt_head_block', 1, 1, 1),
-(6, 'auto_navigation', 500, 500, 'サイト構造に合わせて自動リンクを生成します。', NOW(), 'オートナビゲーションブロック', 'sz_bt_auto_navigation', 1, 1, 1),
-(7, 'googlemap', 500, 500, 'GoogleMapを表示します。', NOW(), 'GoogleMapブロック', 'sz_bt_googlemap_block', 1, 1, 1),
-(8, 'html', 500, 500, 'HTMLコードを挿入します。', NOW(), 'HTMLブロック', 'sz_bt_htmlcontent', 1, 1, 1),
-(9, 'tabs', 500, 400, 'タブ切り替え可能なブロックを生成します。', NOW(), 'タブコンテンツブロック', 'sz_bt_tab_contents', 1, 1, 0),
-(10, 'twitter', 500, 500, 'twitterのつぶやきを表示します。', NOW(), 'twitterブロック', 'sz_bt_twitter_block', 1, 1, 1),
-(12, 'slideshow', 600, 500, '画像をスライドショーで切り替えます。', NOW(), 'スライドショーブロック', 'sz_bt_slideshow', 1, 1, 0),
-(13, 'image_text', 500, 500, 'テキスト＋画像を並べて表示します。', NOW(), 'テキスト＋画像ブロック', 'sz_bt_image_text', 1, 1, 1),
-(14, 'area_splitter', 500, 500, '編集エリアを分割します。', NOW(), '編集エリア分割ブロック', 'sz_bt_area_splitter', 1, 1, 1),
-(15, 'flash', 500, 500, 'Flashムービーを設置します。', NOW(), 'Flash設置ブロック', 'sz_bt_flash', 1, 0, 1),
-(16, 'video', 500, 500, '外部ビデオを再生します。', NOW(), 'ビデオプレイヤーブロック', 'sz_bt_video', 1, 1, 0),
-(17, 'table', 760, 500, '簡易的な表を作成します。', NOW(), '表ブロック', 'sz_bt_table', 1, 1, 1),
-(18, 'blogupdates', 500, 500, 'ブログの更新情報を表示します。', NOW(), 'ブログ更新情報ブロック', 'sz_bt_bloginfo', 1, 1, 1);
+(1, 'textcontent', 760, 500, 'リッチエディタでコンテンツを作成します。', NOW(), '記事ブロック', '{DBPREFIX}bt_textcontent', 1, 1, 1),
+(2, 'image', 500, 500, '画像を設置します。', NOW(), '画像ブロック', '{DBPREFIX}bt_image_block', 1, 1, 1),
+(3, 'file_download', 500, 500, 'ファイルをダウンロードさせるブロックを設置します。', NOW(), 'ファイルダウンロードブロック', '{DBPREFIX}bt_file_download', 1, 1, 1),
+(4, 'form', 700, 600, 'お問い合わせフォームを設置します。', NOW(), 'お問い合わせフォームブロック', '{DBPREFIX}bt_forms', 1, 1, 1),
+(5, 'head', 500, 500, '見出しを挿入します。', NOW(), '見出しブロック', '{DBPREFIX}bt_head_block', 1, 1, 1),
+(6, 'auto_navigation', 500, 500, 'サイト構造に合わせて自動リンクを生成します。', NOW(), 'オートナビゲーションブロック', '{DBPREFIX}bt_auto_navigation', 1, 1, 1),
+(7, 'googlemap', 500, 500, 'GoogleMapを表示します。', NOW(), 'GoogleMapブロック', '{DBPREFIX}bt_googlemap_block', 1, 1, 1),
+(8, 'html', 500, 500, 'HTMLコードを挿入します。', NOW(), 'HTMLブロック', '{DBPREFIX}bt_htmlcontent', 1, 1, 1),
+(9, 'tabs', 500, 400, 'タブ切り替え可能なブロックを生成します。', NOW(), 'タブコンテンツブロック', '{DBPREFIX}bt_tab_contents', 1, 1, 0),
+(10, 'twitter', 500, 500, 'twitterのつぶやきを表示します。', NOW(), 'twitterブロック', '{DBPREFIX}bt_twitter_block', 1, 1, 1),
+(12, 'slideshow', 600, 500, '画像をスライドショーで切り替えます。', NOW(), 'スライドショーブロック', '{DBPREFIX}bt_slideshow', 1, 1, 0),
+(13, 'image_text', 500, 500, 'テキスト＋画像を並べて表示します。', NOW(), 'テキスト＋画像ブロック', '{DBPREFIX}bt_image_text', 1, 1, 1),
+(14, 'area_splitter', 500, 500, '編集エリアを分割します。', NOW(), '編集エリア分割ブロック', '{DBPREFIX}bt_area_splitter', 1, 1, 1),
+(15, 'flash', 500, 500, 'Flashムービーを設置します。', NOW(), 'Flash設置ブロック', '{DBPREFIX}bt_flash', 1, 0, 1),
+(16, 'video', 500, 500, '外部ビデオを再生します。', NOW(), 'ビデオプレイヤーブロック', '{DBPREFIX}bt_video', 1, 1, 0),
+(17, 'table', 760, 500, '簡易的な表を作成します。', NOW(), '表ブロック', '{DBPREFIX}bt_table', 1, 1, 1),
+(18, 'blogupdates', 500, 500, 'ブログの更新情報を表示します。', NOW(), 'ブログ更新情報ブロック', '{DBPREFIX}bt_bloginfo', 1, 1, 1);
 
 --
 -- テーブルの構造 `directories`
@@ -207,10 +207,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}file_groups` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_forms`
+-- テーブルの構造 `bt_forms`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_forms` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_forms` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `question_key` varchar(255) DEFAULT '0',
   `form_title` varchar(255) DEFAULT NULL,
@@ -223,10 +223,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_forms` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_googlemap_block`
+-- テーブルの構造 `bt_googlemap_block`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_googlemap_block` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_googlemap_block` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `api_key` varchar(255) DEFAULT NULL,
   `zoom` int(2) DEFAULT '13',
@@ -240,10 +240,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_googlemap_block` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_head_block`
+-- テーブルの構造 `bt_head_block`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_head_block` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_head_block` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `head_level` varchar(2) DEFAULT NULL,
   `class_name` varchar(255) DEFAULT NULL,
@@ -255,20 +255,20 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_head_block` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_htmlcontent`
+-- テーブルの構造 `bt_htmlcontent`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_htmlcontent` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_htmlcontent` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `body` text,
   PRIMARY KEY (`block_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_image_block`
+-- テーブルの構造 `bt_image_block`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_image_block` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_image_block` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `file_id` int(11) DEFAULT '0',
   `alt` varchar(255) DEFAULT NULL,
@@ -370,7 +370,7 @@ INSERT INTO `{DBPREFIX}page_paths` (`page_path_id`, `page_path`, `page_id`) VALU
 (1, 'home', 1),
 (2, 'login', 2),
 (3, 'logout', 3),
-(4, 'dashboard/panel', 4),
+(4, 'dashboard', 4),
 (5, 'dashboard/pages', 5),
 (6, 'dashboard/pages/page_list', 6),
 (7, 'dashboard/pages/system_page', 7),
@@ -557,25 +557,25 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}pending_pages` (
 
 
 -- 
--- テーブルの構造 `sz_backend`
+-- テーブルの構造 `backend`
 -- 
 
-CREATE TABLE `sz_backend` (
-  `sz_backend_id` int(11) NOT NULL auto_increment,
+CREATE TABLE `backend` (
+  `backend_id` int(11) NOT NULL auto_increment,
   `backend_handle` varchar(255) NOT NULL,
   `backend_name` varchar(255) NOT NULL,
   `description` varchar(255) default NULL,
   `last_run` datetime NOT NULL default '0000-00-00 00:00:00',
   `result` text,
   `is_process` int(1) NOT NULL default '0',
-  PRIMARY KEY  (`sz_backend_id`)
+  PRIMARY KEY  (`backend_id`)
 ) DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
--- テーブルの構造 `sz_bt_questions`
+-- テーブルの構造 `bt_questions`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_questions` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_questions` (
   `question_id` int(1) NOT NULL AUTO_INCREMENT,
   `question_key` varchar(255) DEFAULT '0',
   `question_name` varchar(255) DEFAULT '0',
@@ -595,10 +595,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_questions` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_question_answers`
+-- テーブルの構造 `bt_question_answers`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_question_answers` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_question_answers` (
   `question_key` varchar(255) DEFAULT '0',
   `question_id` int(11) DEFAULT '0',
   `answer` varchar(255) DEFAULT NULL,
@@ -637,10 +637,10 @@ INSERT INTO `{DBPREFIX}site_info` (`site_title`, `google_analytics`, `is_mainten
 ('', '', 0, 1, '', '', 0, 0);
 
 --
--- テーブルの構造 `sz_bt_image_text`
+-- テーブルの構造 `bt_image_text`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_image_text` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_image_text` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `file_id` int(11) DEFAULT NULL,
   `text` text,
@@ -649,20 +649,20 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_image_text` (
 )  DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_flash`
+-- テーブルの構造 `bt_flash`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_flash` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_flash` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `file_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`block_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_video`
+-- テーブルの構造 `bt_video`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_video` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_video` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `file_id` int(11) DEFAULT NULL,
   `display_width` int(5) DEFAULT NULL,
@@ -671,13 +671,13 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_video` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_blog`
+-- テーブルの構造 `blog`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_blog` (
-  `sz_blog_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ブログエントリーID',
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}blog` (
+  `blog_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ブログエントリーID',
   `user_id` int(11) NOT NULL DEFAULT 0 COMMENT 'ブログエントリーの投稿者ID',
-  `sz_blog_category_id` int(11) NOT NULL COMMENT 'カテゴリID',
+  `blog_category_id` int(11) NOT NULL COMMENT 'カテゴリID',
   `title` varchar(255) NOT NULL COMMENT 'タイトル',
   `body` text NOT NULL COMMENT '内容',
   `entry_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '投稿日時',
@@ -686,70 +686,70 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_blog` (
   `is_accept_trackback` int(1) NOT NULL DEFAULT '1' COMMENT 'トラックバックを受け付けるかどうかのチェック',
   `is_public` tinyint(1) NOT NULL DEFAULT 1 COMMENT '下書きフラグ（0:下書き1:公開）',
   `drafted_by` int(11) NOT NULL DEFAULT 0 COMMENT '下書き元のエントリーID',
-  PRIMARY KEY (`sz_blog_id`)
+  PRIMARY KEY (`blog_id`)
 ) DEFAULT CHARSET=utf8;
 
 
 --
--- テーブルの構造 `sz_blog_category`
+-- テーブルの構造 `blog_category`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_blog_category` (
-  `sz_blog_category_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'カテゴリID',
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}blog_category` (
+  `blog_category_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'カテゴリID',
   `category_name` varchar(255) NOT NULL COMMENT 'カテゴリ名',
   `is_use` int(1) NOT NULL DEFAULT '1' COMMENT '使用しているかどうか',
-  PRIMARY KEY (`sz_blog_category_id`)
+  PRIMARY KEY (`blog_category_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_blog_comment`
+-- テーブルの構造 `blog_comment`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_blog_comment` (
-  `sz_blog_comment_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'コメントID',
-  `sz_blog_id` int(11) NOT NULL COMMENT 'コメント対象の記事ID',
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}blog_comment` (
+  `blog_comment_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'コメントID',
+  `blog_id` int(11) NOT NULL COMMENT 'コメント対象の記事ID',
   `post_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '投稿日時',
   `name` varchar(255) NOT NULL DEFAULT 'no name' COMMENT '投稿者名',
   `comment_body` text NOT NULL COMMENT 'コメント内容',
-  PRIMARY KEY (`sz_blog_comment_id`),
-  KEY `sz_blog_id` (`sz_blog_id`, `sz_blog_comment_id`)
+  PRIMARY KEY (`blog_comment_id`),
+  KEY `blog_id` (`blog_id`, `blog_comment_id`)
 ) DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
 --
--- テーブルの構造 `sz_blog_ping_list`
+-- テーブルの構造 `blog_ping_list`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_blog_ping_list` (
-  `sz_blog_ping_list_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}blog_ping_list` (
+  `blog_ping_list_id` int(11) NOT NULL AUTO_INCREMENT,
   `ping_server` varchar(255) NOT NULL DEFAULT '0' COMMENT 'ping送信先URL',
   `ping_name` varchar(255) NOT NULL DEFAULT '0' COMMENT 'ping名',
-  PRIMARY KEY (`sz_blog_ping_list_id`)
+  PRIMARY KEY (`blog_ping_list_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルのデータをダンプしています `sz_blog_ping_list`
+-- テーブルのデータをダンプしています `blog_ping_list`
 --
 
-INSERT INTO `{DBPREFIX}sz_blog_ping_list` (`sz_blog_ping_list_id`, `ping_server`, `ping_name`) VALUES
+INSERT INTO `{DBPREFIX}blog_ping_list` (`blog_ping_list_id`, `ping_server`, `ping_name`) VALUES
 (1, 'http://blogsearch.google.com/ping/RPC2', 'Google Blog Search');
 
 
 --
--- テーブルの構造 `sz_bt_area_splitter`
+-- テーブルの構造 `bt_area_splitter`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_area_splitter` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_area_splitter` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `as_relation_key` varchar(255) DEFAULT '0',
   PRIMARY KEY (`block_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_area_splitter_relation`
+-- テーブルの構造 `bt_area_splitter_relation`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_area_splitter_relation` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_area_splitter_relation` (
   `as_relation_key` varchar(255) DEFAULT '0',
   `contents_name` varchar(255) DEFAULT '0',
   `contents_per` int(3) DEFAULT '0',
@@ -757,10 +757,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_area_splitter_relation` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_file_download`
+-- テーブルの構造 `bt_file_download`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_file_download` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_file_download` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `file_id` int(11) DEFAULT NULL,
   `dl_text` varchar(255) DEFAULT NULL,
@@ -768,10 +768,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_file_download` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_slideshow`
+-- テーブルの構造 `bt_slideshow`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_slideshow` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_slideshow` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `slide_type` varchar(60) DEFAULT NULL,
   `delay_time` int(11) DEFAULT '3000',
@@ -783,10 +783,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_slideshow` (
 )  DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_gadgets`
+-- テーブルの構造 `gadgets`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadgets` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}gadgets` (
   `gadget_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ガジェットID',
   `gadget_name` varchar(255) NOT NULL DEFAULT '0',
   `db_table` varchar(255) NOT NULL DEFAULT '0',
@@ -796,45 +796,45 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadgets` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルのデータをダンプしています `sz_gadgets`
+-- テーブルのデータをダンプしています `gadgets`
 --
 
-INSERT INTO `{DBPREFIX}sz_gadgets` (`gadget_id`, `gadget_name`, `db_table`, `display_gadget_name`, `gadget_description`) VALUES
-(1, 'memo', 'sz_gadget_memo', 'メモ', '簡単なメモ書きを保存しておけます。'),
-(2, 'weather', 'sz_gadget_weather', '天気', '地域別の天気を確認できます。'),
-(3, 'twitter', 'sz_gadget_twitter', 'Twitter', 'Twitterのつぶやきを表示します。'),
-(4, 'rss', 'sz_gadget_rss', 'RSS', 'RSSを購読します(RSS1.0,RSS2.0形式のみ対応)'),
-(5, 'bbs', 'sz_gadget_bbs', '簡易BBS', 'システムのユーザー間でチャットが行えます。'),
--- (6, 'google_translate', 'sz_gadget_translate', 'Google翻訳', 'Google AJAX Language APIを利用して翻訳が行えます。'),
-(7, 'wikipedia', 'sz_gadget_wikipedia', 'Wikipedia', 'WIkipediaで意味を検索できます。');
+INSERT INTO `{DBPREFIX}gadgets` (`gadget_id`, `gadget_name`, `db_table`, `display_gadget_name`, `gadget_description`) VALUES
+(1, 'memo', 'gadget_memo', 'メモ', '簡単なメモ書きを保存しておけます。'),
+(2, 'weather', 'gadget_weather', '天気', '地域別の天気を確認できます。'),
+(3, 'twitter', 'gadget_twitter', 'Twitter', 'Twitterのつぶやきを表示します。'),
+(4, 'rss', 'gadget_rss', 'RSS', 'RSSを購読します(RSS1.0,RSS2.0形式のみ対応)'),
+(5, 'bbs', 'gadget_bbs', '簡易BBS', 'システムのユーザー間でチャットが行えます。'),
+-- (6, 'google_translate', 'gadget_translate', 'Google翻訳', 'Google AJAX Language APIを利用して翻訳が行えます。'),
+(7, 'wikipedia', 'gadget_wikipedia', 'Wikipedia', 'WIkipediaで意味を検索できます。');
 
 --
--- テーブルの構造 `sz_gadget_bbs`
+-- テーブルの構造 `gadget_bbs`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_bbs` (
-  `sz_gadget_bbs_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}gadget_bbs` (
+  `gadget_bbs_id` int(11) NOT NULL AUTO_INCREMENT,
   `token` varchar(255) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sz_gadget_bbs_id`)
+  PRIMARY KEY (`gadget_bbs_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_gadget_bbs_data`
+-- テーブルの構造 `gadget_bbs_data`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_bbs_data` (
-  `sz_gadget_bbs_data_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}gadget_bbs_data` (
+  `gadget_bbs_data_id` int(11) NOT NULL AUTO_INCREMENT,
   `posted_user_id` int(11) NOT NULL,
   `post_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `body` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`sz_gadget_bbs_data_id`)
+  PRIMARY KEY (`gadget_bbs_data_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_gadget_master`
+-- テーブルの構造 `gadget_master`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_master` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}gadget_master` (
   `gadget_master_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL DEFAULT '0',
   `token` varchar(255) NOT NULL DEFAULT '0',
@@ -844,10 +844,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_master` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_gadget_memo`
+-- テーブルの構造 `gadget_memo`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_memo` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}gadget_memo` (
   `gadget_memo_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'メモガジェットID',
   `user_id` int(11) NOT NULL DEFAULT '0' COMMENT '使用しているユーザーID',
   `token` varchar(255) NOT NULL DEFAULT '0' COMMENT 'ハッシュキー',
@@ -857,65 +857,65 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_memo` (
 )  DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_gadget_rss`
+-- テーブルの構造 `gadget_rss`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_rss` (
-  `sz_gadgt_rss_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}gadget_rss` (
+  `gadgt_rss_id` int(11) NOT NULL AUTO_INCREMENT,
   `token` varchar(255) NOT NULL DEFAULT '0',
   `rss_url` varchar(255) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sz_gadgt_rss_id`)
+  PRIMARY KEY (`gadgt_rss_id`)
 )  DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_gadget_translate`
+-- テーブルの構造 `gadget_translate`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_translate` (
-  `sz_gadget_translate_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}gadget_translate` (
+  `gadget_translate_id` int(11) NOT NULL AUTO_INCREMENT,
   `token` varchar(255) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sz_gadget_translate_id`)
+  PRIMARY KEY (`gadget_translate_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_gadget_twitter`
+-- テーブルの構造 `gadget_twitter`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_twitter` (
-  `sz_gadget_twitter_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}gadget_twitter` (
+  `gadget_twitter_id` int(11) NOT NULL AUTO_INCREMENT,
   `token` varchar(255) NOT NULL DEFAULT '0',
   `account_name` varchar(255) NOT NULL DEFAULT '0',
   `update_time` int(11) NOT NULL DEFAULT '5' COMMENT '更新間隔（分）',
   `show_count` int(3) NOT NULL DEFAULT '10',
-  PRIMARY KEY (`sz_gadget_twitter_id`)
+  PRIMARY KEY (`gadget_twitter_id`)
 )  DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_gadget_weather`
+-- テーブルの構造 `gadget_weather`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_weather` (
-  `sz_gadget_weather_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}gadget_weather` (
+  `gadget_weather_id` int(11) NOT NULL AUTO_INCREMENT,
   `token` varchar(255) NOT NULL DEFAULT '0',
   `city_id` int(4) NOT NULL DEFAULT '63' COMMENT '地域ID(デフォルト63:東京)',
-  PRIMARY KEY (`sz_gadget_weather_id`)
+  PRIMARY KEY (`gadget_weather_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_gadget_wikipedia`
+-- テーブルの構造 `gadget_wikipedia`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_gadget_wikipedia` (
-  `sz_gadget_wikipedia_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}gadget_wikipedia` (
+  `gadget_wikipedia_id` int(11) NOT NULL AUTO_INCREMENT,
   `token` varchar(255) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sz_gadget_wikipedia_id`)
+  PRIMARY KEY (`gadget_wikipedia_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_sessions`
+-- テーブルの構造 `sessions`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_sessions` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}sessions` (
   `session_id` varchar(40) NOT NULL DEFAULT '0',
   `session_mobile_id` varchar(255) DEFAULT NULL,
   `ip_address` varchar(39) NOT NULL DEFAULT '0',
@@ -926,10 +926,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_sessions` (
 )  DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_tab_contents`
+-- テーブルの構造 `bt_tab_contents`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_tab_contents` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_tab_contents` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `tab_relation_key` varchar(255) DEFAULT '0',
   `single_contents` int(1) DEFAULT '1',
@@ -938,10 +938,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_tab_contents` (
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_tab_relations`
+-- テーブルの構造 `bt_tab_relations`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_tab_relations` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_tab_relations` (
   `tab_relation_id` int(1) NOT NULL AUTO_INCREMENT,
   `tab_relation_key` varchar(255) DEFAULT '0',
   `contents_name` varchar(255) DEFAULT '0',
@@ -971,20 +971,20 @@ INSERT INTO `{DBPREFIX}templates` (`template_id`, `template_name`, `template_han
 (1, 'seezooデフォルトテンプレート', 'default', 'デフォルトのテンプレートです。', NULL);
 
 --
--- テーブルの構造 `sz_bt_textcontent`
+-- テーブルの構造 `bt_textcontent`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_textcontent` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_textcontent` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `body` text,
   PRIMARY KEY (`block_id`)
 )  DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_twitter_block`
+-- テーブルの構造 `bt_twitter_block`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_twitter_block` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_twitter_block` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `user_name` varchar(255) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
@@ -994,10 +994,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_twitter_block` (
 )  DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_users`
+-- テーブルの構造 `users`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_users` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}users` (
   `user_id` int(11) NOT NULL auto_increment COMMENT 'ユーザーID',
   `user_name` varchar(255) NOT NULL default '0' COMMENT 'ユーザー名',
   `password` varchar(255) NOT NULL default '0' COMMENT 'パスワード',
@@ -1075,10 +1075,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}block_set_data` (
 -- ---------------------------------------------------------------------------------------------
 
 --
--- テーブルの構造 `sz_search_index`
+-- テーブルの構造 `search_index`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_search_index` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}search_index` (
   `page_id` int(11) NOT NULL,
   `page_path` varchar(255) DEFAULT NULL,
   `page_title` varchar(255) DEFAULT NULL,
@@ -1087,17 +1087,17 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_search_index` (
 )  DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_blog_menu`
+-- テーブルの構造 `blog_menu`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_blog_menu` (
-  `sz_blog_menu_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'メニュー連番ID',
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}blog_menu` (
+  `blog_menu_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'メニュー連番ID',
   `is_hidden` tinyint(1) NOT NULL DEFAULT '0' COMMENT '表示するかどうかのフラグ',
   `display_order` int(3) NOT NULL DEFAULT '1' COMMENT '表示順',
   `menu_type` varchar(255) NOT NULL DEFAULT '' COMMENT 'メニュータイプ',
   `menu_title` varchar(255) NOT NULL DEFAULT '' COMMENT 'メニュー名',
   `description` varchar(255) NOT NULL DEFAULT '' COMMENT 'メニュー概要',
-  PRIMARY KEY (`sz_blog_menu_id`)
+  PRIMARY KEY (`blog_menu_id`)
 ) DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 --
@@ -1128,11 +1128,11 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}static_blocks` (
 
 
 --
--- テーブルの構造 `sz_blog_trackbacks`
+-- テーブルの構造 `blog_trackbacks`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_blog_trackbacks` (
-  `sz_blog_trackbacks_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '連番ID',
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}blog_trackbacks` (
+  `blog_trackbacks_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '連番ID',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '記事タイトル',
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT '参照元URI',
   `blog_name` varchar(255) NOT NULL DEFAULT '' COMMENT '参照元ブログ名',
@@ -1140,32 +1140,32 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_blog_trackbacks` (
   `ip_address` varchar(60) NOT NULL DEFAULT '0.0.0.0' COMMENT '送信元IPアドレス',
   `received_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '受付日時',
   `is_allowed` tinyint(1) NOT NULL DEFAULT '0' COMMENT '表示を許可したかどうか',
-  `sz_blog_id` int(11) NOT NULL DEFAULT '0' COMMENT 'トラックバック対象の記事ID',
-  PRIMARY KEY (`sz_blog_trackbacks_id`),
-  KEY `sz_blog_id` (`sz_blog_id`)
+  `blog_id` int(11) NOT NULL DEFAULT '0' COMMENT 'トラックバック対象の記事ID',
+  PRIMARY KEY (`blog_trackbacks_id`),
+  KEY `blog_id` (`blog_id`)
 )   DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
 --
--- テーブルの構造 `sz_system_logs`
+-- テーブルの構造 `system_logs`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_system_logs` (
-  `sz_system_logs_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ログID',
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}system_logs` (
+  `system_logs_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ログID',
   `log_type` varchar(60) NOT NULL DEFAULT 'debug' COMMENT 'ロギングタイプ',
   `severity` varchar(60) NOT NULL DEFAULT '' COMMENT 'エラーレベル',
   `log_text` text NOT NULL COMMENT 'ログの内容',
   `logged_date` datetime NOT NULL COMMENT 'ログ書き込み日時',
-  PRIMARY KEY (`sz_system_logs_id`),
+  PRIMARY KEY (`system_logs_id`),
   KEY `log_type` (`log_type`)
 ) DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 
 --
--- テーブルの構造 `sz_bt_table`
+-- テーブルの構造 `bt_table`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_table` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_table` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `table_data` text,
   PRIMARY KEY (`block_id`)
@@ -1173,11 +1173,11 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_table` (
 
 
 --
--- テーブルの構造 `sz_members`
+-- テーブルの構造 `members`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_members` (
-  `sz_member_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}members` (
+  `member_id` int(11) NOT NULL AUTO_INCREMENT,
   `nick_name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -1191,17 +1191,17 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_members` (
   `joined_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `activation_limit_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `twitter_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`sz_member_id`)
+  PRIMARY KEY (`member_id`)
 ) DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `sz_member_attributes`
+-- テーブルの構造 `member_attributes`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_member_attributes` (
-  `sz_member_attributes_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}member_attributes` (
+  `member_attributes_id` int(11) NOT NULL AUTO_INCREMENT,
   `attribute_name` varchar(255) NOT NULL DEFAULT '',
   `attribute_type` varchar(255) NOT NULL DEFAULT 'text',
   `rows` int(5) NOT NULL DEFAULT '0',
@@ -1211,7 +1211,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_member_attributes` (
   `is_use` tinyint(1) NOT NULL DEFAULT '1',
   `display_order` int(3) NOT NULL DEFAULT '0',
   `is_inputable` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sz_member_attributes_id`),
+  PRIMARY KEY (`member_attributes_id`),
   KEY `is_use` (`is_use`),
   KEY `is_inputable` (`is_inputable`)
 )  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
@@ -1219,23 +1219,23 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_member_attributes` (
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `sz_member_attributes_value`
+-- テーブルの構造 `member_attributes_value`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_member_attributes_value` (
-  `sz_member_id` int(3) NOT NULL DEFAULT '0',
-  `sz_member_attributes_id` int(11) NOT NULL,
-  `sz_member_attributes_value` varchar(255) DEFAULT NULL,
-  `sz_member_attributes_value_text` text,
-  KEY `sz_member_id` (`sz_member_id`,`sz_member_attributes_id`),
-  KEY `sz_member_attributes_id` (`sz_member_attributes_id`)
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}member_attributes_value` (
+  `member_id` int(3) NOT NULL DEFAULT '0',
+  `member_attributes_id` int(11) NOT NULL,
+  `member_attributes_value` varchar(255) DEFAULT NULL,
+  `member_attributes_value_text` text,
+  KEY `member_id` (`member_id`,`member_attributes_id`),
+  KEY `member_attributes_id` (`member_attributes_id`)
 ) DEFAULT CHARSET=utf8;
 
 --
--- テーブルの構造 `sz_bt_bloginfo`
+-- テーブルの構造 `bt_bloginfo`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_bloginfo` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}bt_bloginfo` (
   `block_id` int(11) NOT NULL DEFAULT '0',
   `category` int(11) DEFAULT '0',
   `view_count` int(3) DEFAULT '10',
@@ -1247,12 +1247,12 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_bt_bloginfo` (
 
 
 --
--- テーブルの構造 `sz_activation_data`
+-- テーブルの構造 `activation_data`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_activation_data` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}activation_data` (
   `activation_code` varchar(255) NOT NULL,
-  `sz_member_id` int(11) NOT NULL DEFAULT '0',
+  `member_id` int(11) NOT NULL DEFAULT '0',
   `user_id` int(11) NOT NULL DEFAULT '0',
   `email` varchar(255) DEFAULT NULL,
   `data` text,
@@ -1262,9 +1262,9 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_activation_data` (
 
 
 --
--- テーブルの構造 `sz_options`
+-- テーブルの構造 `options`
 --
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_options` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}options` (
   `option_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '汎用オプションID',
   `name` varchar(255) NOT NULL COMMENT 'オプション名',
   `value` varchar(255) DEFAULT NULL COMMENT 'オプション設定値',
@@ -1274,10 +1274,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_options` (
 
 
 --
--- テーブルの構造 `sz_ogp_data`
+-- テーブルの構造 `ogp_data`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_ogp_data` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}ogp_data` (
   `is_enable` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'OGP出力有効/無効フラグ',
   `site_type` varchar(64) NOT NULL DEFAULT 'website' COMMENT 'サイトタイプ',
   `file_id` int(11) NOT NULL DEFAULT '0' COMMENT 'imageプロパティに使用するファイルID',
@@ -1288,10 +1288,10 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_ogp_data` (
 -- --------------------------------------------------------
 
 --
--- テーブルの構造 `sz_plugins`
+-- テーブルの構造 `plugins`
 --
 
-CREATE TABLE IF NOT EXISTS `{DBPREFIX}sz_plugins` (
+CREATE TABLE IF NOT EXISTS `{DBPREFIX}plugins` (
   `plugin_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'プラグイン連番ID',
   `plugin_name` varchar(255) NOT NULL COMMENT 'プラグイン名',
   `plugin_handle` varchar(255) NOT NULL COMMENT 'プラグインディレクトリハンドル',
@@ -1340,18 +1340,18 @@ INSERT INTO `{DBPREFIX}block_versions` (`block_version_id`, `block_id`, `collect
 (6, 6, 'textcontent', 5, 2, 1, NOW(), 2, '');
 
 -- auto_navigation
-INSERT INTO `{DBPREFIX}sz_bt_auto_navigation` (`block_id`, `sort_order`, `based_page_id`, `subpage_level`, `manual_selected_pages`, `handle_class`, `display_mode`, `show_base_page`, `current_class`) VALUES (2, 1, 1, 1, '0', NULL, 2, 1, 'current');
+INSERT INTO `{DBPREFIX}bt_auto_navigation` (`block_id`, `sort_order`, `based_page_id`, `subpage_level`, `manual_selected_pages`, `handle_class`, `display_mode`, `show_base_page`, `current_class`) VALUES (2, 1, 1, 1, '0', NULL, 2, 1, 'current');
 
 -- head
-INSERT INTO `{DBPREFIX}sz_bt_head_block` (`block_id`, `head_level`, `class_name`, `text`) VALUES (3, '3', 'green', 'Welcome to Seezoo!'),
+INSERT INTO `{DBPREFIX}bt_head_block` (`block_id`, `head_level`, `class_name`, `text`) VALUES (3, '3', 'green', 'Welcome to Seezoo!'),
 (5, '2', NULL, 'サブメニュー');
 
 -- textcontent
-INSERT INTO `{DBPREFIX}sz_bt_textcontent` (`block_id`, `body`) VALUES (4, '<br>Seezooは見たままを直感的に編集するCMSです。<br><br>編集エリアに色々な機能を持ったブロックを追加することで、ページをしていきます。<br><br>編集履歴をバージョン管理しているので、前の状態に戻すことも簡単にできます。<br><br>まずはブロックを追加して、ページを編集してみてください！<br>'),
+INSERT INTO `{DBPREFIX}bt_textcontent` (`block_id`, `body`) VALUES (4, '<br>Seezooは見たままを直感的に編集するCMSです。<br><br>編集エリアに色々な機能を持ったブロックを追加することで、ページをしていきます。<br><br>編集履歴をバージョン管理しているので、前の状態に戻すことも簡単にできます。<br><br>まずはブロックを追加して、ページを編集してみてください！<br>'),
 (6, '<br>ここは右カラムのエリアですが、追加したブロックは他のエリアに自由に移動させることができます。<br><br>ツールバーのメニューから『移動モード』を選択し、マウスを合わせると現れるレイヤーをドラッグ＆ドロップし、ブロックを移動してみてください。<br>');
 
 -- image_block
-INSERT INTO `{DBPREFIX}sz_bt_image_block` (`block_id`, `file_id`, `alt`, `link_to`, `action_method`, `action_file_id`) VALUES (1, 1, NULL, NULL, NULL, NULL);
+INSERT INTO `{DBPREFIX}bt_image_block` (`block_id`, `file_id`, `alt`, `link_to`, `action_method`, `action_file_id`) VALUES (1, 1, NULL, NULL, NULL, NULL);
 
 -- files
 INSERT INTO `{DBPREFIX}files` (`file_id`, `file_name`, `crypt_name`, `extension`, `width`, `height`, `added_date`, `size`, `file_group`, `directories_id`) VALUES (1, 'img_01', '366bbb57fbcaedbe769a3357c23b9b6e', 'jpg', 920, 262, '2010-09-28 17:57:54', 58, '', 1),
@@ -1360,7 +1360,7 @@ INSERT INTO `{DBPREFIX}files` (`file_id`, `file_name`, `crypt_name`, `extension`
 (4, 'img_04', '6f629b4e27a0d5892aa284c6aa698486', 'jpg', 920, 259, '2010-09-28 17:57:56', 133, '', 1);
 
 -- blog menu
-INSERT INTO `{DBPREFIX}sz_blog_menu` (`is_hidden`, `display_order`, `menu_type`, `menu_title`, `description`) VALUES
+INSERT INTO `{DBPREFIX}blog_menu` (`is_hidden`, `display_order`, `menu_type`, `menu_title`, `description`) VALUES
 (0, 4, 'calendar', 'カレンダー', 'カレンダーを表示します。'),
 (0, 5, 'category', 'カテゴリ表示', '記事カテゴリーを表示します。'),
 (0, 3, 'comment', 'コメントを表示', '最近付けられたコメントを表示します。'),
