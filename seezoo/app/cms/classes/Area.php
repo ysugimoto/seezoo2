@@ -1,5 +1,7 @@
 <?php  if ( ! defined('SZ_EXEC')) exit('No direct script access allowed');
 
+define('BASEPATH', 1);
+
 /**
  * ====================================================
  * 
@@ -242,7 +244,7 @@ class Area
 			
 			if ( $blockEnable )
 			{
-				$BlockClass->addHeaderItem($block->collection_name);
+				$BlockClass->addBlockAssets();
 			}
 			
 			$BlockClass->view();
@@ -261,29 +263,27 @@ class Area
 				$SZ->view->render('parts/edit_wrapper', $data);
 				if ( $blockEnable )
 				{
-					$dir = $block->collection_name . '/';
 					$param = array('controller' => $BlockClass);
-					$BlockClass->render($dir . $viewPath, $param, FALSE, $block->plugin_handle);
+					$BlockClass->renderView($viewPath, $param);
 				}
 				else
 				{
 					$SZ->view->render('elements/block_view_disabled', $block);
-					if ( ! $block->isMultiMolumn() )
+					if ( ! $block->multiColumn )
 					{
 						$SZ->view->render('parts/edit_wrapper_end', $data);
 					}
 				}
 				
-				if ( ! $block->isMultiMolumn() )
+				if ( ! $block->multiColumn )
 				{	
 					$SZ->view->render('parts/edit_wrapper_end', $data);
 				}
 			}
 			else if ( $blockEnable )
 			{
-				$dir = $block->collection_name . '/';
 				$param = array('controller' => $BlockClass);
-				$BlockClass->render($dir . $viewPath, $param, FALSE, $block->plugin_handle);
+				$BlockClass->renderView($viewPath, $param);
 			}
 		}
 	}

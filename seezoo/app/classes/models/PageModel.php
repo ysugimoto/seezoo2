@@ -45,7 +45,7 @@ class PageModel extends SZ_Kennel
 		return FALSE;
 	}
 	
-	public function getPageObject($pageID, $versionMode)
+	public function getPageObject($pageID, $versionMode = NULL)
 	{
 		$prefix = $this->db->prefix();
 		// switch get page method by version mode
@@ -91,7 +91,7 @@ class PageModel extends SZ_Kennel
 					;
 			$query = $this->db->query($sql, array($pageID, db_datetime()));
 		}
-		else if (is_numeric($ver))
+		else if ( is_numeric($versionMode) )
 		{
 			// version string is numeric, get target version (this process works preview only.)
 			$sql =
@@ -114,7 +114,8 @@ class PageModel extends SZ_Kennel
 		{
 			$sql =
 					'SELECT '
-					.	'* '
+					.	'*, '
+					.	'pv.page_id as page_id '
 					.'FROM '
 					.	$prefix.'page_versions as pv '
 					.'LEFT OUTER JOIN ' . $prefix.'page_permissions as perms ON ( '
@@ -137,5 +138,34 @@ class PageModel extends SZ_Kennel
 			return FALSE;
 		}
 		return $query->row();
+	}
+	
+	public function getPagePathByPageID($pageID)
+	{
+		$PP = ActiveRecord::finder('page_paths')
+		       ->findByPageId($pageID, array('page_path'));
+		
+		return $PP->page_path;
+	}
+	
+	public function getFirstChildPage($pageID)
+	{
+		$sql =
+				'SELECT '
+				.	'PV.*, '
+				.	'PP.* '
+				.'FROM '
+				.	$this->db->prefix().'page_versions as PV '
+				.'LEFT JOIN ' . $this->db->prefix().'page_paths as PP ON ( '
+				.	'PV.page_id = PP.page_id '
+				.') '
+				.'WHERE '
+				.	'PV.parent = ? '
+				.'ORDER BY '
+				.	'PV.display_order ASC '
+				.'LIMIT 1'
+				;
+		$query = $this->db->query($sql, array((int)$pageID));
+		return ( $query ) ? $query->row() : FALSE;
 	}
 }

@@ -25,10 +25,15 @@ class EX_Breeder extends SZ_Breeder
 	
 	protected function _startUpCMS()
 	{
-		$this->pageData = new stdClass;
-		$this->pageData->page_id = 1;
-		$this->pageData->parent_id = 1;
+		$path = trim($this->request->getAccessPathInfo(), '/');
+		$PageModel = Seezoo::$Importer->model('PageModel');
+		$page      = $PageModel->detectPage($path);
+		if ( $page )
+		{
+			$pageData = $PageModel->getPageObject($page->page_id);
+			SeezooCMS::setStatus('page', $pageData);
+		}
 		
-		$this->view->assign(array('pageData' => $this->pageData));
+		$this->view->assign(array('seezoo' => SeezooCMS::getInstance()));
 	}
 }

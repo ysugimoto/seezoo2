@@ -89,8 +89,8 @@ if ( ! function_exists('flint_exeute') )
 		
 		if ( $lib )
 		{
-			return '<script type="text/javascript" src="' . file_link() . 'index.php/flint/flint_config/' . $workMode . '" charset="UTF-8"></script>' . "\n"
-					.'<script type="text/javascript" src="' . file_link() . 'js/' . $workMode . '" charset="UTF-8"></script>';
+			return '<script type="text/javascript" src="' . file_link() . 'flint.php?m=' . $workMode . '" charset="UTF-8"></script>' . "\n"
+					.'<script type="text/javascript" src="' . file_link() . 'js/' . $lib . '" charset="UTF-8"></script>';
 		}
 		return '';
 	}

@@ -13,18 +13,16 @@
 
 class PageController extends EX_Breeder
 {
-	public static $pageTitle = '管理パネルトップ';
+	public static $pageTitle = 'ページ管理';
 	
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import->model(array('InitModel', 'DashboardModel', 'UserModel'));
-		$this->import->library('Session');
+		$this->import->model('PageModel');
+		$seezoo       = SeezooCMS::getInstance();
+		$redirectPath = $this->pageModel->getFirstChildPage($seezoo->page->page_id);
 		
-		if ( ! $this->initModel->isLoggedIn() )
-		{
-			Seezoo::$Response->redirect(SEEZOO_SYSTEM_LOGIN_URI);
-		}
+		$this->response->redirect($redirectPath->page_path);
 	}
 	
 	public function index($msg = '')

@@ -13,10 +13,11 @@ class PageLead extends SZ_Lead
 {
 	public function index($msg)
 	{
+		$seezoo = SeezooCMS::getInstance();
 		$userID = $this->session->get('user_id');
 		$data = new stdClass;
 		$data->editPageCount   = $this->dashboardModel->getEditPageCount($userID);
-		$data->site            = SeezooOptions::get('site_info');
+		$data->site            = $seezoo->getStatus('site');
 		$data->approveOrders   = $this->dashboardModel->getApproveStatuses($userID);
 		$data->approveRequest  = $this->dashboardModel->getApproveRequests($userID, $this->userModel->isAdmin($userID));
 		$data->userData        = ActiveRecord::finder('sz_users')

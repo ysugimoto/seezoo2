@@ -20,7 +20,7 @@ class PageLead extends SZ_Lead
 	public function __construct()
 	{
 		parent::__construct();
-		$this->seezoo  = SeezooCMS::getInstance();
+		$this->seezoo = SeezooCMS::getInstance();
 		$this->userID = $this->seezoo->getUserID();
 		$this->site   = $this->seezoo->getStatus('site');
 	}

@@ -15,6 +15,7 @@
 <?php elseif (ADVANCE_UA === 'ie7'):?>
 <link rel="stylesheet" type="text/css" href="<?php echo file_link();?>css/edit_base_advance_ie7.css" />
 <?php endif;?>
+<?php echo flint_execute('segment');?>
 </head>
 <body>
   <div id="wrapper">
@@ -37,7 +38,7 @@
       <?php if ( ! isset($sidebar) || $sidebar !== FALSE ):?>
       <div id="container">
         <div id="sidebar">
-          <?php echo $Helper->cms->buildDashboardMenu($pageData);?> 
+          <?php echo $seezoo->buildDashboardMenu();?> 
         </div>
         <!-- // #sidebar -->
       <?php else:?>

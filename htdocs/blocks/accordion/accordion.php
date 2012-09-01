@@ -1,4 +1,4 @@
-<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php  if ( ! defined('SZ_EXEC')) exit('No direct script access allowed');
 /**
  * ============================================================================
  * Seezoo 開閉コンテンツブロックコントローラ
@@ -8,16 +8,15 @@
  */
 class Accordion_block extends Block
 {
-	protected $table            = 'sz_bt_accordion';
-	protected $block_name       = 'アコーディオンブロック';
-	protected $description      = '見出し+開閉可能なエリアを挿入します。';
-	protected $interface_width  = 500;
-	protected $interface_height = 500;
-	protected $enable_mb        = FALSE;
+	protected $table = 'sz_bt_accordion';
 	
-	protected $multi_column     = TRUE;
+	public $blockName        = 'アコーディオンブロック';
+	public $description      = '見出し+開閉可能なエリアを挿入します。';
+	public $interfaceWidth   = 500;
+	public $interfaceHeight  = 500;
+	public $enableMB         = FALSE;
 
-	public function db()
+	public static function db()
 	{
 		$dbst = array(
 			'block_id'		=> array(

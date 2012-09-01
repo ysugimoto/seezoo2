@@ -92,7 +92,6 @@ class PageController extends EX_Breeder
 		}
 		$data = $this->lead->view($page);
 		$this->view->assign($data);
-		$this->view->assign(array('seezoo' => new SeezooCMS()));
 		$this->view->renderTemplate($data->templateDir);
 	}
 	

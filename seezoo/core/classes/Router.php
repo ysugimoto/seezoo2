@@ -505,6 +505,36 @@ class SZ_Router
 	
 	
 	/**
+	 * Build routed uri
+	 * 
+	 * @access public
+	 * @param  bool $containDefaults
+	 * @return string
+	 */
+	public function buildRoutedPath($containDefaults = FALSE)
+	{
+		$path = array();
+		if ( $this->_directory )
+		{
+			$path[] = rtrim($this->_directory, '/');
+		}
+		if ( $this->_class !== $this->defaultController || $containDefaults )
+		{
+			$path[] = $this->_class;
+		}
+		if ( $this->_method !== 'index' || $containDefaults )
+		{
+			$path[] = $this->_method;
+		}
+		
+		return implode('/', $path);
+	}
+	
+	
+	// ---------------------------------------------------------------
+	
+	
+	/**
 	 * Controller detection
 	 * 
 	 * @access protected

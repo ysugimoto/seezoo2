@@ -20,6 +20,11 @@ class SeezooCMS
 	private static $instance;
 	protected $_userID;
 	
+	public $additionalHeaderJavaScript = array();
+	public $additionalHeaderCss        = array();
+	public $additionalFooterJavaScript = array();
+	public $additionalFooterElement    = array();
+	
 	
 	private $convertDefaults = array(
 		'width'          => 300,
@@ -231,7 +236,7 @@ class SeezooCMS
 	 * 
 	 * @return HTML string
 	 */
-	public function buildDashboardMenu($pageData)
+	public function buildDashboardMenu()
 	{
 		$db  = Seezoo::$Importer->database();
 		$sql = 
@@ -278,7 +283,7 @@ class SeezooCMS
 				.'ORDER BY '
 				.	'PV.display_order ASC'
 				;
-		$query       = $db->query($sql, array('dashboard/%'));
+		$query       = $db->query($sql, array('dashboard%'));
 		$child_stack = array();
 		$out         = array('<ul class="sideNav">');
 		foreach ( $query->resultArray() as $v )
@@ -291,19 +296,21 @@ class SeezooCMS
 			);
 			$child_stack[] = $arr;
 		}
+		
+		$userData = $this->getUserData($this->getUserID());
 		// format HTML
 		foreach ( $child_stack as $key => $value )
 		{
-			$out[] = $this->_buildDashboardMenuFormat($value['page'], $pageData);
+			$out[] = $this->_buildDashboardMenuFormat($value['page'], $userData);
 
 			if ( $value['child']
-			     && ( $value['page']['page_id'] == $pageData->page_id
-			          || $value['page']['page_id'] == $pageData->parent_id) )
+			     && ( $value['page']['page_id'] == $this->page->page_id
+			          || $value['page']['page_id'] == $this->page->parent_id) )
 			{
 				$out[] = '<ul>';
 				foreach ( $value['child'] as $v )
 				{
-					$out[] = $this->_buildDashboardMenuFormat($v, $pageData);
+					$out[] = $this->_buildDashboardMenuFormat($v, $userData);
 					$out[] = '</li>';
 				}
 				$out[] = '</ul>';
@@ -320,21 +327,21 @@ class SeezooCMS
 	 * Format dashboard menu tree
 	 * 
 	 * @param array $page
-	 * @param object $pageData
+	 * @param object $userData
 	 * @return string
 	 */
-	protected function _buildDashboardMenuFormat($page, $pageData)
+	protected function _buildDashboardMenuFormat($page, $userData)
 	{
 		// Are you a master user?
-		if ( $this->_userData->user_id  > 1 )
+		if ( $userData->user_id  > 1 )
 		{
 			// Do you have admin_permission?
-			if ( $this->_userData->admin_flag == 0 )
+			if ( $userData->admin_flag == 0 )
 			{
 				// this page allow_access?
 				if ( ! $this->hasPermission(
 				                        $page['allow_access_user'],
-				                        $this->_userData->user_id
+				                        $userData->user_id
 				                        )
 				)
 				{
@@ -346,8 +353,8 @@ class SeezooCMS
 		$out[] = '<li id="dashboard_page_' . $page['page_id'] . '">'
 		         .'<a href="' . page_link() . $page['page_path'] . '"';
 		
-		if ( $page['page_id'] == $pageData->page_id
-		     || $page['page_id'] == $pageData->parent_id)
+		if ( $page['page_id'] == $this->page->page_id
+		     || $page['page_id'] == $this->page->parent)
 		{
 			$out[] = ' class="active"';
 		}
