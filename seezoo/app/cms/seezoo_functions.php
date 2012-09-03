@@ -80,7 +80,7 @@ if ( ! function_exists('flint_exeute') )
 		
 		if ( $mode === 'pc' || $CI->is_login === TRUE )
 		{
-			$lib = ( ADVANCE_UA === 'ie6' ) ? 'flint.dev.min.js' : 'flint.dev2.min.js';
+			$lib = ( ADVANCE_UA === 'ie6' ) ? 'flint.dev.min.js' : 'flint.dev2.js';
 		}
 		else if ( $mode === 'sp' )
 		{
@@ -89,10 +89,38 @@ if ( ! function_exists('flint_exeute') )
 		
 		if ( $lib )
 		{
-			return '<script type="text/javascript" src="' . file_link() . 'flint.php?m=' . $workMode . '" charset="UTF-8"></script>' . "\n"
+			return '<script type="text/javascript" src="' . file_link() . 'flint.php?mode=' . $workMode . '" charset="UTF-8"></script>' . "\n"
 					.'<script type="text/javascript" src="' . file_link() . 'js/' . $lib . '" charset="UTF-8"></script>';
 		}
 		return '';
+	}
+}
+
+// set_image : 画像パス生成
+// @note IE6の場合、png->gifのコンバートが走る
+if ( ! function_exists('set_image'))
+{
+	function set_image($filePath)
+	{
+		// replace file png to gif
+		if ( ADVANCE_UA === 'ie6' && preg_match('/\.png$/u', $filePath) )
+		{
+			$ie6      = preg_replace('/\.png$/', '.gif', $filePath);
+			$fileName = basename($ie6);
+			if ( ! file_exists(FCPATH . 'files/ie6/' . $fileName) )
+			{
+				// convert image
+				$source = imagecreatefrompng($ie6);
+				imagepng($source, FCPATH . 'files/ie6/' . $fileName);
+				imagedestroy($source);
+			}
+			$path = file_link() . 'files/ie6/' . $fileName;
+		}
+		else
+		{
+			$path = file_link() . 'images/' . $filePath;
+		}
+		return '<img src="' . $path . '" alt="" />';
 	}
 }
 

@@ -44,6 +44,9 @@
   </table>
   <p id="login_btn">
     <?php echo $Helper->form->hidden($tokenName, $token);?>
+    <?php if ( $redirect ):?>
+    <?php echo $Helper->form->hidden('redirect', $redirect);?>
+    <?php endif;?>
     <input type="image" src="<?php echo base_link();?>images/login/login_btn.gif" alt="login" id="btn" />
   </p>
   <?php echo $Helper->form->close();?>

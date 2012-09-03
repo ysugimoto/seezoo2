@@ -363,6 +363,12 @@ class SeezooCMS
 		return implode('', $out);
 	}
 	
+	public function hasRollbackUser()
+	{
+		$sess = Seezoo::$Importer->library('Session');
+		return ( $sess->get('rollback_user') ) ? TRUE : FALSE;
+	}
+	
 	
 	
 	

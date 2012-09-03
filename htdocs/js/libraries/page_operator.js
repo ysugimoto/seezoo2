@@ -268,7 +268,7 @@ ClassExtend('Library', function page_operator() {
 			suffix = ( mode === 'block' ) ? '_block' : '',
 			len, ttl;
 
-		FL.ajax.get('dashboard/pages/page_list/ajax_get_child' + suffix + '/' + pid, {
+		FL.ajax.get('dashboard/sitemap/page_list/get_child' + suffix + '/' + pid, {
 			success : function(resp) {
 					if (e.last().tag === 'ul') {
 						e.last().remove();
@@ -384,25 +384,25 @@ ClassExtend('Library', function page_operator() {
 				break;
 			case 1:
 				if ( current.hasClass('external')) {
-					elm.attr('href', uri + 'ajax/external_page_config_from_operator/' + pid + '/' + token);
+					elm.attr('href', uri + 'dashboard/sitemap/page_list/external_page_config_from_operator/' + pid + '/' + token);
 				} else {
-					elm.attr('href', uri + 'ajax/page_config_from_operator/' + pid + '/' + token);
+					elm.attr('href', uri + 'dashboard/sitemap/page_list/page_config_from_operator/' + pid + '/' + token);
 				}
 				break;
 			case 2:
-				elm.attr('href', uri + 'ajax/add_page/' + pid + '/' + token);
+				elm.attr('href', uri + 'page/add_page/' + pid + '/' + token);
 				break;
 			case 3:
-				elm.attr('href', uri + 'ajax/add_external_link/' + pid + '/' + token);
+				elm.attr('href', uri + 'dashboard/sitemap/page_list/add_external_link/' + pid + '/' + token);
 				break;			
 			case 4:
-				elm.attr('href', uri + 'ajax/get_versions/' + pid + '/' + token);
+				elm.attr('href', uri + 'page/get_versions/' + pid + '/' + token);
 				break;
 			case 7:
-				elm.attr('href', uri + 'dashboard/pages/page_list/ajax_arrange_copyto_same_level');
+				elm.attr('href', uri + 'dashboard/sitemap/page_list/ajax_arrange_copyto_same_level');
 				break;
 			case 8:
-				elm.attr('href', uri + 'dashboard/pages/page_list/delete/' + pid + '/' + token);
+				elm.attr('href', uri + 'dashboard/sitemap/page_list/delete/' + pid + '/' + token);
 				break;
 			}
 			// num === 7 of copy, connect with ajax
@@ -757,7 +757,7 @@ ClassExtend('Library', function page_operator() {
 		var that = this;
 
 		DOM('span.ttl').unevent('click');
-		FL.ajax.post('dashboard/pages/page_list/refresh/' + FL.config.item('sz_token'), {
+		FL.ajax.post('dashboard/sitemap/page_list/refresh/' + FL.config.item('sz_token'), {
 			param : {open : (a || 0) + '|' + (b || 0)},
 			success : function(resp) {
 				DOM.id('sitemap').html(resp.responseText);
@@ -859,7 +859,7 @@ ClassExtend('Library', function page_operator() {
 		});
 
 		// sort order
-		FL.ajax.post('dashboard/pages/page_list/sort_display_order/' + FL.config.item('sz_token'), {
+		FL.ajax.post('dashboard/sitemap/page_list/sort_display_order/' + FL.config.item('sz_token'), {
 			param : {
 				master : master.parent().readAttr('id').replace('page_', ''),
 				order : order

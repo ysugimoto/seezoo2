@@ -46,7 +46,6 @@ class RequestHandleEvent
 	{
 		$this->request   = Seezoo::getRequest();
 		$this->env       = Seezoo::getENV();
-		$this->session   = Seezoo::$Importer->library('Session'); 
 		$this->initModel = Seezoo::$Importer->model('InitModel');
 		
 		$ut = new SeezooCMS;
@@ -55,12 +54,18 @@ class RequestHandleEvent
 	
 	public function handle()
 	{
+		if ( ! $this->initModel->isAlreadyInstalled() )
+		{
+			return;
+		}
+		
 		// If requested from JavaScript-XMLHttpRequest,
 		// set session update time enough long.
 		if ( is_ajax_request() )
 		{
 			$this->env->setConfig('session_update_time', 7200);
 		}
+		$this->session = Seezoo::$Importer->library('Session'); 
 		
 		// Set CMS output mode
 		$this->_setOutputMode();
@@ -142,7 +147,7 @@ class RequestHandleEvent
 	protected function _checkAjaxToken()
 	{
 		$token = $this->request->post('sz_token');
-		if ( ! $ticket || $ticket !== $this->session->get('sz_token') )
+		if ( ! $token || $token !== $this->session->get('sz_token') )
 		{
 			exit('不正なチケットが送信されました。');
 		}
@@ -362,15 +367,15 @@ class RequestHandleEvent
 			$destTable = ( $dashboardRequest ) ? 'page_versions' : 'pending_pages';
 			$Page = ActiveRecord::finder($destTable)
 			        ->findByPageIdAndVersionNumber($pageID, $versionNumber);
-			$Page->page_title         = $Validation->value('page_title');
-			$Page->meta_title         = $Validation->value('meta_title');
-			$Page->meta_keyword       = $Validation->value('meta_keyword');
-			$Page->meta_description   = $Validation->value('meta_description');
-			$Page->template_id        = (int)$this->request->post('template_id');
-			$Page->navigation_show    = (int)$this->request->post('navigation_show');
-			$Page->is_ssl_page        = (int)$this->request->post('is_ssl_page');
-			$Page->is_mobile_only     = (int)$this->request->post('is_mobile_only');
-			$Page->target_blank       = (int)$this->request->post('target_blank');
+			$Page->page_title       = $Validation->value('page_title');
+			$Page->meta_title       = $Validation->value('meta_title');
+			$Page->meta_keyword     = $Validation->value('meta_keyword');
+			$Page->meta_description = $Validation->value('meta_description');
+			$Page->template_id      = (int)$this->request->post('template_id');
+			$Page->navigation_show  = (int)$this->request->post('navigation_show');
+			$Page->is_ssl_page      = (int)$this->request->post('is_ssl_page');
+			$Page->is_mobile_only   = (int)$this->request->post('is_mobile_only');
+			$Page->target_blank     = (int)$this->request->post('target_blank');
 			
 			$result = $Page->update();
 			return ( $result ) ? $Page : FALSE;
@@ -380,6 +385,102 @@ class RequestHandleEvent
 	protected function page_edit()
 	{
 		$this->page_add(TRUE);
+	}
+	
+	protected function external_page_add($update = FALSE)
+	{
+		if ( $this->request->post('from_po') != 1 )
+		{
+			exit('System error!');
+		}
+		
+		$pageID    = $this->request->post('page_id');
+		$PageModel = Seezoo::$Importer->model('PageModel');
+		$status    = $PageModel->getPageStatus($pageID);
+		
+		if ( $status->is_editting > 0 )
+		{
+			exit('editting');
+		}
+
+		// is update?
+		if ( $update === TRUE )
+		{
+			// when update, create pageversion.
+			$PV = ActiveRecord::finder('page_versions')
+			       ->findByPageIdAndVersionNumber($pageID, 1);
+			$PV->page_title      = $this->request->post('page_title');
+			$PV->external_link   = $this->request->post('external_link');
+			$PV->navigation_show = ( $this->request->post('navigation_show') ) ? 1 : 0;
+			$PV->target_blank    = ( $this->request->post('target_blank') ) ? 1 : 0;
+			$PV->is_public       = 1;
+			$result = $PV->update();
+		}
+		else
+		{
+			// else, simply create page and set version 1.
+			$SitemapModel = Seezoo::$Importer->model('SitemapModel');
+			$seezoo       = SeezooCMS::getInstance();
+			
+			$Page      = ActiveRecord::create('pages');
+			$Page->version_number = 1;
+			$newPageID = $Page->insert();
+			
+			$PV = ActiveRecord::create('page_versions');
+			$PV->page_id          = $newPageID;
+			$PV->page_title       = $this->request->post('page_title');
+			$PV->external_link    = $this->request->post('external_link');
+			$PV->navigation_show  = ( $this->request->post('navigation_show') ) ? 1 : 0;
+			$PV->target_blank     = ( $this->request->post('target_blank') ) ? 1 : 0;
+			$PV->is_public        = 1;
+			$PV->parent           = $pageID;
+			$PV->display_order    = $SitemapModel->getMaxDisplayOrder($pageID);
+			$PV->version_date     = db_datetime();
+			$PV->created_user_id  = $seezoo->getUserID();
+			$PV->approved_user_id = $seezoo->getUserID();
+			$PV->version_comment  = '初稿';
+			
+			$result = $PV->insert();
+		}
+		
+		if ( $result )
+		{
+			// if create or update page is succeed, try update or insert page path
+			if ( ! empty($PV->external_link) )
+			{
+				if ( $update )
+				{
+					$PP = ActiveRecord::finder('page_paths')
+					       ->findByPagePathId($this->request->post('page_path_id'));
+					$PP->page_path = $PV->external_link;
+					$PP->update();
+				}
+				else
+				{
+					$PP = ActiveRecord::create('page_paths');
+					$PP->page_path = $PV->external_link;
+					$PP->page_id   = $result;
+					$PP->insert();
+				}
+			}
+			// if requested by dashboard, return JSON object string.
+			// requested by ajax page_operator
+			$response = array('page_title' => $PV->page_title, 'page_id' => $pageID);
+			Seezoo::$Response->displayJSON($response);
+		}
+		// update or create page missed...
+		else
+		{
+			$msg = ( $update === TRUE )
+			         ? 'ページ編集に失敗しました。'
+			         : 'ページ追加に失敗しました。';
+			exit($msg);
+		}
+	}
+	
+	protected function external_page_edit()
+	{
+		$this->external_page_add(TRUE);
 	}
 
 

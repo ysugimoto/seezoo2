@@ -21,6 +21,12 @@ class Area
 	protected $areaID;
 	
 	/**
+	 * This page ID
+	 * @var int
+	 */
+	protected $pageID;
+	
+	/**
 	 * This area name
 	 * @var string
 	 */
@@ -40,7 +46,7 @@ class Area
 	protected $seezoo;
 
 
-	function __construct($name = FALSE)
+	function __construct($name = FALSE, $pageID = 0)
 	{
 		if ( ! $name )
 		{
@@ -50,7 +56,11 @@ class Area
 		$this->areaName = $name;
 		$this->db       = Seezoo::$Importer->database();
 		$this->seezoo   = SeezooCMS::getInstance();
-		$this->_detectArea();
+		$this->pageID   = ( $pageID === 0 )
+		                    ? $this->seezoo->page->page_id
+		                    : $pageID;
+		
+		$this->_detectArea($pageID);
 	}
 	
 	
@@ -65,15 +75,15 @@ class Area
 	protected function _detectArea()
 	{
 		$Area = ActiveRecord::finder('areas')
-		        ->setOrderBY('area_id', 'desc')
-		        ->findByAreaNameAndPageId($this->areaName, $this->seezoo->page->page_id);
+		        ->setOrderBy('area_id', 'desc')
+		        ->findByAreaNameAndPageId($this->areaName, $this->pageID);
 		
 		if ( ! $Area )
 		{
 			// Create new area record when record not exists
 			$Area = ActiveRecord::create('areas');
 			$Area->area_name    = $this->areaName;
-			$Area->page_id      = $this->seezoo->page->page_id;
+			$Area->page_id      = $this->pageID;
 			$Area->created_date = db_datetime();
 			$this->areaID = $Area->insert();
 		}
@@ -103,7 +113,7 @@ class Area
 		
 		if ( $editting && $reverse === TRUE )
 		{
-			$SZ->view->assign(array('areaName' => $this->areaName, 'pageID' => $this->seezoo->page->page_id));
+			$SZ->view->assign(array('areaName' => $this->areaName, 'pageID' => $this->pageID));
 			$SZ->view->render('parts/add_block');
 		}
 		
@@ -128,7 +138,7 @@ class Area
 		{
 			if ( $reverse === FALSE )
 			{
-				$SZ->view->render('parts/add_block', array('areaName' => $this->areaName, 'pageID' => $this->seezoo->page->page_id));
+				$SZ->view->render('parts/add_block', array('areaName' => $this->areaName, 'pageID' => $this->pageID));
 			}
 			$SZ->view->render('parts/arrange_master_wrapper_end');
 		}
@@ -373,17 +383,17 @@ class Area
 		// or duplicate to same page
 		// or same areaname already_exists
 		if ( ! $targetPageID
-		     || $targetPageID == $this->seezoo->page->page_id
+		     || $targetPageID == $this->pageID
 		     || $this->_areaExists($targetPageID) )
 		{
 			return;
 		}
 		
-		$Page = Seezoo::$Importer->model('PageModel');
+		$Sitemap = Seezoo::$Importer->model('SitemapModel');
 		
 		// get current version
-		$currentVersion        = $Page->getCurrentVersion($this->seezoo->page->page_id);
-		$currentTargetVersion  = $Page->getCurrentVersion($targetPageID);
+		$currentVersion        = $Sitemap->getCurrentVersion($this->pageID);
+		$currentTargetVersion  = $Sitemap->getCurrentVersion($targetPageID);
 		$nowDate               = db_datetime();
 		
 		$Area = ActiveRecord::create('areas');
@@ -396,7 +406,7 @@ class Area
 		// get block data on copy-from area
 		$blocks = ActiveRecord::finder('block_versions')
 		          ->distinct()
-		          ->findAllByAreaIdAndVersionNumber($this->seezoo->page->page_id, $currentVersion);
+		          ->findAllByAreaIdAndVersionNumber($this->pageID, $currentVersion);
 		
 		// block not exists
 		if ( ! $blocks )

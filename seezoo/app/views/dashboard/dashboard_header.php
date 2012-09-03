@@ -23,12 +23,12 @@
     <!-- You can name the links with lowercase, they will be transformed to uppercase by CSS, we prefered to name them with uppercase to have the same effect with disabled stylesheet -->
     <ul id="mainNav">
       <li><a href="<?php echo page_link('dashboard');?>" class="active">Dashboard</a></li> <!-- Use the "active" class for the active menu item  -->
-      <?php if ( $site->is_maintenance > 0 ):?>
+      <?php if ( $seezoo->site->is_maintenance > 0 ):?>
       <li><a class="maintenance" href="<?php echo page_link('dashboard/site_settings')?>">現在、メンテナンスモードに設定されています！</a></li>
       <?php endif;?>
       <li class="logout"><a href="<?php echo page_link('logout')?>">ログアウト</a></li>
       <li class="logout"><a href="<?php echo page_link()?>">サイトに戻る</a></li>
-      <?php if ( $Lead->isRollbackUser() ):?>
+      <?php if ( $seezoo->hasRollbackUser() ):?>
       <li class="logout"><a href="<?php echo page_link('dashboard/panel/rollback_user')?>">元のユーザに戻る</a></li>
       <?php endif;?>
     </ul>

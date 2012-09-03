@@ -44,7 +44,7 @@ ClassExtend('Model', function pages_model() {
 			that = this,
 			box = DOM.id('scaned_page_list').html('').addStyle({'height' : '0px', overflow : 'hidden'});
 		
-		this.ajax.get('dashboard/pages/system_page/scan_system_page/' + this.config.item('sz_token'), {
+		this.ajax.get('dashboard/sitemap/system_page/scan_system_page/' + this.config.item('sz_token'), {
 			success : function (resp) {
 				box.html(resp.responseText).animate('blindDown', {
 						mode : 'y',

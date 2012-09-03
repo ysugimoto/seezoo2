@@ -6,7 +6,8 @@ $Init    = Seezoo::$Importer->model('InitModel');
 
 require_once(APPPATH . 'data/flint.config.php');
 $setting = $config['init_config'];
-$setting['siteUrl'] = page_link();
+$setting['siteUrl'] = page_link() . 'index.php';
+$setting['isModRewrite'] = get_config('enable_mod_rewirte');
 
 if ( $Session->get('sz_token') )
 {
@@ -34,11 +35,11 @@ else
 	$setting['version_number'] = $Request->get('v');
 	$setting['can_edit'] = ( strpos($status->allow_edit_user, ':' . $userID . ':') !== FALSE ) ? TRUE : FALSE;
 	$setting['is_edit']  = ( $status->edit_user_id == $userID ) ? TRUE : FALSE;
-	
-	if ( $setting['directoryList'] === 'auto' )
-	{
-		$setting['directoryList'] = getControllers('./' . $setting['scriptPath'] . 'controllers');
-	}
+}
+
+if ( $setting['directoryList'] === 'auto' )
+{
+	$setting['directoryList'] = getControllers('./' . $setting['scriptPath'] . 'controllers');
 }
 
 Seezoo::$Response->setHeader('Content-Type', 'text/javascript');

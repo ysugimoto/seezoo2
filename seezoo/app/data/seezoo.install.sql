@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}block_permissions` (
   `block_id` int(11) NOT NULL default '0',
   `allow_view_id` varchar(255) default NULL,
   `allow_edit_id` varchar(255) default NULL,
+  `allow_mobile_carrier` varchar(255) default NULL,
   PRIMARY KEY  (`block_permissions_id`)
 ) DEFAULT CHARSET=utf8;
 
@@ -371,10 +372,10 @@ INSERT INTO `{DBPREFIX}page_paths` (`page_path_id`, `page_path`, `page_id`) VALU
 (2, 'login', 2),
 (3, 'logout', 3),
 (4, 'dashboard', 4),
-(5, 'dashboard/pages', 5),
-(6, 'dashboard/pages/page_list', 6),
-(7, 'dashboard/pages/system_page', 7),
-(8, 'dashboard/pages/static_pages', 8),
+(5, 'dashboard/sitemap', 5),
+(6, 'dashboard/sitemap/page_list', 6),
+(7, 'dashboard/sitemap/system_page', 7),
+(8, 'dashboard/sitemap/static_pages', 8),
 (9, 'dashboard/pages/pseudo_variables', 9),
 (10, 'dashboard/files', 10),
 (11, 'dashboard/files/directory_view', 11),
@@ -560,7 +561,7 @@ CREATE TABLE IF NOT EXISTS `{DBPREFIX}pending_pages` (
 -- テーブルの構造 `backend`
 -- 
 
-CREATE TABLE `backend` (
+CREATE TABLE `{DBPREFIX}backend` (
   `backend_id` int(11) NOT NULL auto_increment,
   `backend_handle` varchar(255) NOT NULL,
   `backend_name` varchar(255) NOT NULL,

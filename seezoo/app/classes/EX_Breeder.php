@@ -26,6 +26,15 @@ class EX_Breeder extends SZ_Breeder
 	protected function _startUpCMS()
 	{
 		$path = trim($this->request->getAccessPathInfo(), '/');
+		// if " dashboard" access, check logged in
+		if ( strpos($path, 'dashboard') === 0 )
+		{
+			$Init = Seezoo::$Importer->model('InitModel');
+			if ( ! $Init->isLoggedIn() )
+			{
+				$this->response->redirect(SEEZOO_SYSTEM_LOGIN_URI . '?redirect=' . base64_encode($path));
+			}
+		}
 		$PageModel = Seezoo::$Importer->model('PageModel');
 		$page      = $PageModel->detectPage($path);
 		if ( $page )
@@ -35,5 +44,19 @@ class EX_Breeder extends SZ_Breeder
 		}
 		
 		$this->view->assign(array('seezoo' => SeezooCMS::getInstance()));
+	}
+	
+	protected function _ajaxTokenCheck($token = FALSE)
+	{
+		if ( ! $token )
+		{
+			$token = $this->request->post('sz_token');
+		}
+		
+		$sess = Seezoo::$Importer->library('Session');
+		if ( ! $token || $token !== $sess->get('sz_token') )
+		{
+			exit('access_denied');
+		}
 	}
 }

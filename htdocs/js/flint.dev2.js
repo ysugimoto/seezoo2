@@ -3733,6 +3733,9 @@
 					} else {
 						this._directoryName = arg[0].slice(0, point) + '/';
 						this._controllerName = arg[0].slice(point + 1);
+						if ( this._controllerName === '' ) {
+						this._controllerName = this._conf.defaultController;
+						}
 					}
 					this._methodName = arg[1];
 					// detect arguments

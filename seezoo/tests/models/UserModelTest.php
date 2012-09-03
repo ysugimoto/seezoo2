@@ -10,16 +10,16 @@ class UserModelTest extends SZ_KennelTest
 		$this->assertTrue($result);
 	}
 	
-	public function testIsAdminZero()
-	{
-		$result = $this->model->isAdmin(0);
-		$this->assertFalse($result);
-	}
-	
 	public function testIsAdminNG()
 	{
 		$result = $this->model->isAdmin(100);
 		$this->assertFalse($result);
+	}
+	
+	public function testGetUserList()
+	{
+		$result = $this->model->getUserList();
+		$this->assertInternalType('array', $result);
 	}
 
 }

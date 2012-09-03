@@ -168,4 +168,10 @@ class PageModel extends SZ_Kennel
 		$query = $this->db->query($sql, array((int)$pageID));
 		return ( $query ) ? $query->row() : FALSE;
 	}
+	
+	public function getPageStatus($pageID)
+	{
+		return ActiveRecord::finder('pages')
+		        ->findByPageId($pageID);
+	}
 }

@@ -48,10 +48,4 @@ class PageLead extends SZ_Lead
 				return '';
 		}
 	}
-	
-	public function isRollbackUser()
-	{
-		$sess = Seezoo::$Importer->library('Session');
-		return ( $sess->get('rollback_user') ) ? TRUE : FALSE;
-	}
 }

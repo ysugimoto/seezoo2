@@ -15,14 +15,18 @@ class LoginLead extends SZ_Lead
 	
 	public function index($noValidation = FALSE)
 	{
+		$request         = Seezoo::getRequest();
 		$data            = new stdClass;
 		$data->tokenName = $this->tokenName;
 		$data->token     = $this->session->generateToken($this->tokenName);
+		$data->redirect  = ( $request->get('redirect') )
+		                     ? base64_decode($request->get('redirect'))
+		                     : FALSE;
+		
 		if ( ! $noValidation )
 		{
 			$Validation = $this->_validation();
 		}
-		$R = Seezoo::getRequest();
 		
 		return $data;
 	}
@@ -49,7 +53,15 @@ class LoginLead extends SZ_Lead
 		
 		if ( $result )
 		{
-			Seezoo::$Response->redirect($result);
+			$redirect = $request->post('redirect');
+			if ( $redirect && strpos(page_link($redirect), get_config('base_url')) === 0 )
+			{
+				Seezoo::$Response->redirect($redirect);
+			}
+			else
+			{
+				Seezoo::$Response->redirect($result);
+			}
 		}
 		
 		$data            = new stdClass;

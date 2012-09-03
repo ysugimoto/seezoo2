@@ -1,26 +1,23 @@
 <?php if ( ! defined('SZ_EXEC') ) exit('access_denied');
-
 /**
  * ===============================================================================
  * 
- * Seezoo dashboard 一般ページ管理コントローラ
- * 
- * @package Seezoo Core
+ * seezoo テンプレート管理モデル
+ *
+ * @package seezoo-cms Core
  * @author Yoshiaki Sugimoto <neo.yoshiaki.sugimoto@gmail.com>
- * 
+ *
  * ===============================================================================
  */
-class Page_listController extends EX_Breeder
+class TemplateModel extends SZ_Kennel
 {
-	public static $page_title = '一般ページ管理';
-	
 	public function __construct()
 	{
 		parent::__construct();
 	}
 	
-	public function index()
+	public function getTemplateList()
 	{
-		// TODO : implement
+		return ActiveRecord::finder('templates')->findAll();
 	}
 }

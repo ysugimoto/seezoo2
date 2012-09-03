@@ -22,7 +22,6 @@ class LoginController extends SZ_Breeder
 	{
 		parent::__construct();
 		$this->import->helper('form');
-		$this->import->library('Session');
 		$this->import->model('AuthModel');
 		
 		if ( $this->request->segment(1) !== SEEZOO_SYSTEM_LOGIN_URI )

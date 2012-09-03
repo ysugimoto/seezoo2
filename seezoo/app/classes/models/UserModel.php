@@ -28,19 +28,32 @@ class UserModel extends SZ_Kennel
 			return TRUE; // master user
 		}
 		
-		$User = ActiveRecord::finder('user')
-		        ->findByUserIs($userID, 'admin_flag');
-		/*
-		$sql = 'SELECT admin_flag FROM users WHERE user_id = ? LIMIT 1';
-		$query = $this->db->query($sql, array((int)$uid));
-		if ($query->num_rows() > 0)
-		{
-			$result = $query->row();
-			if ((int)$result->admin_flag === 1)
-			{
-				return TRUE;
-			}
-		}*/
+		$User = ActiveRecord::finder('users')
+		        ->findByUserId($userID, 'admin_flag');
+		
 		return ( $User && $User->admin_flag > 0 ) ? TRUE : FALSE;
+	}
+	
+	public function getUserList()
+	{
+		$Users = ActiveRecord::finder('users')
+		          ->findAll();
+		$userList = array();
+		
+		// create virtual data
+		$user = new stdClass;
+		$user->user_name  = '一般ユーザー';
+		$user->admin_flag = 0;
+		$userList[0] = $user;
+		$user = new stdClass;
+		$user->user_name  = '登録メンバー';
+		$user->admin_flag = 0;
+		$userList['m'] = $user;
+		
+		foreach ( $Users as $u )
+		{
+			$userList[$u->user_id] = $u;
+		}
+		return $userList;
 	}
 }
