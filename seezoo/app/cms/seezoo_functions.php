@@ -124,3 +124,50 @@ if ( ! function_exists('set_image'))
 	}
 }
 
+if ( ! function_exists('parse_path_segment'))
+{
+	function parse_path_segment($path, $before = FALSE)
+	{
+		$pos = strrpos($path, '/');
+
+		if ( $pos === FALSE )
+		{
+			return ( $before === FALSE ) ? $path : '';
+		}
+		else
+		{
+			return ( $before === FALSE )
+			         ? substr($path, $pos + 1)
+			         : substr($path, 0, $pos);
+		}
+	}
+}
+
+// hour_list : 時間の配列を生成
+if ( ! function_exists('hour_list'))
+{
+	function hour_list()
+	{
+		for ($i = 0; $i < 24; $i++)
+		{
+			$key = ($i < 10) ? '0' . $i : (string)$i;
+			$list[$key] = $key;
+		}
+		return $list;
+	}
+}
+
+// minute_list : 分の配列を生成
+if ( ! function_exists('minute_list'))
+{
+	function minute_list()
+	{
+		for ($i = 0; $i < 60; $i++)
+		{
+			$key = ($i < 10) ? '0' . $i : (string)$i;
+			$list[$key] = $key;
+		}
+		return $list;
+	}
+}
+

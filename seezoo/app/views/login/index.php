@@ -2,11 +2,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<!--
 <script type="text/javascript" src="<?php echo base_link();?>flint.php?mode=view" charset="UTF-8"></script>
 <script type="text/javascript" src="<?php echo base_link();?>js/flint.dev2.js" charset="UTF-8"></script>
 <script type="text/javascript" src="<?php echo base_link();?>js/login.js" charset="UTF-8"></script>
--->
 
 <link rel="stylesheet" type="text/css" href="<?php echo base_link();?>css/login.css" />
 <title>ログイン</title>

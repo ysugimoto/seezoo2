@@ -382,6 +382,15 @@ class SZ_View extends SZ_Driver
 		$this->setExtension($extension);
 	}
 	
+	// --------------------------------------------------
+	
+	
+	/**
+	 * Get current engine
+	 * 
+	 * @access public
+	 * @return string
+	 */
 	public function getEngine()
 	{
 		return $this->_templateEngine;

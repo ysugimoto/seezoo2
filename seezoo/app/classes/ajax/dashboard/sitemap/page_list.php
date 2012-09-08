@@ -190,4 +190,41 @@ class Page_listController extends EX_Breeder
 		
 		$this->view->render('ajax/edit_external_link', $data);
 	}
+	
+	/**
+	 * ページ設定
+	 * @access public
+	 * @param int $pageID
+	 * @param string $token
+	 */
+	function page_config_from_operator($pageID, $token = FALSE)
+	{
+		$this->_ajaxTokenCheck($token);
+		if ( ! $pageID || ! ctype_digit($pageID) )
+		{
+			echo 'access_denied';
+			return;
+		}
+		
+		$TemplateModel = Seezoo::$Importer->model('TemplateModel');
+		$PageModel     = Seezoo::$Importer->model('PageModel');
+		$UserModel     = Seezoo::$Importer->model('UserModel');
+		$SitemapModel  = Seezoo::$Importer->model('SitemapModel');
+		
+		$data            = new stdClass;
+		$data->token     = $token;
+		$data->templates = $TemplateModel->getTemplateList();
+		$data->page      = $PageModel->getPageObject($pageID, 'approve');
+		$data->user_list = $UserModel->getUserList();
+		$data->seezoo    = SeezooCMS::getInstance();
+		
+		$page            = $PageModel->getPageObject($pageID, 'approve');
+		$topPagePath     = ActiveRecord::finder('page_paths')->findByPageId(1);
+		$grep            = '|^' . preg_quote(trail_slash($topPagePath->page_path)) . '|';
+		$page->page_path = preg_replace($grep, '', $page->page_path);
+		$data->page      = $page;
+		
+		$this->view->assign($data);
+		$this->view->render('ajax/edit_page_form');
+	}
 }

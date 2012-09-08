@@ -897,7 +897,7 @@ ClassExtend('Library', function page_operator() {
 								.appendTo()
 								.addStyle('position', 'fixed');
 		}
-		FL.ajax.post('ajax/check_page_path_exists/' + FL.config.item('sz_token'), {
+		FL.ajax.post('page/check_page_path_exists/' + FL.config.item('sz_token'), {
 			param : { path : path , page_id : pid },
 			error : function() { alert('通信に失敗しました。'); },
 			success : function(resp) {

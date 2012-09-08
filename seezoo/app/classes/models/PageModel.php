@@ -54,14 +54,18 @@ class PageModel extends SZ_Kennel
 			// current editting version
 			$sql =
 					'SELECT '
-					.	'* '
+					.	'*, '
+					.	'pv.page_id as page_id '
 					.'FROM '
 					.	$prefix.'pending_pages as pv '
 					.'LEFT OUTER JOIN ' . $prefix.'templates as tpl ON ( '
 					.	'pv.template_id = tpl.template_id '
 					.') '
+					.'LEFT JOIN ' . $prefix.'page_paths as PP ON ( '
+					.	'pv.page_id = PP.page_id '
+					.') '
 					.'WHERE '
-					.	'page_id = ? '
+					.	'pv.page_id = ? '
 					.'ORDER BY '
 					.	'version_number DESC '
 					.'LIMIT 1'
@@ -73,14 +77,21 @@ class PageModel extends SZ_Kennel
 			// normal access view. get approved version
 			$sql =
 					'SELECT '
-					.	'* '
+					.	'*, '
+					.	'pv.page_id as page_id '
 					.'FROM '
 					.	$prefix.'page_versions as pv '
 					.'LEFT OUTER JOIN ' . $prefix.'templates as tpl ON ( '
 					.	'pv.template_id = tpl.template_id '
 					.') '
+					.'LEFT JOIN ' . $prefix.'page_paths as PP ON ( '
+					.	'pv.page_id = PP.page_id '
+					.') '
+					.'LEFT OUTER JOIN ' . $prefix.'page_permissions as PERM ON ( '
+					.	'pv.page_id = PERM.page_id '
+					.') '
 					.'WHERE '
-					.	'page_id = ? '
+					.	'pv.page_id = ? '
 					.'AND '
 					.	'is_public = 1 '
 					.'AND '
@@ -96,14 +107,18 @@ class PageModel extends SZ_Kennel
 			// version string is numeric, get target version (this process works preview only.)
 			$sql =
 					'SELECT '
-					.	'* '
+					.	'*, '
+					.	'pv.page_id as page_id '
 					.'FROM '
 					.	$prefix.'page_versions as pv '
 					.'LEFT OUTER JOIN ' . $prefix.'templates as tpl ON ( '
 					.	'pv.template_id = tpl.template_id '
 					.') '
+					.'LEFT JOIN ' . $prefix.'page_paths as PP ON ( '
+					.	'pv.page_id = PP.page_id '
+					.') '
 					.'WHERE '
-					.	'page_id = ? '
+					.	'pv.page_id = ? '
 					.'AND '
 					.	'version_number = ? '
 					.'LIMIT 1'
@@ -123,6 +138,9 @@ class PageModel extends SZ_Kennel
 					.') '
 					.'LEFT OUTER JOIN ' . $prefix.'templates as tpl ON ( '
 					.	'pv.template_id = tpl.template_id '
+					.') '
+					.'LEFT JOIN ' . $prefix.'page_paths as PP ON ( '
+					.	'pv.page_id = PP.page_id '
 					.') '
 					.'WHERE '
 					.	'pv.page_id = ? '
@@ -173,5 +191,39 @@ class PageModel extends SZ_Kennel
 	{
 		return ActiveRecord::finder('pages')
 		        ->findByPageId($pageID);
+	}
+	
+	public function checkPagePathExists($pageID, $pagePath)
+	{
+		// First, CMS page exists?
+		$sql =
+				'SELECT '
+				.	'page_id '
+				.'FROM '
+				.	$this->db->prefix().'page_paths '
+				.'WHERE '
+				.	'page_path = ? ';
+		$bind = array($pagePath);
+		if ( $pageID > 0 )
+		{
+			$sql   .=	'AND page_id <> ?';
+			$bind[] = $pageID;
+		}
+		$query = $this->db->query($sql, $bind);
+		
+		if ( $query->numRows() > 0 )
+		{
+			return 'PAGE_EXISTS';
+		}
+		else 
+		{
+			// second, static page exists?
+			if (file_exists(ROOTPATH . 'statics/' . $pagePath . '.php')
+			    || file_exists(ROOTPATH . 'statics/' . $pagePath . '.html'))
+			{
+				return 'STATIC_EXISTS';
+			}
+			return 'NOT_EXISTS';
+		}
 	}
 }
