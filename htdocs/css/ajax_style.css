@@ -1,0 +1,183 @@
+/* ==================
+ * Common saving image
+ * ================== */
+div#sz_saving {
+  position : fixed;
+  top : 50%;
+  left : 0;
+  width : 100%;
+  height : 200px;
+  margin-top : -100px;
+  z-index:  10000;
+  background : #d8e6eb url(../images/loading/save.gif) center center no-repeat;
+  opacity : 0.7;
+  filter : alpha(opacity=70);
+  display : none;
+}
+
+/* ==================
+ * popup window
+ * ================== */
+div.sz-popup-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1010;
+  border-radius : 8px;
+  border: solid 1px #130e2b;
+  background: #fff;
+  -webkit-box-shadow: 5px 5px 5px #333;
+  -moz-box-shadow: 5px 5px 5px #333;
+  -ms-box-shadow: 5px 5px 5px #333;
+  -o-box-shadow: 5px 5px 5px #333;
+  box-shadow: 5px 5px 5px #333;
+}
+div.sz-popup-content h3.sz-pp-head {
+background: #1a1747; /* Old browsers */
+background: -moz-linear-gradient(top,  #1a1747 0%, #130e2b 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1a1747), color-stop(100%,#130e2b)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #1a1747 0%,#130e2b 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #1a1747 0%,#130e2b 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #1a1747 0%,#130e2b 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #1a1747 0%,#130e2b 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1747', endColorstr='#130e2b',GradientType=0 ); /* IE6-9 */
+
+  border-radius : 6px 6px 0 0;
+  border-bottom: solid 1px #fff;
+  margin: 0;
+  padding : 8px 12px;
+  text-shadow: 1px 1px 2px #333;
+  color : #fff;
+  font-size: 0.8em;
+}
+div.sz-popup-content div.sz-pp-contents {
+  padding: 10px;
+}
+div.sz-popup-content a.pp_close {
+  position: absolute;
+  top : 8px;
+  right: 10px;
+}
+
+
+
+div#sitemap {
+  padding : 10px;
+}
+* html div#sitemap {
+  overflow-x : hidden;
+}
+
+div#sitemap img {
+  vertical-align : middle;
+}
+div#sitemap ul {
+  padding-left : 20px;
+  margin : 0;
+}
+div#sitemap li {
+  padding : 5px 0;
+  position : relative;
+}
+div#sitemap li {
+  text-align : left; list-style : none outside;
+}
+div#sitemap li span.ttl {
+  cursor : pointer ;
+}
+div#sitemap li.sz_page_placeholder {
+  height :2px;
+  margin-top : 2px;
+  padding : 0;
+  font-size : 0;
+}
+div#sitemap li.placeholder_target {
+  height :5px;
+  border : dotted 1px #600;
+}
+div#sitemap li span.target { font-weight : bold;}
+div#sitemap li img.sort_page { cursor : move;}
+div#sitemap li div.target { background-color : #ffc;}
+div#sitemap div.target span { font-weight : bold;}
+
+div#sitemap div.movable {
+  -webkit-transition: background-color 0.3s;
+  -moz-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
+  -ms-transition: background-color 0.3s;
+  transition: background-color 0.3s;
+}
+
+div#sitemap div.menu_current {background-color : #8ae2fe}
+div#sitemap div.menu_current span.ttl{ color : #000;}
+div#sitemap li a {
+  outline : none;
+  -webkit-transition: none;
+  -moz-transition: none;
+  -ms-transition: none;
+  -o-transition: none;
+  transition: none;
+}
+div#sitemap li a.open_dir {
+  background : url(../images/icons/arrow_open.gif) center center no-repeat;
+  display : block;
+  text-indent : -9999px;
+  position : absolute;
+  top : 6px;
+  left : -16px;
+  text-decoration : none;
+  width :16px;
+  height : 16px;
+}
+
+div#sitemap li a.close_dir {
+  background : url(../images/icons/arrow_close.gif) center center no-repeat;
+  display : block;
+  position : absolute;
+  text-indent : -9999px;
+  top : 6px;
+  left : -16px;
+  text-decoration : none;
+  width :16px;
+  height : 16px;
+}
+form#sz_sitemap_page_search_dashboard {
+  padding: 10px;
+}
+form#sz_sitemap_page_search_dashboard p {
+  margin : 8px 0;
+}
+form#sz_sitemap_page_search_dashboard p label {
+  display: block;
+  width: 100%;
+}
+div#sitemap_search_result {
+  padding : 10px;
+  font-size: 1.0em;
+}
+div#sz_sitemap_search_result_box h3 {
+  margin : 0;
+}
+div#sz_sitemap_search_result_box div.sz_section {
+  border-bottom : dotted 2px #8ad6ef;
+  padding : 8px 0;
+  cursor : pointer;
+}
+div#sitemap_search_result p {
+  margin : 8px 0;
+}
+div.sz_section * {
+  vertical-align : middle;
+}
+div.sz_section em {
+  float: right;
+  color: #999;
+  font-size: 0.9em;
+  margin-right: 8px;
+}
+div.sz_section span {
+  margin-left : 10px;
+}
+div.sz_section_hover {
+  background : #ffc;
+}

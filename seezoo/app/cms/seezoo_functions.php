@@ -171,3 +171,17 @@ if ( ! function_exists('minute_list'))
 	}
 }
 
+// set_public_datetime : DATETIME形式からフォーマットで出力
+if ( ! function_exists('set_public_datetime'))
+{
+	function set_public_datetime($format, $datetime)
+	{
+		// PHP5.1.0以前はstrtotimeは-1を返却するのでここで吸収
+		if ((int)strtotime($datetime) < 1)
+		{
+			return '';
+		}
+		return date($format, strtotime($datetime));
+	}
+}
+

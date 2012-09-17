@@ -120,7 +120,7 @@ class SeezooCMS
 	
 	public function __construct()
 	{
-		$this->_userID = $this->getUserID();
+		//$this->_userID = $this->getUserID();
 	}
 	
 	public function getUserID()
@@ -285,14 +285,14 @@ class SeezooCMS
 				;
 		$query       = $db->query($sql, array('dashboard%'));
 		$child_stack = array();
-		$out         = array('<ul class="sideNav">');
-		foreach ( $query->resultArray() as $v )
+		$out         = array('<ul class="menu vertical">');
+		foreach ( $query->result() as $v )
 		{
 			// page has child?
-			$query2 = $db->query($ch_sql, array($v['page_id']));
+			$query2 = $db->query($ch_sql, array($v->page_id));
 			$arr    = array(
 				'page'  => $v,
-				'child' => ( $query2->numRows() > 0 ) ? $query2->resultArray() : FALSE
+				'child' => ( $query2->numRows() > 0 ) ? $query2->result() : FALSE
 			);
 			$child_stack[] = $arr;
 		}
@@ -303,9 +303,7 @@ class SeezooCMS
 		{
 			$out[] = $this->_buildDashboardMenuFormat($value['page'], $userData);
 
-			if ( $value['child']
-			     && ( $value['page']['page_id'] == $this->page->page_id
-			          || $value['page']['page_id'] == $this->page->parent_id) )
+			if ( $value['child'] )
 			{
 				$out[] = '<ul>';
 				foreach ( $value['child'] as $v )
@@ -340,7 +338,7 @@ class SeezooCMS
 			{
 				// this page allow_access?
 				if ( ! $this->hasPermission(
-				                        $page['allow_access_user'],
+				                        $page->allow_access_user,
 				                        $userData->user_id
 				                        )
 				)
@@ -350,15 +348,15 @@ class SeezooCMS
 			}
 		}
 
-		$out[] = '<li id="dashboard_page_' . $page['page_id'] . '">'
-		         .'<a href="' . page_link() . $page['page_path'] . '"';
+		$out[] = '<li id="dashboard_page_' . $page->page_id . '">'
+		         .'<a href="' . page_link($page->page_path) . '"';
 		
-		if ( $page['page_id'] == $this->page->page_id
-		     || $page['page_id'] == $this->page->parent)
+		if ( $page->page_id == $this->page->page_id
+		     || $page->page_id == $this->page->parent)
 		{
 			$out[] = ' class="active"';
 		}
-		$out[] = '>' . $page['page_title'] . '</a>';
+		$out[] = '>' . prep_str($page->page_title) . '</a>';
 
 		return implode('', $out);
 	}

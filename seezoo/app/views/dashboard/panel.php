@@ -1,13 +1,7 @@
 <?php echo $this->loadView('dashboard/dashboard_header');?>
-<!--  dashboard contents -->
-<h2>Seezoo&nbsp;管理パネル&nbsp;TOP</h2>
-<div id="main">
-  <?php if ( ! empty($msg) ):?>
-  <div class="message"><?php echo $msg;?></div>
-  <?php endif;?>
-  <p class="admin_name">ようこそ、<?php echo prep_str($userData->user_name);?>さん！</p>
+<div class="col_6 widget">
   <h3>サイト情報</h3>
-  <table cellpadding="0" cellspacing="0">
+  <table class="striped">
     <tr class="odd">
       <td>seezooのバージョン</td>
       <td class="action"><?php echo get_config('seezoo_current_version');?></td>
@@ -33,12 +27,12 @@
       <td class="action"><?php echo $editPageCount;?></td>
     </tr>
     <tr class="odd">
-      <td>デフォルトで使用するテンプレート</td>
+      <td>デフォルトテンプレート</td>
       <td class="action"><?php echo prep_str($defaultTemplate->template_name);?></td>
     </tr>
   </table>
-  <br />
-  <br />
+</div>
+<div class="col_6 widget">
   <h3>システムインフォメーション</h3>
   <h4>申請状況</h4>
   <ul class="sz_system_info">
@@ -113,6 +107,17 @@
     <?php endif;?>
   </ul>
 </div>
-<!-- // #main -->
+<div class="col_3 widget">
+  <h3>widget</h3>
+</div>
+<div class="col_3 widget">
+  <h3>widget</h3>
+</div>
+<div class="col_3 widget">
+  <h3>widget</h3>
+</div>
+<div class="col_3 widget">
+  <h3>widget</h3>
+</div>
 
 <?php echo $this->loadView('dashboard/dashboard_footer');?>

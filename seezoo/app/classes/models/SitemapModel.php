@@ -630,12 +630,11 @@ class SitemapModel extends SZ_Kennel
 	{
 		foreach ( $orders as $order )
 		{
-			$update = array('parent' => $master);
+			//$update = array('parent' => $master);
 			$exp = explode(':', $order);
 			if ( count($exp) === 2 )
 			{
-				$update['page_id'] = $exp[0]; 
-				if ( ! $this->db->update('page_versions', $update, array('display_order' => $exp[1])) )
+				if ( ! $this->db->update('page_versions', array('display_order' => $exp[1]), array('page_id' => $exp[0])) )
 				{
 					return FALSE;
 				}
@@ -664,5 +663,52 @@ class SitemapModel extends SZ_Kennel
 				;
 		$query = $this->db->query($sql, array((int)$pageID));
 		return ( $query && $query->row( )) ? $query->row() : FALSE;
+	}
+	
+	// page search
+	function searchPage($pageTitle = '', $pagePath = '', $frontendOnly = FALSE)
+	{
+		$bind = array('%' . $pageTitle . '%', '%' . $pagePath . '%');
+		$sql  = 
+				'SELECT '
+				.	'DISTINCT(pv.page_id), '
+				.	'pv.page_title, '
+				.	'pp.page_path '
+				.'FROM '
+				.	'page_versions as pv '
+				.'RIGHT OUTER JOIN page_paths as pp ON ('
+				.	'pv.page_id = pp.page_id '
+				.') '
+				.'WHERE 1 '
+				.'AND pv.page_title LIKE ? '
+				.'AND pp.page_path LIKE ? '
+				.'AND pv.alias_to = 0 '
+				."AND (pv.external_link = '' OR pv.external_link IS NULL ) "
+				;
+		if ( $frontendOnly )
+		{
+			$bind[] = 'dashboard/%';
+			$sql   .= 'AND pp.page_path NOT LIKE ? ' ;
+		}
+		$sql .=	'ORDER BY pv.version_number DESC, pv.page_id ASC ';
+		
+		// set bind query
+		$query = $this->db->query($sql, $bind);
+		$ret   = array();
+		
+		if ( $query->numRows() > 0 )
+		{
+			$stack = array(); // guard distinct array
+			foreach ( $query->result() as $page )
+			{
+				if ( ! in_array($page->page_id, $stack) )
+				{
+					$ret[]   = $page;
+					$stack[] = $page->page_id;
+				}
+			}
+		}
+		
+		return $ret;
 	}
 }

@@ -133,12 +133,12 @@ ClassExtend('Controller', function DashboardPagesPageListController() {
 			success : function(resp) {
 				pp.setContent(resp.responseText);
 				// pre delete caption...
-				pp.box.getOne('h3').remove();
+				//pp.box.getOne('h3').remove();
 				if (tab) {
 					// set up tab
 					that.page_model.tabChange();
 					// set up calendar
-					that.sz_calendar.initialize({template : 'sz_calendar', yearRange : 'current-2011'});
+					that.sz_calendar.initialize({template : 'sz_calendar', yearRange : 'current-current+2'});
 					that.sz_calendar.setUp(DOM.byName('public_ymd').get(0));
 					// cancel submit event and process ajax
 					DOM.create('input').attr({type : 'hidden', name : 'from_po', value : 1}).prependTo(DOM('p.sz_add_form_submit').get(0));

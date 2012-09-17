@@ -68,6 +68,7 @@ class LoginLead extends SZ_Lead
 		$data->msg       = 'ログインに失敗しました。ユーザ名とパスワードを確認してください。';
 		$data->tokenName = $this->tokenName;
 		$data->token     = $this->session->generateToken($this->tokenName);
+		$data->redirect  = $request->post('redirect');
 		return $data;
 	}
 	

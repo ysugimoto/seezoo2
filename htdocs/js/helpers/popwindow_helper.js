@@ -56,6 +56,7 @@
 			if (PP.closeCallback && FL.ut.isFunction(PP.closeCallback)) {
 				PP.closeCallback();
 			}
+			PP.box.getOne('a.pp_close').unevent('click');
 			PP.box.unevent('mouseover').unevent('mouseout').remove();
 			ppStack = [];
 			ppCount--;
@@ -73,6 +74,7 @@
 			if (PP.closeCallback && FL.ut.isFunction(PP.closeCallback)) {
 				PP.closeCallback();
 			}
+			PP.box.getOne('a.pp_close').unevent('click');
 			PP.box.unevent('mouseover').unevent('mouseout').remove();
 			ppStack[ppCount - 2].box.addStyle('zIndex', latestIndex);
 			if (FL.ua.IE6) {
@@ -131,6 +133,7 @@
 			if (FL.ua.IE6) {
 				pp.box.addStyle('position', 'fixed');
 				sc = {x : 0, y : 0};
+				/*
 				html = ['<div class="sz-pp-tl" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'', FL.config.baseUrl(), 'images/ppbox/rad_top_left.png\',sizingMethod=\'scale\');"></div>',
 				        '<div class="sz-pp-tc">', tt, '</div>',
 				        '<div class="sz-pp-tr" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'', FL.config.baseUrl(), 'images/ppbox/rad_top_right.png\',sizingMethod=\'scale\')"></div>',
@@ -140,16 +143,28 @@
 				        '<div class="sz-pp-br" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src=\'', FL.config.baseUrl(), 'images/ppbox/rad_bottom_right.png\',sizingMethod=\'image\')"></div>',
 				        '<a href="javascript:void(0)" class="pp_close"></a>'
 				         ];
+				*/
 			} else {
+				/*
 				html = ['<div class="sz-pp-tl"></div><div class="sz-pp-tc">', tt, '</div><div class="sz-pp-tr"></div>',
 				           '<div class="sz-pp-contents" id="sz_pp_contents">', bd, '</div><div class="sz-pp-bl"></div><div class="sz-pp-bc"></div><div class="sz-pp-br"></div><a href="javascript:void(0)" class="pp_close"></a>'
 				            ];
+				*/
 			}
-			pp.box.html(html.join('\n'));
+			html = [
+			        '<h3 class="sz-pp-head">', tt, '</h3>',
+			        '<div class="sz-pp-contents">', bd, '</div>',
+			        '<a href="javascript:void(0)" class="pp_close">',
+			          '<span data-icon="x" class="icon small white" style="display:inline-block">',
+			            '<span aria-hidden="true">x</span>',
+			          '</span>',
+			        '</a>'
+			       ];
+			pp.box.html(html.join(''));
 			pp.hide = hidePP;
 			pp.keepLayer = withLayer || false;
 			pp.setContent = function(e) {
-				pp.body.append(e).addStyle('background', '#fff');
+				pp.body.append(e);
 				if (FL.ua.IE6) {
 					pp.box.addStyle('zoom', '1');
 					if (IE6FixFlag === false) {
@@ -181,8 +196,9 @@
 			if (ppCount === 1) {
 				layer = new Module.layer(true);
 			}
-			pp.title = pp.box.detect('div.sz-pp-tc').get(0, true);
-			pp.body = pp.box.detect('div.sz-pp-contents').get(0, true);
+			pp.title = pp.box.getOne('h3.sz-pp-head');
+			pp.body = pp.box.getOne('div.sz-pp-contents');
+			pp.box.getOne('a.pp_close').once('click', hidePP);
 
 			if (!cancelDrag && !FL.ua.IE6) {
 				new Module.draggable(pp.box, {handle : pp.title});

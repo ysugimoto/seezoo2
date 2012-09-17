@@ -280,7 +280,7 @@ $config['cookie_path']   = '/';
 
 $config['session_store_type']      = 'php';
 $config['session_auth_key']        = 'seezoo_session_key';  // session authorize key
-$config['session_lifetime']        = 500;                   // session expiration time ( sec digit )
+$config['session_lifetime']        = 7200;                   // session expiration time ( sec digit )
 $config['session_name']            = 'sz_session';          // session name
 $config['session_encryption']      = TRUE;                  // encryption session auth key
 $config['session_match_ip']        = TRUE;                  // session matching ip_address

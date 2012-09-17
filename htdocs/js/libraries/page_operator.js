@@ -143,12 +143,13 @@ ClassExtend('Library', function page_operator() {
 	 * @return void
 	 * ==============================================================================================
 	 */
-	this.doSearch = function() {
+	this.doSearch = function(evt) {
+		evt.preventDefault();
 		var suffix = ( mode === 'block' ) ? '_block' : '';
 		
 		layer.show();
 		saving.show();
-		FL.ajax.post('ajax/search_page_sitemap' + suffix + '/' + FL.config.item('sz_token'), {
+		FL.ajax.post('page/search_page_sitemap' + suffix + '/' + FL.config.item('sz_token'), {
 			param : DOM.id('sz_sitemap_page_search_dashboard').serialize(),
 			error : function() {layer.show(); saving.show(); alert('ページの検索に失敗しました。');},
 			success : function(resp) {
@@ -475,7 +476,7 @@ ClassExtend('Library', function page_operator() {
 	 */
 	this.showMenuFromSearch = function(ev) {
 		ev.stopPropagation();
-		var pid = DOM(ev.target).readAttr('pid'),
+		var pid = DOM(ev.currentTarget).readAttr('pid'),
 			uri = FL.config.siteUrl(),
 			token = FL.config.item('sz_token'),
 			e = DOM(ev.target),
