@@ -71,25 +71,31 @@ class PageController extends EX_Breeder
 			echo 'access denied';
 		}
 
-		$PageModel     = Seezoo::$Importer->model('PageModel');
-		$TemplateModel = Seezoo::$Importer->model('TemplateModel');
-		$UserModel     = Seezoo::$Importer->model('UserModel');
-		// load page create data
-		$data = new stdClass;
-		$data->page      = $PageModel->getPageObject($pageID);
-		$data->templates = $TemplateModel->getTemplateList();
-		$data->users     = $UserModel->getUserList();
-		$data->token     = $token;
-		
-		/*
-		$data->page_id = intval($pid);
+		$data = $this->lead->getPageAddEditData($pageID, TRUE);
 		$data->token = $token;
-		$data->default_template_id = $this->ajax_model->get_default_template_id();
-		$data->templates = $this->ajax_model->get_template_list();
-		$data->parent_path = $this->ajax_model->get_current_page_path($pid);
-		$data->permission_list = $this->ajax_model->get_user_list();
-		*/
+		
 		$this->view->assign($data);
 		$this->view->render('ajax/add_page_form');
+	}
+	
+	/**
+	 * ページ情報編集
+	 * @access public
+	 * @param $pageID
+	 * @param $token
+	 */
+	function edit_page($pageID, $token = FALSE)
+	{
+		$this->_ajaxTokenCheck($token);
+		if ( ! $pageID || ! ctype_digit($pageID) )
+		{
+			echo 'access denied';
+		}
+
+		$data = $this->lead->getPageAddEditData($pageID, FALSE);
+		$data->token = $token;
+		
+		$this->view->assign($data);
+		$this->view->render('ajax/edit_page_form');
 	}
 }

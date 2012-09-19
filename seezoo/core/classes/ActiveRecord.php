@@ -524,8 +524,15 @@ class SZ_ActiveRecord
 		$primaryTable = $db->prefix() . $this->_table;
 		$selectColumn = ( count($columns) > 0 ) ? implode(', ', $columns) : '*';
 		$bindData     = array();
-		$columns      = ( count($columns) === 0 ) ? array('*') : explode(',', $columns);
-		
+		if ( is_array($columns) )
+		{
+			$columns = ( count($columns) === 0 ) ? array('*') : $columns;
+		}
+		else
+		{
+			$columns = array_filter(explode(',', $columns));
+		}
+	
 		foreach ( $columns as $key => $col )
 		{
 			$col = $db->prepColumn($col);

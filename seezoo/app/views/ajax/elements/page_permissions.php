@@ -1,11 +1,11 @@
-<p style="color:#c00;margin : 8px 0;">※チェックを入れたユーザーに対して権限が設定されます。</p>
-<table class="striped">
+<div class="notice warning">※チェックを入れたユーザーに対して権限が設定されます。</div>
+<table class="striped permissions">
   <tbody>
     <tr>
-      <th>&nbsp;</th>
-      <th>ページへのアクセス</th>
-      <th>ページの編集</th>
-      <th>ページの公開</th>
+      <th class="center">&nbsp;</th>
+      <th class="center">ページへのアクセス</th>
+      <th class="center">ページの編集</th>
+      <th class="center">ページの公開</th>
     </tr>
     <?php $cnt = 0;?>
     <?php foreach ($users as $key => $user):?>
@@ -14,21 +14,21 @@
       <?php if ( $key == 1 || $user->admin_flag > 0 ):?>
       <td colspan="3" class="center">管理者権限により許可</td>
       <?php else:?>
-      <td class="pp_ch">
+      <td class="center">
         <?php echo $Helper->form->checkbox('permission[]', $key, ( $key === 0 || $key === 'm' || $value->admin_flag < 1 ) ? TRUE : FALSE);?>
       </td>
-      <td class="pp_ch">
+      <td class="center">
         <?php if ( $key === 0 || $key === 'm' ):?>
         -
         <?php else:?>
         <?php echo $Helper->form->checkbox('permission_edit[]', $key);?>
         <?php endif;?>
       </td>
-      <td class="pp_ch">
+      <td class="center">
         <?php if ( $key === 0 || $key === 'm' ):?>
         -
         <?php else:?>
-        <?php echo $Helper->form->checkbox('permissions_approve[]', $key);?>
+        <?php echo $Helper->form->checkbox('permission_approve[]', $key);?>
         <?php endif;?>
       </td>
       <?php endif;?>

@@ -199,4 +199,22 @@ class PageLead extends SZ_Lead
 		}
 		SeezooCMS::setStatus('can_edit', $this->canEdit);
 	}
+
+	public function getPageAddEditData($pageID, $isAddPage = TRUE)
+	{
+		$request       = Seezoo::getRequest();
+		$PageModel     = Seezoo::$Importer->model('PageModel');
+		$TemplateModel = Seezoo::$Importer->model('TemplateModel');
+		$UserModel     = Seezoo::$Importer->model('UserModel');
+		// load page create data
+		$data = new stdClass;
+		$data->page      = $PageModel->getPageObject($pageID);
+		$data->templates = $TemplateModel->getTemplateList();
+		$data->users     = $UserModel->getUserList();
+		$data->add_flag  = $isAddPage;
+		$data->fromPO    = ( strpos($request->server('http_referer'), 'dashboard/sitemap') !== FALSE )
+		                     ? TRUE
+		                     : FALSE;
+		return $data;
+	}
 }

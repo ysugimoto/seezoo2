@@ -240,7 +240,7 @@ class SitemapModel extends SZ_Kennel
 		             ->findByPageId($to);
 		
 		// Update move from page
-		$fromPage->display_order      = $this->_getMaxDisplayOrder($to);
+		$fromPage->display_order      = $this->_getNextDisplayOrder($to);
 		$fromPage->parent             = $to;
 		$fromPage->display_page_level = (int)$toPage->display_page_level + 1;
 		if ( ! $fromPage->update() )
@@ -263,7 +263,7 @@ class SitemapModel extends SZ_Kennel
 		return TRUE;
 	}
 	
-	public function getMaxDisplayOrder($pageID)
+	public function getNextDisplayOrder($pageID)
 	{
 		$sql =
 				'SELECT '
@@ -279,7 +279,7 @@ class SitemapModel extends SZ_Kennel
 		return (int)$result->m + 1;
 	}
 	
-	protected function _getDisplayPageLevel($pageID, $versionNumber)
+	public function getDisplayPageLevel($pageID, $versionNumber)
 	{
 		$PV = ActiveRecord::finder('page_versions')
 		       ->findByPageIdAndVersionNumber($pageID, $versionNumber, array('display_page_level'));
@@ -451,7 +451,7 @@ class SitemapModel extends SZ_Kennel
 		$PageVersions->version_number     = 1;
 		$PageVersions->parent             = $to;
 		$PageVersions->is_public          = 1;
-		$PageVersions->display_order      = $this->_getMaxDisplayOrder($to);
+		$PageVersions->display_order      = $this->_getNextDisplayOrder($to);
 		$PageVersions->display_page_level = $this->_getDisplayPageLevel($to, $toCurrentVersion);
 		$PageVersions->version_date       = $datetime;
 		$PageVersions->public_datetime    = $datetime;

@@ -385,9 +385,9 @@ ClassExtend('Library', function page_operator() {
 				break;
 			case 1:
 				if ( current.hasClass('external')) {
-					elm.attr('href', uri + 'dashboard/sitemap/page_list/external_page_config_from_operator/' + pid + '/' + token);
+					elm.attr('href', uri + 'page/edit_page_external/' + pid + '/' + token);
 				} else {
-					elm.attr('href', uri + 'dashboard/sitemap/page_list/page_config_from_operator/' + pid + '/' + token);
+					elm.attr('href', uri + 'page/edit_page/' + pid + '/' + token);
 				}
 				break;
 			case 2:

@@ -1,3 +1,101 @@
+/* =================
+ * Common setting
+ * =================
+ */
+.mt20 {
+  margin-top : 20px;
+}
+input.long-text {
+  width: 100%;
+}
+input.middle-text {
+  width: 75%;
+}
+input.short-text {
+  width: 50%;
+}
+input.tiny-text {
+  width: 25%;
+}
+
+/* ==================
+ * initial hide mark
+ * ==================
+ */
+.init_hide {
+  display: none;
+}
+
+
+/* ==================
+ * loading
+ * ==================
+ */
+.loading {
+  background-image : url(../images/loading/small.gif);
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+.loading * {
+  visibility: hidden !important;
+}
+
+
+/* ==================
+ * Notification
+ * ==================
+ */
+.sz_notification {
+  position: fixed;
+  bottom: 16px;
+  padding: 12px;
+  min-height: 20px;
+  color: #fff;
+  right: 14px;
+  width: 200px;
+  font-size : 12px;
+  font-weight: bold;
+  overflow: hidden;
+  background: #333;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  z-index: 6000;
+}
+
+/* ==================
+ * Login window
+ * ==================
+ */
+#sz_loginwindow {
+  text-align: center;
+  position: fixed;
+  width : 400px;
+  height : 200px;
+  top : 50%;
+  left: 50%;
+  background: #fff;
+  border: solid 6px #333;
+  padding : 16px;
+  margin : -111px 0 0 -211px;
+  z-index : 8000;
+  border-radius:85px;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  -o-border-radius: 8px;
+  -ms-border-radius: 8px;
+}
+#sz_loginwindow p {
+  margin : 18px 0;
+}
+#sz_loginwindow h5 {
+  font-size : 12px;
+}
+
+
+
 /* ==================
  * Common saving image
  * ================== */
@@ -33,14 +131,14 @@ div.sz-popup-content {
   box-shadow: 5px 5px 5px #333;
 }
 div.sz-popup-content h3.sz-pp-head {
-background: #1a1747; /* Old browsers */
-background: -moz-linear-gradient(top,  #1a1747 0%, #130e2b 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1a1747), color-stop(100%,#130e2b)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  #1a1747 0%,#130e2b 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  #1a1747 0%,#130e2b 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  #1a1747 0%,#130e2b 100%); /* IE10+ */
-background: linear-gradient(to bottom,  #1a1747 0%,#130e2b 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1747', endColorstr='#130e2b',GradientType=0 ); /* IE6-9 */
+  background: #1a1747; /* Old browsers */
+  background: -moz-linear-gradient(top,  #1a1747 0%, #130e2b 100%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#1a1747), color-stop(100%,#130e2b)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top,  #1a1747 0%,#130e2b 100%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top,  #1a1747 0%,#130e2b 100%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top,  #1a1747 0%,#130e2b 100%); /* IE10+ */
+  background: linear-gradient(to bottom,  #1a1747 0%,#130e2b 100%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1747', endColorstr='#130e2b',GradientType=0 ); /* IE6-9 */
 
   border-radius : 6px 6px 0 0;
   border-bottom: solid 1px #fff;
@@ -52,11 +150,16 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a1747', end
 }
 div.sz-popup-content div.sz-pp-contents {
   padding: 10px;
+  overflow: auto;
 }
 div.sz-popup-content a.pp_close {
   position: absolute;
   top : 8px;
   right: 10px;
+}
+div.sz-pp-contents textarea {
+  height: 5em;
+  width: 100%;
 }
 
 

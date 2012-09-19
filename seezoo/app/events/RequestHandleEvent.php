@@ -225,11 +225,11 @@ class RequestHandleEvent
 	
 	protected function page_add($update = FALSE)
 	{
-		$Validation = $this->_validationPageAdd();
+		$Validation = $this->_validationPage();
 		if ( ! $Validation->run() )
 		{
-			echo $Validation->getErrors();
-			return;
+			echo $Validation->errorString();
+			exit;
 		}
 		$dashboardRequest = ( (int)$this->request->post('from_po') === 1 ) ? TRUE : FALSE;
 		$pageID           = (int)$this->request->post('page_id');
@@ -243,7 +243,7 @@ class RequestHandleEvent
 		}
 		
 		// control page
-		$page = $this->_controllPage($update, $dashboardRequest, $pageID, $versionNumber, $userID);
+		$page = $this->_controllPage($Validation, $update, $dashboardRequest, $pageID, $versionNumber, $userID);
 		
 		if ( $page )
 		{
@@ -257,7 +257,7 @@ class RequestHandleEvent
 			if ( $dashboardRequest )
 			{
 				$json = array(
-					'page_title' => $page->poge_title,
+					'page_title' => $page->page_title,
 					'page_id'    => $pageID
 				);
 				Seezoo::$Response->displayJSON($json);
@@ -274,7 +274,7 @@ class RequestHandleEvent
 		}
 	}
 	
-	protected function _controlPagePermission($update, $pageID)
+	protected function _controllPagePermission($update, $pageID)
 	{
 		// when from_po data is posted, requested by page_list dashboard.
 		if ( $update )
@@ -311,7 +311,11 @@ class RequestHandleEvent
 			{
 				$AR = ActiveRecord::finder('page_paths')
 				      ->findByPageId($pageID);
-				$AR->page_path = $pageID;
+				$segments = explode('/', $AR->page_path);
+				// pop last segment and push new semgent
+				array_pop($segments);
+				array_push($segments, $pagePath);
+				$AR->page_path = implode('/', $segments);
 				return $AR->update();
 			}
 		}
@@ -324,7 +328,7 @@ class RequestHandleEvent
 		}
 	}
 
-	protected function _controllPage($update, $dashboardRequest, $pageID, $versionNumber, $userID)
+	protected function _controllPage($Validation, $update, $dashboardRequest, $pageID, $versionNumber, $userID)
 	{
 		if ( ! $update )
 		{
@@ -340,8 +344,8 @@ class RequestHandleEvent
 			$Page->is_mobile_only     = (int)$this->request->post('is_mobile_only');
 			$Page->target_blank       = (int)$this->request->post('target_blank');
 			$Page->parent             = $pageID;
-			$Page->display_order      = $Sitemap->getMaxDisplayOrder($pageID) + 1;
-			$Page->display_page_level = $Sitemap->getParentPageLevel($pageID) + 1;
+			$Page->display_order      = $Sitemap->getNextDisplayOrder($pageID);
+			$Page->display_page_level = $Sitemap->getDisplayPageLevel($pageID, $versionNumber) + 1;
 			$Page->version_date       = date('Y-m-d H:i:s');
 			$Page->created_user_id    = $userID;
 			$Page->is_public          = 1;
@@ -376,6 +380,12 @@ class RequestHandleEvent
 			$Page->is_ssl_page      = (int)$this->request->post('is_ssl_page');
 			$Page->is_mobile_only   = (int)$this->request->post('is_mobile_only');
 			$Page->target_blank     = (int)$this->request->post('target_blank');
+			$Page->public_datetime  = sprintf(
+			                            '%s %s:%s:00',
+			                            $Validation->value('public_ymd'),
+			                            $Validation->value('public_time'),
+			                            $Validation->value('public_minute')
+			                          );
 			
 			$result = $Page->update();
 			return ( $result ) ? $Page : FALSE;
@@ -434,7 +444,7 @@ class RequestHandleEvent
 			$PV->target_blank     = ( $this->request->post('target_blank') ) ? 1 : 0;
 			$PV->is_public        = 1;
 			$PV->parent           = $pageID;
-			$PV->display_order    = $SitemapModel->getMaxDisplayOrder($pageID);
+			$PV->display_order    = $SitemapModel->getNextDisplayOrder($pageID);
 			$PV->version_date     = db_datetime();
 			$PV->created_user_id  = $seezoo->getUserID();
 			$PV->approved_user_id = $seezoo->getUserID();
@@ -488,12 +498,18 @@ class RequestHandleEvent
 
 
 
-
+	protected function _validationPage()
+	{
+		$Validation = Seezoo::$Importer->library('Validation');
+		$Validation->delimiter('', '');
+		$Validation->importRulesXML(APPPATH . 'data/validation/page.xml');
+		return $Validation;
+	}
 
 	protected function _redirectByPath($page_id)
 	{
 		$Page     = Seezoo::$Importer->model('PageModel');
-		$pageData = $Page->getPagePath($page_id);
+		$pageData = $Page->getPagePathByPageID($page_id);
 		Seezoo::$Response->redirect(page_link() . $pageData->page_path);
 	}
 }

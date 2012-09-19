@@ -12,37 +12,12 @@
 (function() {
 
 	var FL = getInstance(), Helper = FL.config.getGlobal('Helper'),
-		ppCount = 0, ppStack = [], stableIndex = 990, latestIndex = 1100, layer, imgBase = FL.config.baseUrl() + 'images/';
+		ppCount = 0, ppStack = [], stableIndex = 990, latestIndex = 1100, layer,
+		isLoggedIn = FL.config.item('is_login');
 
 	FL.load.module('layer');
 	FL.load.module('ui');
 
-	// preload button rollover image and window frame images
-	FL.image.preLoad([
-	   imgBase + 'btn_right_on.png',
-	   imgBase + 'ppbox/close.png',
-	   imgBase + 'ppbox/rad_bottom_center.gif',
-	   imgBase + 'ppbox/rad_bottom_left.png',
-	   imgBase + 'ppbox/rad_bottom_right.png',
-	   imgBase + 'ppbox/rad_top_center.gif',
-	   imgBase + 'ppbox/rad_top_left.png',
-	   imgBase + 'ppbox/rad_top_right.png',
-	   imgBase + 'ppbox/ppinfo_lb.png',
-	   imgBase + 'ppbox/ppinfo_lt.png',
-	   imgBase + 'ppbox/ppinfo_rb.png',
-	   imgBase + 'ppbox/ppinfo_rt.png',
-	   imgBase + 'ppbox/ppinfo_bc.gif',
-	   imgBase + 'ppbox/ppinfo_lc.gif',
-	   imgBase + 'ppbox/ppinfo_rc.gif',
-	   imgBase + 'ppbox/ppinfo_tc.gif',
-	   imgBase + 'menu/loading_save.gif'
-	]);
-
-	FL.event.exprLive('a.pp_close', 'click', function(ev) {
-		var p = DOM(ev.target.parentNode);
-
-		hidePP(p);
-	});
 
 	var hidePP = function(callback) {
 		var PP;
@@ -171,12 +146,6 @@
 						pp.body.addStyle('height', height);
 					}
 				}
-
-				// set button mouseover is exists
-				var buttons = pp.box.detect('p.sz_button a');
-				if (buttons.length === 0) { return; }
-				buttons.event('mouseover', function(ev) { DOM(this).addClass('hover');})
-								.event('mouseout', function(ev) { DOM(this).removeClass('hover');});
 			};
 			pp.setOnClose = function(fn, conf) {
 				pp.doConfirm = conf || false;
@@ -199,6 +168,7 @@
 			pp.title = pp.box.getOne('h3.sz-pp-head');
 			pp.body = pp.box.getOne('div.sz-pp-contents');
 			pp.box.getOne('a.pp_close').once('click', hidePP);
+			pp.body.addStyle('height', pp.box.prop('offsetHeight') - pp.title.prop('offsetHeight') - 30 + 'px');
 
 			if (!cancelDrag && !FL.ua.IE6) {
 				new Module.draggable(pp.box, {handle : pp.title});
@@ -213,6 +183,88 @@
 		};
 	}
 	
-	
+	if ( ! functionExists('createNotify') ) {
+		Helper.createNotify = function(msg) {
+			var box = DOM.create('div').addClass('sz_notification'),
+				exists = DOM('div.sz_notification');
 			
+			if ( exists.length > 0 ) {
+				exists.get(0).remove();
+			}
+			box.addStyle({
+				position : 'fixed',
+				opacity  : 0
+			});
+			box.html(msg);
+			box.appendTo();
+			Animation.appear(box, {to : 0.9});
+			setTimeout(function () {
+				Animation.fade(box, { callback : function() {
+					box.remove();
+					box = null;
+				}});
+			}, 3600);
+		}
+	}
+	
+	if ( ! functionExists('createLoginWindow') ) {
+		Helper.createLoginWindow = function() {
+			if ( ! isLoggedIn ) {
+				return;
+			}
+			var box = DOM.create('div').attr('id', 'sz_loginwindow'),
+				html,
+				layer = new Module.layer(),
+				is = layer.isHidden();
+			
+			box.appendTo();
+			html = [
+			        '<h5>ログイン状態が解除されました。もう一度ログインしてください。</h5>',
+			        '<form class="center">',
+			        '<p>ID:&nbsp;&nbsp;<input type="text" name="username" class="middle-text" value="" /></p>',
+			        '<p style="margin-left:-11px">Pass:&nbsp;&nbsp;<input type="password" class="middle-text" name="password" value="" /></p>',
+			        '<button class="blue">',
+			          '<span data-icon="Q" class="icon white medium" style="display:inline-block">',
+			            '<span aria-hidden="true">Q</span>',
+			          '</span>',
+			          'ログイン',
+			        '</button>',
+			        '</form>'
+			];
+			box.html(html.join(''));
+			layer.show();
+			// re:login event
+			box.getOne('button').event('click', function (evt) {
+				evt.preventDefault();
+				box.addClass('loading');
+				FL.ajax.post('login/index/' + FL.config.item('sz_token'), {
+					param : box.getOne('form').serialize(),
+					success: function(resp) {
+						var json;
+						
+						try {
+							json = FL.json.parse(resp.responseText);
+							if ( json.status === 'success' ) {
+								box.remove();
+								FL.config.setItem('sz_token', json.token);
+								is && layer.hide();
+							} else {
+								alert('ログインに失敗しました。');
+								box.removeClass('loading');
+							}
+						} catch ( e ) {
+							alert('システムエラーが発生しました。');
+						}
+						
+					},
+					error : function(resp) {
+						alert(resp.responseText);
+						box.removeClass('loading');
+						
+					}
+				});
+			});
+		}
+	}
+
 })();

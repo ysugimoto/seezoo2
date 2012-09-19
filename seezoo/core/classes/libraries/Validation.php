@@ -83,7 +83,10 @@ class SZ_Validation extends SZ_Driver
 		
 		// append for View
 		$SZ = Seezoo::getInstance();
-		$SZ->view->assign(array('Validation' => $this));
+		if ( $SZ )
+		{
+			$SZ->view->assign(array('Validation' => $this));
+		}
 	}
 	
 	

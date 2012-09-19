@@ -1,6 +1,5 @@
 <?php echo $Helper->form->open($page->page_id, array('id' => 'sz-page_add_form'));?>
-<h3>新規ページを追加</h3>
-<ul class="sz_tabs clearfix">
+<ul class="tabs sz_tabs">
   <li><a href="#tab_content1" class="active">ページ設定</a></li>
   <li><a href="#tab_content3">アクセス権限</a></li>
   <li><a href="#tab_content2">使用テンプレート</a></li>
@@ -24,10 +23,10 @@
         </td>
         <td>
           <label for="tpid_<?php echo $value->template_id;?>">
-            <?php if ( file_exists('templates/' . $value->template_handle . '/image.jpg') ):?>
-            <img src="<?php echo file_link('templates/' . $value->template_handle . 'image.jpg');?>" alt="" />
+            <?php if ( file_exists(ROOTPATH . 'templates/' . $value->template_handle . '/image.jpg') ):?>
+            <img src="<?php echo file_link('templates/' . $value->template_handle . '/image.jpg');?>" alt="" class="style1" />
             <?php else:?>
-            <img src="<?php echo file_link('images/no_image.gif');?>" alt=""/>
+            <img src="<?php echo file_link('images/no_image.gif');?>" alt="" class="style1"/>
             <?php endif;?>
           </label>
         </td>
@@ -43,10 +42,17 @@
 <div id="tab_content3" class="init_hide tab_content">
   <?php echo $this->loadView('ajax/elements/page_permissions');?>
 </div>
-<p class="sz_add_form_submit">
+<p class="center mt20">
   <input type="hidden" name="page_id" value="<?php echo $page->page_id;?>" />
   <input type="hidden" name="sz_token" value="<?php echo $token;?>" />
   <input type="hidden" name="process" value="page_add" />
-  <input type="submit" value="ページを追加する" class="page_submit" />
+  <input type="hidden" name="from_po" value="<?php echo $fromPO;?>" />
+  <button type="submit" class="medium blue center">
+    <span class="icon white" data-icon="+" style="display:inline-block">
+      <span aria-hidden="true">+</span>
+    </span>
+    ページを作成する
+  </button>
+ 
 </p>
 <?php echo $Helper->form->close();?>
