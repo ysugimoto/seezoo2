@@ -12,7 +12,7 @@ class PageModelTest extends SZ_KennelTest
 {
 	public function testDetectPageOK()
 	{
-		$result = $this->model->detectPage('home');
+		$result = $this->model->detectPage(1);
 		$this->assertInstanceOf('stdClass', $result);
 	}
 	
@@ -43,7 +43,7 @@ class PageModelTest extends SZ_KennelTest
 	public function testGetPagePathByPageID()
 	{
 		$result = $this->model->getPagePathByPageID(1);
-		$this->assertEquals('home', $result);
+		$this->assertInternalType('string', $result);
 	}
 	
 	public function testGetFirstChildPage()

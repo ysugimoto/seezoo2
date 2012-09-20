@@ -34,15 +34,15 @@ class SitemapModelTest extends SZ_KennelTest
 		// DB使うのでどうするか
 	}
 	
-	public function testGetMaxDisplayOrder()
+	public function testGetNextDisplayOrder()
 	{
-		$result = $this->model->getMaxDisplayOrder(1);
+		$result = $this->model->getNextDisplayOrder(1);
 		$this->assertInternalType('int', $result);
 	}
 	
 	public function testGetDisplayPageLevel()
 	{
-		$ref = new ReflectionMethod($this->model, '_getDisplayPageLevel');
+		$ref = new ReflectionMethod($this->model, 'getDisplayPageLevel');
 		$ref->setAccessible(TRUE);
 		$result = $ref->invoke($this->model, 1, 1);
 		$this->assertEquals(0, $result);
@@ -93,7 +93,7 @@ class SitemapModelTest extends SZ_KennelTest
 	
 	public function testIsPagePathExistsTrue()
 	{
-		$result = $this->model->isPagePathExists('home');
+		$result = $this->model->isPagePathExists('dashboard/sitemap');
 		$this->assertTrue($result);
 	}
 	
