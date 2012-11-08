@@ -41,9 +41,11 @@ class SZ_Validation extends SZ_Driver
 	 * special validate rule regexes
 	 * @var string
 	 */
-	protected $_paramRegex = '/\A(.+)\[([^\]]+)\]\Z/u';
-	protected $_origRegex  = '/\Aorig:([^\[]+)\[?(.+)?\]?\Z/u';
-	protected $_syncRegex  = '/\Async:([^\[]+)\[(.+)\]\Z/u';
+	protected $_paramRegex       = '/\A(.+)\[([^\]]+)\]\Z/u';
+	protected $_origRegex        = '/\Aorig:([^\[]+)\[?(.+)?\]?\Z/u';
+	protected $_syncRegex        = '/\Async:([^\[]+)\[(.+)\]\Z/u';
+	protected $_classMethodRegex = '/\A(.+)::(.+)\Z/u';
+	protected $_functionalRegex  = '/\A(.+)\(\)\Z/u';
 	
 	
 	/**
@@ -83,10 +85,7 @@ class SZ_Validation extends SZ_Driver
 		
 		// append for View
 		$SZ = Seezoo::getInstance();
-		if ( $SZ )
-		{
-			$SZ->view->assign(array('Validation' => $this));
-		}
+		$SZ->view->assign(array('Validation' => $this));
 	}
 	
 	
@@ -102,6 +101,14 @@ class SZ_Validation extends SZ_Driver
 	 */
 	public function setMessage($rule, $message)
 	{
+		if ( preg_match($this->_classMethodRegex, $rule, $matches) )
+		{
+			$rule = $matches[2];
+		}
+		else if ( preg_match($this->_functionalRegex, $rule, $matches) )
+		{
+			$rule = $matches[1];
+		}
 		$this->_verify->setMessage($rule, $message);
 	}
 	
@@ -369,9 +376,7 @@ class SZ_Validation extends SZ_Driver
 		// If data is not exists, use propery or default $_POST.
 		if ( ! $data )
 		{
-			$data = ( $this->_targetData )
-			          ? $this->_targetData
-			          : $_POST;
+			$data = ( $this->_targetData ) ? $this->_targetData : $_POST;
 		}
 		
 		// convert object-to-array
@@ -387,17 +392,29 @@ class SZ_Validation extends SZ_Driver
 		// executed stack
 		$executed  = array();
 		
+		// Validate event fire
+		Event::fire('before_validation');
+		
 		// loop of parts
 		foreach ( $this->_parts[$group] as $index => $v )
 		{
-			$name = $v->getName();
+			$name  = $v->getName();
+			$rules = $v->getRules();
 			// field data is exists?
 			if ( ! isset($data[$name]) )
 			{
-				continue;
+				if ( ! $v->isDelegateValidation() && ! in_array('required', $rules) )
+				{
+					continue;
+				}
+				$value = '';
+			}
+			else
+			{
+				$value = $data[$name];
 			}
 			
-			$value   = $data[$name];
+			// Mark success
 			$success = TRUE;
 			
 			// target data is array?
@@ -405,99 +422,52 @@ class SZ_Validation extends SZ_Driver
 			$is_array = ( is_array($value) ) ? TRUE : FALSE;
 			$value    = ( $is_array ) ? $value : array($value);
 			
-			// loop of field loop
-			foreach ( $v->getRules() as $rule )
+			// Does field enabled to delegete validation?
+			if ( $v->isDelegateValidation() )
 			{
-				if ( $rule === '' )
+				$success = $rules[0]->validate($v);
+			}
+			else
+			{
+				// loop of rules
+				foreach ( $rules as $rule )
 				{
-					continue;
-				}
-				$class = $this->_verify;
-				// Is special syncronized rule?
-				if ( preg_match($this->_syncRegex, $rule, $matches) )
-				{
-					$condition = $this->getField($matches[2]);
-					// Is target filed already processed?
-					if ( isset($executed[$matches[2]]) && $executed[$matches[2]] === $condition )
+					if ( $rule === '' )
 					{
-						if ( ! $this->{'_sync_' . $matches[1]}($value[0], $condition->getValue()) )
-						{
-							$msg = sprintf(
-								$this->_verify->messages[$matches[1]],
-								$condition->getLabel()
-							);
-							$condition->setMessage($msg);
-							$success = FALSE;
-						}
+						continue;
 					}
-					else
-					{
-						$condition->setRules('required');
-						
-					}
-					continue;
-				}
-				// Does rule has a condition parameter?
-				else if ( preg_match($this->_paramRegex, $rule, $matches) )
-				{
-					list(, $rule, $condition) = $matches;
-					if ( $rule === 'matches' )
-					{
-						$condition = ( isset($this->_targetData[$condition]) )
-						               ? $this->_targetData[$condition]
-						               : null;
-					}
-				}
-				// Does rule declared by Controller/Process method?
-				else if ( preg_match($this->_origRegex, $rule, $matches) )
-				{
-					$class     = Seezoo::getInstance();
-					$rule      = $matches[1];
-					$condition = ( isset($matches[2]) ) ? $matches[2] : FALSE;
-				}
-				// No condition.
-				else
-				{
-					$condition = FALSE;
-				}
-				
-				// Does rule method really exisits?
-				if ( ! method_exists($class, $rule) )
-				{
-					throw new Exception('Undefined ' . $rule . ' rules method in ' . get_class($class) . '!');
-					return FALSE;
-				}
-				
-				// loop of field value
-				// @note string value also treats as an array.
-				foreach ( $value as $key => $val )
-				{
-					// verify method execute.
-					$result = $class->{$rule}($val, $condition);
 					
-					// Does method returns result ( TRUE / FALSE ) flag?
-					if ( is_bool($result) )
+					$class = $this->_verify;
+					// Is special syncronized rule?
+					if ( preg_match($this->_syncRegex, $rule, $matches) )
 					{
-						if ( $result === FALSE )
+						$condition = $this->getField($matches[2]);
+						// Is target filed already processed?
+						if ( isset($executed[$matches[2]]) && $executed[$matches[2]] === $condition )
 						{
-							if ( ! isset($this->_verify->messages[$rule]) )
+							if ( ! $this->{'_sync_' . $matches[1]}($value[0], $condition->getValue()) )
 							{
-								throw new Exception('Undefined Validation message of ' . $rule);
-								return FALSE;
+								$msg = sprintf(
+									$this->_verify->messages[$matches[1]],
+									$condition->getLabel()
+								);
+								$condition->setMessage($msg);
+								$success = FALSE;
 							}
-							// generate error message
-							$msg = ( $condition !== FALSE )
-							         ? sprintf($this->_verify->messages[$rule], $v->getLabel(), $condition)
-							         : sprintf($this->_verify->messages[$rule], $v->getLabel());
-							$v->setMessage($msg);
-							$success = FALSE;
 						}
+						else
+						{
+							$condition->setRules('required');
+							
+						}
+						continue;
 					}
-					// else, method returns processed value.
-					else
-					{
-						$value[$key] = $result;
-					}
+					
+					// Parse and format rule, execute class, condition paramter
+					$format  = $this->_validateFormat($rule);
+					
+					// Validation execute
+					$success = $this->_execute($v, $format, $value);
 				}
 			}
 			
@@ -511,16 +481,161 @@ class SZ_Validation extends SZ_Driver
 			}
 		}
 		
-		// Does Error count greater than zero?
-		if ( count($errors) > 0 )
+		// Validation end event fire
+		$status         = new stdClass;
+		$status->result = ( count($errors) > 0 ) ? FALSE : TRUE;
+		Event::fire('after_validation', $status);
+		
+		// GC
+		unset($errors);
+		unset($executed);
+		
+		return $status->result;
+	}
+	
+	
+	// --------------------------------------------------
+	
+	
+	/**
+	 * Execute validate
+	 * 
+	 * @access protected
+	 * @param  object $field
+	 * @param  stdClass $format
+	 * @param  array $value ( reference )
+	 * @return bool $result
+	 */
+	protected function _execute($field, stdClass $format, array &$value)
+	{
+		$success = TRUE;
+		foreach ( $value as $key => $val )
 		{
-			unset($errors);
-			unset($executed);
-			return FALSE;
+			// verify method execute.
+			if ( $format->function )
+			{
+				$result = call_user_func($format->function, $val);
+			}
+			else
+			{
+				$result = $format->class->{$format->rule}($val, $format->condition);
+			}
+			
+			// Does method returns result ( TRUE / FALSE ) flag?
+			if ( is_bool($result) )
+			{
+				if ( $result === FALSE )
+				{
+					if ( ! isset($this->_verify->messages[$format->rule]) )
+					{
+						throw new Exception('Undefined Validation message of ' . $format->rule);
+						return FALSE;
+					}
+					// generate error message
+					$msg = ( $format->condition !== FALSE )
+					         ? sprintf($this->_verify->messages[$format->rule], $field->getLabel(), $format->condition)
+					         : sprintf($this->_verify->messages[$format->rule], $field->getLabel());
+					$field->setMessage($msg);
+					$success = FALSE;
+				}
+			}
+			// else, method returns processed value.
+			else
+			{
+				$value[$key] = $result;
+			}
 		}
 		
-		// validation success!
-		return TRUE;
+		return $success;
+	}
+	
+	
+	// --------------------------------------------------
+	
+	
+	/**
+	 * Parse and format validation environment parameters
+	 * 
+	 * @access private
+	 * @param  string $rule
+	 * @return stdClass $format
+	 */
+	protected function _validateFormat($rule)
+	{
+		$format = new stdClass;
+		$format->class     = $this->_verify;
+		$format->function  = NULL;
+		$format->rule      = $rule;
+		$format->condition = FALSE;
+		
+		// Does rule has a condition parameter?
+		if ( preg_match($this->_paramRegex, $rule, $matches) )
+		{
+			list(, $format->rule, $format->condition) = $matches;
+			if ( $rule === 'matches' )
+			{
+				$format->condition = ( isset($this->_targetData[$format->condition]) )
+				                       ? $this->_targetData[$format->condition]
+				                       : FALSE;
+			}
+			
+			if ( ! method_exists($format->class, $rule) )
+			{
+				throw new BadMethodCallException('Undefined method: ' . get_class($format->class) . '::' . $rule . ' !');
+			}
+		}
+		// Does rule declared by Controller/Process method?
+		else if ( preg_match($this->_origRegex, $rule, $matches) )
+		{
+			// swap class
+			$format->class     = Seezoo::getInstance();
+			$format->rule      = $matches[1];
+			$format->condition = ( isset($matches[2]) ) ? $matches[2] : FALSE;
+			
+			if ( ! method_exists($format->class, $lead) )
+			{
+				if ( ! isset($format->class->lead) || ! method_exists($format->class->lead, $rule) )
+				{
+					throw new BadMethodCallException('Undefined ' . $rule . ' rules method in ' . get_class($class) . '!');
+				}
+				$format->class = $lead;
+			}
+		}
+		// Does rule Class::method formatted?
+		else if ( preg_match($this->_classMethodRegex, $rule, $matches) )
+		{
+			if ( ! class_exists($matches[1]) )
+			{
+				throw new BadMethodCallException('Validation execute class: ' . $matches[1] . ' is not found!');
+			}
+			else if ( ! is_callable(array($matches[1], $matches[2])) )
+			{
+				throw new BadMethodCallException($matches[1] . '::' . $matches[2] . ' is not callable');
+			}
+			$format->class     = new $matches[1];
+			$format->rule      = $matches[2];
+		}
+		// Does rule function() formatted?
+		else if ( preg_match($this->_functionalRegex, $rule, $matches) )
+		{
+			if ( ! function_exists($matches[1]) )
+			{
+				throw new BadFunctionCallException('Undefined function:' . $matches[1] . ' is called!');
+			}
+			$format->function  = $matches[1];
+			$format->rule      = $matches[1];
+		}
+		// No condition.
+		else
+		{
+			if ( ! method_exists($format->class, $rule) )
+			{
+				throw new BadMethodCallException('Undefined method: ' . get_class($format->class) . '::' . $rule . ' !');
+			}
+		}
+		
+		// returns formatted paramters
+		return $format;
 	}
 	
 	

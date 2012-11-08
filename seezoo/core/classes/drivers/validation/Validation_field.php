@@ -70,6 +70,8 @@ class SZ_Validation_Field
 	 */
 	protected $_paramRegex = '/\A(.+)\[([^\]]+)\]\Z/u';
 	protected $_origRegex  = '/\Aorig:([^\[]+)\[?(.+)?\]?\Z/u';
+	protected $_classMethodRegex = '/\A(.+)::(.+)\Z/u';
+	protected $_functionalRegex  = '/\A(.+)\(\)\Z/u';
 	
 	
 	
@@ -147,7 +149,7 @@ class SZ_Validation_Field
 	
 	
 	/**
-	 * Filed value getter
+	 * Field value getter
 	 * 
 	 * @access public
 	 * @param  bool $escape
@@ -191,6 +193,10 @@ class SZ_Validation_Field
 		{
 			$this->_rules = $rules;
 		}
+		else if ( $rules instanceof Validatable )
+		{
+			$this->_rules[] = $rules;
+		}
 		else
 		{
 			foreach ( explode('|', $rules) as $rule )
@@ -202,6 +208,38 @@ class SZ_Validation_Field
 			}
 		}
 		return $this;
+	}
+	
+	
+	// --------------------------------------------------
+	
+	
+	/**
+	 * Delegate validation
+	 * 
+	 * @access public
+	 * @param  object $instance ( Validatealbe interface implemented )
+	 * @return $this
+	 */
+	public function delegate(Validatable $instance)
+	{
+		$this->_rules = array($instance);
+	}
+	
+	
+	// --------------------------------------------------
+	
+	
+	/**
+	 * Is delegate validation?
+	 * 
+	 * @access public
+	 * @return bool
+	 */
+	public function isDelegateValidation()
+	{
+		return ( isset($this->_rules[0])
+		         && $this->_rules[0] instanceof Validatable ) ? TRUE : FALSE;
 	}
 	
 	
@@ -279,75 +317,34 @@ class SZ_Validation_Field
 	 */
 	public function exec($value)
 	{
+		$this->_value = $value;
+		
 		// validate value is array?
 		$is_array = ( is_array($value) ) ? TRUE : FALSE;
 		$value    = ( $is_array ) ? $value : array($value);
 		// load the Verication library
-		$verify   = Seezoo::$Importer->library('Verify');
 		$success  = TRUE;
 		
-		$this->_value = $value;
-		
-		// loop and validate
-		foreach ( $this->_rules as $rule )
+		if ( $this->isDelegateValidation() )
 		{
-			if ( $rule === '' )
+			###!!!notice!!!####
+			// varsion until PHP5.3 causes segmentation fault when member function call that argument with "$this".
+			// So we clone $this object and call it.
+			$cloned  = clone $this;
+			$success = $this->rules[0]->validate($cloned);
+		}
+		else
+		{
+			// loop and validate
+			foreach ( $this->_rules as $rule )
 			{
-				continue;
-			}
-			$class = $verify;
-			// rule has condition parameter?
-			if ( preg_match($this->_paramRegex, $rule, $matches) )
-			{
-				list(, $rule, $condition) = $matches;
-			}
-			// elseif, rule-method declared by Controller or Process instance?
-			else if ( preg_match($this->_origRegex, $rule, $matches) )
-			{
-				$class     = Seezoo::getInstance();
-				$rule      = $matches[1];
-				$condition = ( isset($matches[2]) ) ? $matches[2] : FALSE;
-			}
-			else
-			{
-				// rule have not condition
-				$condition = FALSE;
-			}
-			
-			// rule-method really exists?
-			if ( ! method_exists($class, $rule) )
-			{
-				throw new Exception('Undefined ' . $rule . ' rules method in ' . get_class($class) . '!');
-				return FALSE;
-			}
-			
-			// value loop and rule-method execute!
-			foreach ( $value as $key => $val )
-			{
-				$result = $class->{$rule}($value, $condition);
-				// If method returns boolean (TRUE/FALSE), validate error/success.
-				if ( is_bool($result) )
+				if ( $rule === '' )
 				{
-					if ( $result === FALSE )
-					{
-						if ( ! isset($this->_messages[$rule]) )
-						{
-							throw new Exception('Undefined Validation message of ' . $rule);
-							return FALSE;
-						}
-						$msg = ( $condition !== FALSE )
-						         ? sprintf($verify->_messages[$rule], $this->_label)
-						         : sprintf($verify->_messages[$rule], $this->_label, $condition);
-						$this->setMessage($msg);
-						// switch down flag
-						$success = FALSE;
-					}
+					continue;
 				}
-				// else, method returns processed value
-				else
-				{
-					$value[$key] = $result;
-				}
+				
+				$format  = $this->_validateFormat($rule);
+				$success = $this->_execute($format, $value);
 			}
 		}
 		
@@ -356,6 +353,148 @@ class SZ_Validation_Field
 		
 		// return TRUE(success) / FALSE(failed)
 		return $success;
+	}
+	
+	
+	// --------------------------------------------------
+	
+	
+	/**
+	 * Exdute rule method
+	 * 
+	 * @access protected
+	 * @param  stdClass $format
+	 * @param  array $value ( reference )
+	 * @return bool
+	 */
+	protected function _execute(stdClass $format, array &$value)
+	{
+		$verify  = Seezoo::$Importer->library('Verify');
+		$success = TRUE;
+		
+		// value loop and rule-method execute!
+		foreach ( $value as $key => $val )
+		{
+			// verify method execute.
+			if ( $format->function )
+			{
+				$result = call_user_func($format->function, $val);
+			}
+			else
+			{
+				$result = $format->class->{$format->rule}($val, $format->condition);
+			}
+			// If method returns boolean (TRUE/FALSE), validate error/success.
+			if ( is_bool($result) )
+			{
+				if ( $result === FALSE )
+				{
+					if ( ! isset($verify->messages[$format->rule]) )
+					{
+						throw new Exception('Undefined Validation message of ' . $format->rule);
+						return FALSE;
+					}
+					$msg = ( $format->condition !== FALSE )
+					         ? sprintf($verify->messages[$format->rule], $this->_label)
+					         : sprintf($verify->messages[$format->rule], $this->_label, $format->condition);
+					$this->setMessage($msg);
+					// switch down flag
+					$success = FALSE;
+				}
+			}
+			// else, method returns processed value
+			else
+			{
+				$value[$key] = $result;
+			}
+		}
+		
+		return $success;
+	}
+	
+	
+	// --------------------------------------------------
+	
+	
+	/**
+	 * Format validation class/function, rule/metho, condition
+	 * 
+	 * @access protected
+	 * @param  string $rule
+	 * @return stdClass
+	 */
+	protected function _validateFormat($rule)
+	{
+		$format = new stdClass;
+		$format->class     = Seezoo::$Importer->library('Verify');
+		$format->function  = NULL;
+		$format->rule      = $rule;
+		$format->condition = FALSE;
+		
+		// Does rule has a condition parameter?
+		if ( preg_match($this->_paramRegex, $rule, $matches) )
+		{
+			list(, $format->rule, $format->condition) = $matches;
+			if ( $rule === 'matches' )
+			{
+				throw new LogicException('Cannot use "matches" rule at single validate!');
+			}
+			else if ( ! method_exists($format->class, $rule) )
+			{
+				throw new BadMethodCallException('Undefined method: ' . get_class($format->class) . '::' . $rule . ' !');
+			}
+		}
+		// Does rule declared by Controller/Process method?
+		else if ( preg_match($this->_origRegex, $rule, $matches) )
+		{
+			// swap class
+			$format->class     = Seezoo::getInstance();
+			$format->rule      = $matches[1];
+			$format->condition = ( isset($matches[2]) ) ? $matches[2] : FALSE;
+			
+			if ( ! method_exists($format->class, $lead) )
+			{
+				if ( ! isset($format->class->lead) || ! method_exists($format->class->lead, $format->rule) )
+				{
+					throw new BadMethodCallException('Undefined ' . $format->rule . ' rules method in ' . get_class($class) . '!');
+				}
+				$format->class = $lead;
+			}
+		}
+		// Does rule Class::method formatted?
+		else if ( preg_match($this->_classMethodRegex, $rule, $matches) )
+		{
+			if ( ! class_exists($matches[1]) )
+			{
+				throw new BadMethodCallException('Validation execute class: ' . $matches[1] . ' is not found!');
+			}
+			else if ( ! is_callable(array($matches[1], $matches[2])) )
+			{
+				throw new BadMethodCallException($matches[1] . '::' . $matches[2] . ' is not callable');
+			}
+			$format->class     = new $matches[1];
+			$format->rule      = $matches[2];
+		}
+		// Does rule function() formatted?
+		else if ( preg_match($this->_functionalRegex, $rule, $matches) )
+		{
+			if ( ! function_exists($matches[1]) )
+			{
+				throw new BadFunctionCallException('Undefined function:' . $matches[1] . ' is called!');
+			}
+			$format->function  = $matches[1];
+			$format->rule      = $matches[1];
+		}
+		// No condition.
+		else
+		{
+			if ( ! method_exists($format->class, $rule) )
+			{
+				throw new BadMethodCallException('Undefined method: ' . get_class($format->class) . '::' . $rule . ' !');
+			}
+		}
+		
+		return $format;
 	}
 	
 	

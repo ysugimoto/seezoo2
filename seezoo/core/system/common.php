@@ -31,6 +31,7 @@ if ( ! function_exists('show_404') )
 	{
 		$e = Seezoo::$Importer->classes('Exception');
 		$e->error404($message, $backLinkPath);
+		exit;
 	}
 }
 
@@ -286,6 +287,10 @@ if ( ! function_exists('really_writable') )
 		$env = Seezoo::getENV();
 		if ( ! $env->isWindows )
 		{
+			if ( ! file_exists($path) )
+			{
+				$path = dirname($path);
+			}
 			return is_writable($path);
 		}
 		
@@ -303,7 +308,7 @@ if ( ! function_exists('really_writable') )
 		}
 		else
 		{
-			$fp = @fopen($path, 'w');
+			$fp = @fopen($path, 'wb');
 			if ( ! $fp )
 			{
 				return FALSE;

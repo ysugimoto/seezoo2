@@ -101,7 +101,7 @@ class SZ_Lead
 		if ( method_exists($this, $this->_callInfo) )
 		{
 			$data = call_user_func_array(array($this, $this->_callInfo), $params);
-			if ( ! is_bool($data) && $autoAssign === TRUE )
+			if ( $autoAssign === TRUE )
 			{
 				$this->_assignData = $data;
 			}
@@ -152,7 +152,6 @@ class SZ_Lead
 		{
 			return $this->_modules[$name];
 		}
-		throw new InvalidArgumentException('Undefined Property: ' . $name . 'in Class: ' . get_class($this));
 	}
 	
 	
@@ -179,26 +178,12 @@ class SZ_Lead
 	 * Get auto assign data
 	 * 
 	 * @access public
-	 * @param  bool $forceArray
 	 * @return array
 	 */
-	public function getAssignData($forceArray = FALSE)
+	public function getAssignData()
 	{
-		if ( $forceArray === TRUE )
-		{
-			if ( is_object($this->_assignData) )
-			{
-				$data = get_object_vars($this->_assignData);
-			}
-			else
-			{
-				$data = (array)$this->_assignData;
-			}
-		}
-		else
-		{
-			$data = $this->_assignData;
-		}
-		return $data;
+		return ( is_object($this->_assignData) )
+		         ? get_object_vars($this->_assignData)
+		         : (array)$this->_assignData;
 	}
 }

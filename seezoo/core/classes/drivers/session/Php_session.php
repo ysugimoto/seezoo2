@@ -134,9 +134,7 @@ class SZ_Php_session extends SZ_Session_driver
 	 */
 	protected function _sessionRead()
 	{
-		return ( isset($_SESSION['userData']) )
-		         ? $_SESSION['userData']
-		         : array();
+		return @$_SESSION['userData'];
 	}
 	
 	

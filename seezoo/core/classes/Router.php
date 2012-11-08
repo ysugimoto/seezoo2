@@ -74,6 +74,13 @@ class SZ_Router
 	
 	
 	/**
+	 * Really executed method
+	 * @var string
+	 */
+	protected $_execMethod = '';
+	
+	
+	/**
 	 * Routed informations
 	 * @var string /array
 	 */
@@ -91,7 +98,6 @@ class SZ_Router
 		$this->controllerSuffix  = $this->env->getConfig('controller_suffix');
 		$this->methodPrefix      = $this->env->getConfig('method_prefix');
 		$this->defaultController = $this->env->getConfig('default_controller');
-		
 	}
 	
 	
@@ -168,9 +174,14 @@ class SZ_Router
 	{
 		$path     = str_replace(array('.', '/'), '', $this->_pathinfo);
 		$dir      = $this->detectDir;
-		$pacakges = Seezoo::getPackage();
+		$SZ       = Seezoo::getInstance();
 		
-		foreach ( $pacakges as $pkg )
+		if ( $path === '' )
+		{
+			$path = $this->defaultController;
+		}
+		
+		foreach ( Seezoo::getPackage() as $pkg )
 		{
 			if ( file_exists(PKGPATH . $pkg . '/' . $dir . $path . '.php') )
 			{
@@ -206,12 +217,16 @@ class SZ_Router
 	public function bootProcess()
 	{
 		$path     = str_replace(array('.', '/'), '', $this->_pathinfo);
-		$packages = Seezoo::getPackage();
 		$proc     = FALSE;
 		$dir      = $this->detectDir;
 		
+		if ( $path === '' )
+		{
+			$path = $this->defaultController;
+		}
+		
 		// package detection
-		foreach ( $packages as $pkg )
+		foreach ( Seezoo::getPackage() as $pkg )
 		{
 			if ( file_exists(PKGPATH . $pkg . '/' . $dir . $path . '.php') )
 			{
@@ -243,30 +258,30 @@ class SZ_Router
 	}
 	
 	
-	// ---------------------------------------------------------------
-	
-	
+	// ---------------------------------------------------------------o
+
+
 	/**
 	 * Boot Lead layer class
-	 * 
+	 *
 	 * @access public
 	 * @return object SZ_Lead
 	 */
-	public function bootLead($leadName)
+	public function bootLead()
 	{
 		return Seezoo::$Importer->lead($this->_directory . $this->_class);
 	}
-	
-	
+
+
 	// ---------------------------------------------------------------
+	
 	
 	/**
 	 * Boot MVC/CLI process
 	 * 
 	 * @access public
-	 * @return object SZ_Breeder
 	 */
-	public function bootController()
+	public function bootController($extraArgs = FALSE)
 	{
 		Seezoo::$Importer->classes('Breeder', FALSE);
 		$dir    = $this->detectDir;
@@ -296,7 +311,6 @@ class SZ_Router
 		if ( preg_match('/^_.+$/u', $this->_method) )
 		{
 			throw new Exception('Cannot call private method!');
-			return;
 		}
 		else
 		{
@@ -313,41 +327,44 @@ class SZ_Router
 				// request method suffix
 				$methodSuffix = ( $this->requestMethod === 'POST' ) ? '_post' : '';
 				
-				$callMethod     = '';
 				// First, call method-suffix ( *_post method ) if exists
 				if ( method_exists($Controller, $this->_method . $methodSuffix) )
 				{
-					$callMethod = $this->_method . $methodSuffix;
+					$this->_execMethod = $this->_method . $methodSuffix;
 				}
 				// Second, call prefix-method-suffix ( ex.action_index_post ) if exists
 				else if ( ! empty($this->methodPrefix)
 				           && method_exists($Controller, $this->methodPrefix . $this->_method . $methodSuffix) )
 				{
-					$callMethod = $this->methodPrefix . $this->_method . $methodSuffix;
+					$this->_execMethod = $this->methodPrefix . $this->_method . $methodSuffix;
 				}
 				// Third, call method simply if exists
 				else if ( method_exists($Controller, $this->_method) )
 				{
-					$callMethod = $this->_method;
+					$this->_execMethod = $this->_method;
 				}
 				// Fourth, call prefix-method if exists
 				else if ( ! empty($this->methodPrefix)
 				           && method_exists($Controller, $this->methodPrefix . $this->_method) )
 				{
-					$callMethod = $this->methodPrefix . $this->_method;
+					$this->_execMethod = $this->methodPrefix . $this->_method;
 				}
 				// Method doesn't exists...
 				else
 				{
 					return FALSE;
 				}
-				$Controller->lead->setExecuteMethod($callMethod);
-				call_user_func_array(array($Controller, $callMethod), $this->_arguments);
+				$Controller->lead->setExecuteMethod($this->_execMethod);
+				if ( $extraArgs !== FALSE )
+				{
+					array_push($this->_arguments, $extraArgs);
+				}
+				$rv = call_user_func_array(array($Controller, $this->_execMethod), $this->_arguments);
 			}
 		}
 		$Controller->lead->teardown();
 		
-		return $Controller;
+		return array($Controller, $rv);
 	}
 	
 	
@@ -399,7 +416,6 @@ class SZ_Router
 	{
 		$REQ      = Seezoo::getRequest();
 		$segments = $REQ->uriSegments($this->_level);
-		$packages = Seezoo::getPackage();//$this->env->getConfig('package');
 		$isRouted = FALSE;
 		
 		$this->requestMethod = $REQ->requestMethod;
@@ -413,7 +429,7 @@ class SZ_Router
 		}
 		
 		// loop the package routing
-		foreach ( $packages as $pkg )
+		foreach ( Seezoo::getPackage() as $pkg )
 		{
 			$pkg      = PKGPATH . rtrim($pkg, '/') . '/';
 			$base     = $pkg . $this->detectDir;
@@ -450,14 +466,13 @@ class SZ_Router
 			}
 			else
 			{
-				$apppath = APPPATH;
-				$detected = $this->_detectController($segments, $apppath . $dir);
+				$detected = $this->_detectController($segments, APPPATH . $dir);
 				
 				if ( ! is_array($detected) )
 				{
 					if ( count($segments) === 0 )
 					{
-						$this->_package   = $apppath;
+						$this->_package   = APPPATH;
 						$this->_directory = '';
 						$this->_class     = $this->defaultController;
 						$this->_method    = 'index';
@@ -467,7 +482,7 @@ class SZ_Router
 				}
 				else
 				{
-					$this->_package   = $apppath;
+					$this->_package   = APPPATH;
 					$this->_class     = $detected[0];
 					$this->_method    = $detected[1];
 					$this->_arguments = array_slice($detected, 2);
@@ -505,36 +520,6 @@ class SZ_Router
 	
 	
 	/**
-	 * Build routed uri
-	 * 
-	 * @access public
-	 * @param  bool $containDefaults
-	 * @return string
-	 */
-	public function buildRoutedPath($containDefaults = FALSE)
-	{
-		$path = array();
-		if ( $this->_directory )
-		{
-			$path[] = rtrim($this->_directory, '/');
-		}
-		if ( $this->_class !== $this->defaultController || $containDefaults )
-		{
-			$path[] = $this->_class;
-		}
-		if ( $this->_method !== 'index' || $containDefaults )
-		{
-			$path[] = $this->_method;
-		}
-		
-		return implode('/', $path);
-	}
-	
-	
-	// ---------------------------------------------------------------
-	
-	
-	/**
 	 * Controller detection
 	 * 
 	 * @access protected
@@ -547,7 +532,7 @@ class SZ_Router
 	{
 		if ( file_exists($baseDir . $segments[0] . '.php') )
 		{
-			if ( (! isset($segments[1])) || ( empty ($segments[1] )) )
+			if ( ! isset($segments[1]) || empty($segments[1]) )
 			{
 				$segments[1] = 'index';
 			}

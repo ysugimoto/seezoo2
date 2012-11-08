@@ -173,7 +173,7 @@ Class SZ_Database extends SZ_Driver
 		// Either manual connection
 		else
 		{
-			$this->_connect($group, $dsnConnection);
+			$this->connect($group, $dsnConnection);
 		}
 	}
 	
@@ -281,7 +281,8 @@ Class SZ_Database extends SZ_Driver
 		$this->_stackBench = $this->_bench();
 		if ( is_array($bind) )
 		{
-			if ( strpos($sql, '?') !== FALSE ) {
+			if ( strpos($sql, '?') !== FALSE )
+			{
 				// query binding chars and bind paramter is match?
 				if ( substr_count($sql, '?') !== count($bind) )
 				{
@@ -321,7 +322,6 @@ Class SZ_Database extends SZ_Driver
 			}
 			
 			$bind = NULL;
-			
 			if ( $this->_statement->execute() === FALSE )
 			{
 				$error = '';
@@ -420,11 +420,11 @@ Class SZ_Database extends SZ_Driver
 					implode(', ', $columns),
 					implode(', ', $statements)
 				);
-				
+		$query = $this->query($sql, $bindData);
+		
 		//GC
 		$columns = $statements = $bindData = $data = NULL;
 		
-		$query = $this->query($sql, $bindData);
 		return ( $returnInsertID ) ? $this->insertID() : $query;
 	}
 	

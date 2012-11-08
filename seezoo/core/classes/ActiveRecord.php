@@ -135,13 +135,13 @@ class SZ_ActiveRecord
 			list($columns, $conditions, $limit) = $this->_parseMethod(substr($method, 4), $args);
 			
 			$query  = $this->_execFindQuery($columns, $conditions, $limit)->get();
-			$result = $query->fetchAll(PDO::FETCH_CLASS, get_class($this));
 			$this->reset();
-			if ( $limit > 0 )
+			if ( $limit === 1 )
 			{
-				return ( isset($result[0]) ) ? $result[0] : FALSE;
+				$query->setFetchMode(PDO::FETCH_CLASS, get_class($this));
+				return $query->fetch(PDO::FETCH_CLASS, PDO::FETCH_ORI_ABS, 0);
 			}
-			return $result;
+			return $query->fetchAll(PDO::FETCH_CLASS, get_class($this));
 		}
 	}
 	
@@ -524,15 +524,8 @@ class SZ_ActiveRecord
 		$primaryTable = $db->prefix() . $this->_table;
 		$selectColumn = ( count($columns) > 0 ) ? implode(', ', $columns) : '*';
 		$bindData     = array();
-		if ( is_array($columns) )
-		{
-			$columns = ( count($columns) === 0 ) ? array('*') : $columns;
-		}
-		else
-		{
-			$columns = array_filter(explode(',', $columns));
-		}
-	
+		$columns      = ( count($columns) === 0 ) ? array('*') : explode(',', $columns);
+		
 		foreach ( $columns as $key => $col )
 		{
 			$col = $db->prepColumn($col);
@@ -613,6 +606,6 @@ class SZ_ActiveRecord
 		{
 			$sql .= 'OFFSET ' . $this->_offset;
 		}
-		return $db->query($sql, $bindData);
+		return $db->query($sql, ( count($bindData) > 0 ) ? $bindData : FALSE);
 	}
 }

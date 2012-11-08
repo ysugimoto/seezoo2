@@ -354,7 +354,7 @@ abstract class SZ_Session_driver
 		
 		// Session matching IP check.
 		if ( $this->env->getConfig('session_match_ip') === TRUE
-		     && $this->req->ipAddress()!== $authData['ipAddress'] )
+		     && $this->req->ipAddress() !== $authData['ipAddress'] )
 		{
 			$this->_sessionDestroy();
 			return FALSE;
@@ -433,5 +433,26 @@ abstract class SZ_Session_driver
 				( $this->req->server('HTTPS') === 'on' ) ? TRUE : FALSE
 			);
 		}
+	}
+	
+	
+	// --------------------------------------------------
+	
+	
+	/**
+	 * generate random session ID
+	 * 
+	 * @access protected
+	 * @return string $sessID
+	 */
+	protected function _generateSessionID()
+	{
+		$sessID = '';
+		while (strlen($sessID) < 32)
+		{
+			$sessID .= mt_rand(0, mt_getrandmax());
+		}
+		
+		return $sessID;
 	}
 }

@@ -51,6 +51,10 @@ class SZ_Exception extends Exception
 	
 	public function __construct($message = '', $code = 0)
 	{
+		if ( is_array($message) )
+		{
+			$message = reset($message);
+		}
 		parent::__construct((string)$message, $code);
 	}
 	
@@ -69,7 +73,7 @@ class SZ_Exception extends Exception
 	{
 		if ( defined('SZ_COMMANDLINE_WORKER') ) 
 		{
-			echo '404:' . (( ! empty($msg) ) ? $msg : 'Request not found.') . PHP_EOL;
+			echo '404:' . (( ! empty($message) ) ? $message : 'Request not found.') . PHP_EOL;
 			return;
 		}
 		header('HTTP/1.1 404 Not Found');
@@ -125,7 +129,7 @@ class SZ_Exception extends Exception
 		// switch template
 		$template   = ( isset($this->_errorTemplates[$code]) ) ? $this->_errorTemplates[$code] : 'general';
 		
-		foreach ( $env->getConfig('package') as $pkg )
+		foreach ( Seezoo::getPackage() as $pkg )
 		{
 			if ( file_exists(SZPATH . $pkg . '/errors/' . $template . '.php') )
 			{
@@ -152,6 +156,12 @@ class SZ_Exception extends Exception
 	 */
 	public function handleError($errorNum = 0 ,$message = '', $file = '', $line = 0)
 	{
+		// Do not show an error that occurred in the operator "@"
+		if ( error_reporting() === 0 )
+		{
+			return FALSE;
+		}
+		
 		if ( defined('SZ_COMMANDLINE_WORKER') ) 
 		{
 			echo sprintf('Error:%s in %s line %d', $message, $file, $line) . PHP_EOL;
@@ -165,7 +175,7 @@ class SZ_Exception extends Exception
 		               : 'Error';
 		
 		header('HTTP/1.1 500 Internal Server Error');
-		foreach ( $env->getConfig('package') as $pkg )
+		foreach ( Seezoo::getPackage() as $pkg )
 		{
 			if ( file_exists(SZPATH . $pkg . '/errors/' . $template . '.php') )
 			{

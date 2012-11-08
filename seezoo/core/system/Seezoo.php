@@ -83,6 +83,12 @@ class Seezoo
 	 */
 	private static $_propertyAliases = array();
 	
+	
+	public static $outpuBufferMode = TRUE;
+	
+	
+	private static $packages = array();
+	
 	// ---------------------------------------------------------------
 	
 	
@@ -260,9 +266,9 @@ class Seezoo
 	 */
 	public static function addPackage($package)
 	{
-		if ( ! in_array($package, self::$config['package']) )
+		if ( ! in_array($package, self::$packages) )
 		{
-			self::$config['package'][] = $package;
+			self::$packages[] = $package;
 		}
 	}
 	
@@ -278,9 +284,9 @@ class Seezoo
 	 */
 	public static function removePackage($package)
 	{
-		if ( FALSE !== ($key = array_search($package, self::$config['package'])) )
+		if ( FALSE !== ($key = array_search($package, self::$packages)) )
 		{
-			array_splice(self::$config['package'], $key, 1);
+			array_splice(self::$packages, $key, 1);
 		}
 	}
 	
@@ -295,7 +301,7 @@ class Seezoo
 	 */
 	public static function getPackage()
 	{
-		return self::$config['package'];
+		return self::$packages;
 	}
 	
 	
@@ -338,7 +344,7 @@ class Seezoo
 	 * @param string $mode
 	 * @param string $overridePathInfo
 	 */
-	public static function init($mode = FALSE, $overridePathInfo = '', $options = array())
+	public static function init($mode = FALSE, $overridePathInfo = '', $extraArgs = FALSE)
 	{
 		// Benchmark start
 		$Mark = self::$Importer->classes('Benchmark');
@@ -370,11 +376,14 @@ class Seezoo
 			}
 			$Mark->end('process:' . $process->level . ':MVC:Routed', 'baseProcess:'. $process->level);
 			// Load Controller and execute method
-			$SZ = $process->router->bootController();
-			if ( $SZ === FALSE )
+			$exec = $process->router->bootController($extraArgs);
+			if ( ! is_array($exec) )
 			{
 				show_404();
 			}
+			
+			// extract instance/returnvalue
+			list($SZ, $rv) = $exec;
 			
 			$Mark->end('process:' . $process->level . ':MVC:ControllerExecuted', 'baseProcess:'. $process->level);
 			Event::fire('controller_execute');
@@ -382,7 +391,7 @@ class Seezoo
 			// Does output hook method exists?
 			if ( method_exists($SZ, '_output') )
 			{
-				$output = $SZ->_output($SZ->view->getDisplayBUffer());
+				$output = $SZ->_output($SZ->view->getDisplayBuffer());
 				$SZ->view->replaceBuffer($output);
 			}
 			$Mark->end('process:' . $process->level . ':MVC:MethodExecuted', 'baseProcess:'. $process->level);
@@ -438,18 +447,37 @@ class Seezoo
 		// Is this process in a sub process?
 		if ( $level > 1 )
 		{
-			// returns output buffer
-			return $SZ->view->getDisplayBuffer();
+			// returns process result if buffermode is FALSE
+			if ( self::$outpuBufferMode === FALSE )
+			{
+				$returnValue = ( isset($rv) ) ? $rv : $SZ->view->getDisplayBuffer();
+			}
+			else
+			{
+				// returns output buffer
+				$returnValue = $SZ->view->getDisplayBuffer();
+			}
+			self::$outpuBufferMode = TRUE;
+			return $returnValue;
 		}
 		else
 		{
 			$Mark->end('final', 'baseProcess:'. $process->level);
-			$output = $SZ->view->getDisplayBuffer();
 			Event::fire('session_update');
-			Event::fire('final_output');
 			
-			// final output!
-			self::$Response->display($output);
+			// returns process result if buffermode is FALSE
+			if ( self::$outpuBufferMode === FALSE )
+			{
+				$output = ( isset($rv) ) ? $rv : $SZ->view->getDisplayBuffer();
+				return $output;
+			}
+			else
+			{
+				// final output!
+				$output = $SZ->view->getDisplayBuffer();
+				self::$Response->display($output);
+			}
+			self::$outpuBufferMode = TRUE;
 			
 			//SeezooFactory::killAll();
 		}
@@ -492,18 +520,25 @@ class Seezoo
 		
 		// Cofguration ----------------------------------------------
 		
-		include(COREPATH . 'config/config.php');
-		$coreConfig = $config;
-		// get configuration
 		if ( ! file_exists(APPPATH . 'config/config.php') )
 		{
 			throw new RuntimeException('Configuration file is not exists!');
 			exit;
 		}
 		include(APPPATH . 'config/config.php');
-		self::$config = array_merge($coreConfig, $config);
-		unset($config);
-		unset($coreConfig);
+		self::$config = $config;
+		
+		
+		// Init packages ----------------------------------------------
+		
+		if ( file_exists(APPPATH . 'config/package.php') )
+		{
+			include(APPPATH . 'config/package.php');
+			if ( isset($pakcage) )
+			{
+				self::$packages = $package;
+			}
+		}
 		
 		
 		// Application settings --------------------------------------
@@ -514,7 +549,6 @@ class Seezoo
 		
 		// Event startup ---------------------------------------------
 		
-		spl_autoload_register(array('Event', 'loadEventDispatcher'));
 		Event::addListenerFromFile(APPPATH . 'config/event.php');
 		Event::addListenerFromFile(EXTPATH . 'config/event.php');
 		
@@ -542,21 +576,30 @@ class Seezoo
 		self::$_stackRequest     = self::$Importer->classes('Request');
 		self::$Response          = self::$Importer->classes('Response');
 		self::$Cache             = self::$Importer->classes('Cache');
-		self::$Classes['Driver'] = self::$Importer->classes('Driver', FALSE);
 		self::$Classes['View']   = self::$Importer->classes('View',   FALSE);
 		self::$Classes['Router'] = self::$Importer->classes('Router', FALSE);
 		
 		// Only once!
 		self::$startUpExecuted = TRUE;
 		
-		foreach ( self::getPackage() as $pkg )
+		foreach ( self::$packages as $pkg )
 		{
 			self::initPackage($pkg);
 		}
 		
 		Event::fire('startup');
 	}
-
+	
+	
+	// ---------------------------------------------------------------
+	
+	
+	/**
+	 * Registers packages init
+	 * 
+	 * @access public
+	 * @param  string $pkg
+	 */
 	public static function initPackage($pkg)
 	{
 		if ( file_exists(PKGPATH . $pkg . '/init.php') )

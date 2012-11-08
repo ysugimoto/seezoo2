@@ -34,6 +34,12 @@ class Autoloader
 	private static $loadDir = array();
 	
 	
+	private static $aliasClass = array(
+	                                    'ActiveRecord' => 'classes/',
+	                                    'Database'     => 'classes/'
+	                                  );
+	
+	
 	// ---------------------------------------------------------------
 	
 	
@@ -44,12 +50,11 @@ class Autoloader
 	 */
 	public static function init()
 	{
-		$path = realpath(dirname(__FILE__));
+		$path = dirname(__FILE__);
 		require_once($path . '/constants.php');
 		require_once($path . '/common.php');
 		
 		spl_autoload_register(array('Autoloader', '_initLoad'));
-		spl_autoload_register(array('Autoloader', 'load'));
 		spl_autoload_register(array('Event', 'loadEventDispatcher'));
 	}
 		
@@ -65,6 +70,11 @@ class Autoloader
 	 */
 	public static function register($path)
 	{
+		// Register autoload first time!
+		if ( count(self::$loadDir) === 0 )
+		{
+			spl_autoload_register(array('Autoloader', 'load'));
+		}
 		self::$loadDir[] = trail_slash($path);
 	}
 	
@@ -124,9 +134,9 @@ class Autoloader
 			$dir       = 'classes/';
 			$className = substr($className, strlen(self::$coreClassPrefix));
 		}
-		else if ( $className === 'ActiveRecord' )
+		else if ( isset(self::$aliasClass[$className]) )
 		{
-			$dir = 'classes/';
+			$dir = self::$aliasClass[$className];
 		}
 		else
 		{

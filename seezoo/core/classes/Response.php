@@ -61,8 +61,8 @@ class SZ_Response
 	{
 		if ( ! preg_match('/^https?:/', $uri ) )
 		{
-			$rewrite = Seezoo::$config['enable_mod_rewrite'];
-			$uri     = Seezoo::$config['base_url']
+			$rewrite = $this->env->getConfig('enable_mod_rewrite');
+			$uri     = $this->env->getConfig('base_url')
 			           . (( $rewrite ) ? '' : DISPATCHER . '/') . ltrim($uri, '/');
 		}
 		header("Location: " . $uri, TRUE, $code);
@@ -117,12 +117,6 @@ class SZ_Response
 		// Is it possible to transfer compressed gzip?
 		$this->setGzipHandler();
 		
-		header('HTTP/1.1 200 OK');
-		foreach ( $this->_headers as $header )
-		{
-			@header($header[0], $header[1]);
-		}
-		
 		Event::fire('final_output', $output);
 		
 		if ( $this->env->getConfig('enable_debug') === TRUE )
@@ -130,6 +124,15 @@ class SZ_Response
 			$memory   = memory_get_usage();
 			$debugger = Seezoo::$Importer->classes('Debugger');
 			$output   = str_replace('</body>', $debugger->execute($memory) . "\n</body>", $output);
+		}
+		
+		if ( $this->env->api !== 'cli' )
+		{
+			header('HTTP/1.1 200 OK');
+			foreach ( $this->_headers as $header )
+			{
+				@header($header[0], $header[1]);
+			}
 		}
 		
 		echo $output;
@@ -166,8 +169,8 @@ class SZ_Response
 	 * Force download and exit
 	 * 
 	 * @access public
-	 * @param string $filepath
-	 * @param string $filename
+	 * @param string $filePath
+	 * @param string $fileName
 	 * @param bool   $isData
 	 * @throws Exception
 	 */
@@ -196,13 +199,16 @@ class SZ_Response
 				$fileName = basename($filePath);
 			}
 			$fileSize = filesize($filePath);
-			$Mime     = Seezoo::$Importer->classes('Mimetype');
+			$Mime     = Seezoo::$Importer->library('Mimetype');
 			$mimeType = $Mime->detect($filePath);
-			
+			if ( ! $mimeType )
+			{
+				$mimeType = 'application/octet-stream';
+			}
 		}
 		
 		// send headers
-		$headers = array('Content-Type: "' . $mimeType . '"');
+		$headers = array('Content-Type: ' . $mimeType);
 		
 		if ( $this->env->isIE )
 		{

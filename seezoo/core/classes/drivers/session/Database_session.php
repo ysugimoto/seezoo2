@@ -61,8 +61,8 @@ class SZ_Database_session extends SZ_Session_driver
 	{
 		parent::__construct();
 		
-		$this->db = Seezoo::$Importer->database();
 		$this->_dbTableName = $this->env->getConfig('session_db_tablename');
+		$this->db = Seezoo::$Importer->database();
 
 		if ( $this->_initSession() === FALSE )
 		{
@@ -257,31 +257,9 @@ class SZ_Database_session extends SZ_Session_driver
 			'user_data'     => $data
 		);
 		
-		$this->db->connect();
-		$this->db->update($this->_dbTableName, $updateData, array('session_id' => $sess));
+		$db = Database::getInstance();
+		$db->update($this->_dbTableName, $updateData, array('session_id' => $sess));
 		
 		$this->_setSessionCookie($authKey);
 	}
-	
-	
-	// --------------------------------------------------
-	
-	
-	/**
-	 * generate random session ID
-	 * 
-	 * @access protected
-	 * @return string $sessID
-	 */
-	protected function _generateSessionID()
-	{
-		$sessID = '';
-		while (strlen($sessID) < 32)
-		{
-			$sessID .= mt_rand(0, mt_getrandmax());
-		}
-		
-		return $sessID;
-	}
-	
 }

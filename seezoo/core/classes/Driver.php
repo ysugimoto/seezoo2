@@ -31,23 +31,25 @@ class SZ_Driver
 	 * @param  bool   $instanticate
 	 * @throws Exception
 	 */
-	protected function _loadDriver($driverType, $driverClass, $instantiate = TRUE, $useBaseDriver = TRUE)
+	protected function _loadDriver(
+	                               $driverType,
+	                               $driverClass,
+	                               $instantiate = TRUE,
+	                               $useBaseDriver = TRUE)
 	{
-		$ENV        = Seezoo::getENV();
-		$packages   = $ENV->getConfig('package');
-		$subClass   = $ENV->getConfig('subclass_prefix');
 		$driverPath = 'classes/drivers/' . $driverType . '/'; 
 		$driverBase = ucfirst($driverType) . '_driver';
+		$loadFile   = $driverPath . $driverBase. '.php';
 		
 		if ( $useBaseDriver )
 		{
 			// First, driver base class include
-			if ( ! file_exists(COREPATH . $driverPath . $driverBase. '.php') )
+			if ( ! file_exists(COREPATH . $loadFile) )
 			{
 				throw new Exception('DriverBase: ' . $driverBase . ' file not exists.');
 				return FALSE;
 			}
-			require_once(COREPATH . $driverPath . $driverBase. '.php');
+			require_once(COREPATH . $loadFile);
 		}
 		
 		if ( empty($driverClass) )
@@ -57,29 +59,54 @@ class SZ_Driver
 			return $this->driver;
 		}
 		
-		if ( ! file_exists(COREPATH . $driverPath . $driverClass . '.php') )
+		// Mark the load class
+		$Class  = '';
+		if ( file_exists(COREPATH . $driverPath . $driverClass . '.php') )
 		{
-			throw new Exception('Driver: ' . $driverClass . ' file not exists.');
-			return FALSE;
+			require_once(COREPATH . $driverPath . $driverClass . '.php');
+			$Class    = 'SZ_' . $driverClass;
+			$subClass = get_config('subclass_prefix');
+		}
+		else
+		{
+			// If coreclass not exists, load the original driver
+			$subClass = '';
 		}
 		
-		require_once(COREPATH . $driverPath . $driverClass . '.php');
-		$Class = 'SZ_' . $driverClass;
+		$isLoaded = FALSE;
+		$loadFile = $driverPath . $subClass . $driverClass . '.php';
 		
 		// packages override
-		foreach ( $packages as $pkg )
+		foreach ( Seezoo::getPackage() as $pkg )
 		{
-			$extPath = APPPATH . rtrim($pkg, '/') . '/';
-			if ( file_exists($extPath . $driverPath . $subClass . $driverClass . '.php' ) )
+			$extPath = PKGPATH . $pkg . '/';
+			if ( file_exists($extPath . $loadFile) )
 			{
-				require_once($extPath . $this->_driverPath . $subClass . $driverClass . '.php');
-				if ( ! class_exists($subClass . $driverClass) )
-				{
-					throw new Exception('class:' . $subClass . $driverClass . ' is not declared!');
-				}
-				$Class = $subClass . $driverClass;
+				require_once($extPath . $loadFile);
+				$Class    = $subClass . $driverClass;
+				$isLoaded = TRUE;
 				break;
 			}
+		}
+		
+		// Load a driver from extension/application directory when package driver is not exists.
+		if ( $isLoaded === FALSE )
+		{
+			foreach ( array(EXTPATH, APPPATH) as $paths )
+			{
+				if ( file_exists($paths . $loadFile) )
+				{
+					require_once($paths . $loadFile);
+					$Class = $subClass . $driverClass;
+					break;
+				}
+			}
+			
+		}
+		
+		if ( $Class === '' || ! class_exists($Class) )
+		{
+			throw new Exception('DirverClass:' . $subClass . $driverClass . ' is not declared!');
 		}
 		
 		$this->driver = ( $instantiate === TRUE ) ? new $Class() : $Class;

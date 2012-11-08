@@ -22,8 +22,8 @@
 define('COREPATH',   SZPATH   . 'core/');
 define('APPPATH',    SZPATH   . 'app/');
 define('TESTAPPPATH',SZPATH   . 'test/');
-define('EXTPATH',    realpath(SZPATH   . '../htdocs/extensions') . '/');
-define('PKGPATH',    realpath(SZPATH   . '../htdocs/packages') . '/');
+define('EXTPATH',    SZPATH   . 'extensions/');
+define('PKGPATH',    SZPATH   . 'packages/');
 define('ETCPATH',    SZPATH   . 'etc/');
 define('ENGINEPATH', COREPATH . 'engines/');
 

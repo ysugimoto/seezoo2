@@ -53,6 +53,7 @@ abstract class SZ_View_driver
 	 */
 	protected $_directoryBase;
 	
+	
 	/**
 	 * ===========================================-
 	 * abstruct method rendering
@@ -71,7 +72,6 @@ abstract class SZ_View_driver
 		$this->env = Seezoo::getENV();
 		
 		$this->_initBufLevel = ob_get_level();
-		$this->filter        = Seezoo::$Importer->classes('Filter');
 	}
 	
 	

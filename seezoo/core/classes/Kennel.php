@@ -28,9 +28,10 @@ class SZ_Kennel
 	{
 		$this->modelSuffixRegex = '#' . preg_quote(get_config('model_suffix')) . '$#';
 		
+		// Database autoloaded if the property is defined
 		if ( property_exists($this, 'db') )
 		{
-			$this->db = Seezoo::$Importer->database();
+			$this->_loadDatabase();
 		}
 	}
 	
@@ -60,6 +61,7 @@ class SZ_Kennel
 	 */
 	public function findOne($column, $conditions = array())
 	{
+		$this->_loadDatabase();
 		if ( empty($this->table)
 		     || ! $this->db->isAllowedTableName($this->table) )
 		{
@@ -94,6 +96,7 @@ class SZ_Kennel
 	                     $conditions = array(),
 	                     $fetchMode  = PDO::FETCH_OBJ)
 	{
+		$this->_loadDatabase();
 		if ( empty($this->table)
 		     || ! $this->db->isAllowedTableName($this->table) )
 		{
@@ -131,6 +134,7 @@ class SZ_Kennel
 	                       $conditions = array(),
 	                       $fetchMode  = PDO::FETCH_OBJ)
 	{
+		$this->_loadDatabase();
 		if ( empty($this->table)
 		     || ! $this->db->isAllowedTableName($this->table) )
 		{
@@ -165,6 +169,7 @@ class SZ_Kennel
 	                        $conditions = array(),
 	                        $fetchMode  = PDO::FETCH_OBJ)
 	{
+		$this->_loadDatabase();
 		if ( empty($this->table)
 		     || ! $this->db->isAllowedTableName($this->table) )
 		{
