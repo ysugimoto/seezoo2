@@ -88,6 +88,25 @@ $config['date_timezone'] = 'Asia/Tokyo';
 
 /*
  * --------------------------------------------------
+ * Auto convert input variables
+ * 
+ * Auto convert encoding GLOBAL variables to UTF-8,
+ * when Request class instantiated
+ *   TRUE  : enable auto convert
+ *   FALSE ; disable auto convert
+ * --------------------------------------------------
+ */
+
+$config['auto_convert_input'] = array(
+  'POST'     => TRUE,  // $_POST
+  'GET'      => TRUE,  // $_GET
+  'COOKIE'   => TRUE,  // $_COOKIE
+  'PHPINPUT' => TRUE,  // php://input
+);
+
+
+/*
+ * --------------------------------------------------
  * Server encoding
  * 
  * set a your application server encoding
@@ -117,6 +136,16 @@ $config['helper_suffix']   = 'Helper';
 
 $config['controller_suffix'] = 'Controller';
 $config['method_prefix']     = 'act_';
+
+/*
+ * --------------------------------------------------
+ * Default database connection handle
+ * 
+ * Handle set by default to use to connect to Database
+ * --------------------------------------------------
+ */
+
+$config['default_database_connection_handle'] = 'default';
 
 
 /*
@@ -158,7 +187,7 @@ $config['default_process'] = SZ_MODE_MVC;
  * --------------------------------------------------
  */
 
-$config['default_controller'] = 'page';
+$config['default_controller'] = 'welcome';
 
 
 /*
@@ -175,20 +204,7 @@ $config['default_controller'] = 'page';
 $config['logging_level']     = 1;
 $config['logging_save_type'] = 'file';
 $config['logging_error']     = FALSE;
-$config['logging_save_dir']  = SZPATH . 'logs/';
-
-
-
-/*
- * --------------------------------------------------
- * package
- * 
- * Framework routing from subpackge system.
- * Controller, helper, model, library, and view detect subpackage.
- * --------------------------------------------------
- */
-
-$config['package'] = array();
+$config['logging_save_dir']  = ETCPATH . 'logs/';
 
 
 /*
@@ -278,9 +294,9 @@ $config['cookie_path']   = '/';
  * --------------------------------------------------
  */
 
-$config['session_store_type']      = 'php';
+$config['session_store_type']      = 'file';
 $config['session_auth_key']        = 'seezoo_session_key';  // session authorize key
-$config['session_lifetime']        = 7200;                   // session expiration time ( sec digit )
+$config['session_lifetime']        = 500;                   // session expiration time ( sec digit )
 $config['session_name']            = 'sz_session';          // session name
 $config['session_encryption']      = TRUE;                  // encryption session auth key
 $config['session_match_ip']        = TRUE;                  // session matching ip_address
@@ -293,7 +309,7 @@ $config['session_filename_prefix'] = 'sess_';
 $config['session_file_store_path'] = ETCPATH . 'caches/session/';
 
 /* ----------------- Database session config ------------------ */
-$config['session_db_tablename']    = 'sessions';
+$config['session_db_tablename']    = 'sz_session';
 
 /* ----------------- Memcache session config ------------------ */
 $config['session_memcache_host']     = 'localhost';
@@ -338,6 +354,23 @@ $config['picture_manipulation'] = 'gd';
 $config['imagemagick_lib_path'] = '/usr/bin/convert';
 
 
-
+/*
+ * --------------------------------------------------
+ * FTP server environment
+ * 
+ * Please set some parameters if you use FTP library:
+ * 
+ * hostname : FTP server address ( no need ftp:// protocol )
+ * username : your account username
+ * password : your account password
+ * port     : FTP server port number
+ * passive  : passive ransport mode boolean
+ * --------------------------------------------------
+ */
+$config['FTP']['hostname'] = '';
+$config['FTP']['username'] = '';
+$config['FTP']['password'] = '';
+$config['FTP']['port']     = 21;
+$config['FTP']['passive']  = TRUE;
 
 // EOF
